@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio",
+  "compatibility_date": "2026-08-01",
+
+  // Worker без поля "main" — це деплой лише статичних файлів.
+  // Жодного серверного коду не виконується, Cloudflare просто роздає
+  // вміст out/ зі свого CDN.
+  "assets": {
+    "directory": "./out",
+
+    // Віддавати наш 404.html замість дефолтної помилки Cloudflare.
+    "not_found_handling": "404-page"
+  }
+}
