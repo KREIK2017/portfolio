@@ -1,23 +1,18 @@
 import type { MetadataRoute } from "next";
-import { getAllProjects } from "@/lib/projects";
 import { site } from "@/config/site";
+import { localePath } from "@/lib/i18n";
+import { LOCALES } from "@/types/content";
 
 export const dynamic = "force-static";
 
-/** Next генерує з цього статичний /sitemap.xml під час збірки. */
+/**
+ * Сайт складається з однієї сцени на кожну мову — розділи
+ * відкриваються оверлеями, окремих URL у них немає.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/projects", "/about", "/contact"].map((route) => ({
-    url: `${site.url}${route}/`,
+  return LOCALES.map((locale) => ({
+    url: `${site.url}${localePath(locale)}`,
     changeFrequency: "monthly" as const,
-    priority: route === "" ? 1 : 0.8,
+    priority: locale === "uk" ? 1 : 0.9,
   }));
-
-  const projectRoutes = getAllProjects().map((project) => ({
-    url: `${site.url}/projects/${project.slug}/`,
-    lastModified: new Date(project.date),
-    changeFrequency: "yearly" as const,
-    priority: 0.6,
-  }));
-
-  return [...staticRoutes, ...projectRoutes];
 }

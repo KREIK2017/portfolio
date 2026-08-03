@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="Ізометрична сцена">
+  <defs>
+    <linearGradient id="c" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#2b2620"/>
+      <stop offset="100%" stop-color="#141210"/>
+    </linearGradient>
+    <radialGradient id="d">
+      <stop offset="0%" stop-color="#c9973f" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#c9973f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#c)"/>
+  <circle cx="760" cy="250" r="260" fill="url(#d)"/>
+  <!-- Схематична ізометрія: підлога і дві стіни -->
+  <polygon points="600,240 900,415 600,590 300,415" fill="#453a2c"/>
+  <polygon points="300,415 600,590 600,700 300,525" fill="#211c16"/>
+  <polygon points="900,415 600,590 600,700 900,525" fill="#2c2620"/>
+  <polygon points="470,330 560,382 560,300 470,248" fill="#6b7f7a" opacity="0.75"/>
+  <polygon points="700,352 810,289 810,360 700,423" fill="#8a6e46" opacity="0.85"/>
+  <text x="90" y="640" font-family="Georgia, serif" font-size="60" fill="#e8ddc4">kreik.pp.ua</text>
+</svg>
