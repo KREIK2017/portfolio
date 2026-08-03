@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { SECTIONS, Sidebar } from "./Sidebar";
 import { StackCard } from "./StackCard";
+import { LivingOilFilter } from "@/components/ui/LivingOilFilter";
 import { ui } from "@/content/dictionary";
 import { PROJECTS } from "@/content/projects";
 import { ATTRIBUTES, MAX_SKILL_LEVEL, skillsOf } from "@/content/skills";
@@ -113,6 +114,9 @@ export function Resume({ locale }: { locale: Locale }) {
   return (
     <div className="bg-rs-paper text-rs-ink min-h-dvh">
       <Grain />
+      {/* Оголошується один раз на сторінку, застосовується в CSS
+          до полотна кожної картки через filter: url(#livingOil). */}
+      <LivingOilFilter />
       <Sidebar locale={locale} active={active} />
 
       <div className="pb-24 sm:pb-0 sm:pl-20">

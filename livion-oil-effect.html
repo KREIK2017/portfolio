@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>12 карток стеку — процедурні мазки + жива олія</title>
+<style>
+  :root{
+    --paper:#d9c9a3; --text-light:#e8ddc4; --amber:#c9973f;
+  }
+  body{
+    margin:0; background:#141210; color:var(--text-light);
+    font-family: Georgia, serif;
+    padding:40px 30px;
+  }
+  .grid{
+    display:grid; grid-template-columns:repeat(6,1fr); gap:14px;
+    max-width:1400px; margin:0 auto;
+  }
+  @media (max-width:1150px){ .grid{ grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:640px){ .grid{ grid-template-columns:repeat(2,1fr);} }
+
+  .card{ position:relative; border-radius:3px; overflow:hidden; box-shadow:0 6px 16px rgba(0,0,0,.4); }
+  .card canvas{
+    display:block; width:100%; height:auto;
+    /* --- ЖИВА ОЛІЯ: підключається одним рядком --- */
+    filter:url(#livingOilSubtle);
+  }
+  .card .level{
+    position:absolute; top:8px; right:10px; z-index:2;
+    font-family:Georgia, serif; font-weight:700; font-size:20px; color:var(--paper);
+    background:rgba(0,0,0,.4); width:28px; height:28px; border-radius:2px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card .body{ position:absolute; left:0; right:0; bottom:0; padding:10px 12px 12px; z-index:2; }
+  .card .name{ font-size:13px; letter-spacing:.04em; text-transform:uppercase; font-weight:700; color:var(--paper); margin:0 0 4px; }
+  .card .desc{ font-size:10.5px; line-height:1.35; opacity:.85; margin:0; }
+  .pips{ font-size:10px; letter-spacing:1.5px; margin-top:6px; color:var(--amber); }
+  .pips .empty{ opacity:.3; }
+
+  h1{ max-width:1400px; margin:0 auto 24px; font-size:16px; font-weight:400; letter-spacing:.06em; text-transform:uppercase; opacity:.75; }
+</style>
+</head>
+<body>
+
+<h1>My Stack — 12 карток, живі текстури</h1>
+<div class="grid" id="grid"></div>
+
+<!-- ==== SVG-фільтр "жива олія", м'який/непомітний ==== -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="livingOilSubtle" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" numOctaves="2" seed="7"
+      baseFrequency="0.015 0.02" result="noise1">
+      <animate attributeName="baseFrequency"
+        values="0.015 0.02;0.019 0.016;0.015 0.02"
+        dur="16s" repeatCount="indefinite" />
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="noise1"
+      scale="12" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<script>
+/* ======================================================================
+   Генератор мазків — ОБРАНА ВЕРСІЯ (без змін), просто параметризована
+   палітрою під кожну технологію
+   ====================================================================== */
+function drawCard(ctx, w, h, opts){
+  const {base, accents} = opts;
+  ctx.clearRect(0,0,w,h);
+
+  ctx.fillStyle = base;
+  ctx.fillRect(0,0,w,h);
+
+  const strokeCount = 90;
+  for(let i=0;i<strokeCount;i++){
+    const color = accents[Math.floor(Math.random()*accents.length)];
+    const cx = Math.random()*w;
+    const cy = Math.random()*h*0.75;
+    const len = 30 + Math.random()*110;
+    const thick = 8 + Math.random()*22;
+    const angle = (Math.random()*60-30) * Math.PI/180;
+    const alpha = 0.08 + Math.random()*0.22;
+
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(angle);
+    ctx.globalAlpha = alpha;
+    ctx.filter = `blur(${4+Math.random()*10}px)`;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0,0, thick, len, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  ctx.filter = 'none';
+  for(let i=0;i<10;i++){
+    const x = Math.random()*w;
+    const startY = Math.random()*h*0.5;
+    const dropH = 60+Math.random()*160;
+    const color = accents[Math.floor(Math.random()*accents.length)];
+    const grad = ctx.createLinearGradient(x,startY,x,startY+dropH);
+    grad.addColorStop(0, color+'55');
+    grad.addColorStop(1, color+'00');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2+Math.random()*5;
+    ctx.beginPath();
+    ctx.moveTo(x,startY);
+    ctx.quadraticCurveTo(x+(Math.random()*10-5), startY+dropH*0.6, x+(Math.random()*6-3), startY+dropH);
+    ctx.stroke();
+  }
+
+  const vg = ctx.createRadialGradient(w/2,h*0.4,w*0.2, w/2,h*0.5,w*0.8);
+  vg.addColorStop(0,'rgba(0,0,0,0)');
+  vg.addColorStop(1,'rgba(0,0,0,0.55)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0,0,w,h);
+
+  const imgData = ctx.getImageData(0,0,w,h);
+  const d = imgData.data;
+  for(let p=0;p<d.length;p+=4){
+    const n = (Math.random()-0.5)*18;
+    d[p]+=n; d[p+1]+=n; d[p+2]+=n;
+  }
+  ctx.putImageData(imgData,0,0);
+
+  // --- РВАНИЙ КУТ ПАПЕРУ (верхній правий), як у попередній версії ---
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(w*0.72, 0);
+  let tx = w*0.72, ty = 0;
+  while(tx < w || ty < h*0.28){
+    tx += Math.random()*14;
+    ty += Math.random()*10;
+    ctx.lineTo(Math.min(tx,w), Math.min(ty,h*0.28));
+  }
+  ctx.lineTo(w,0);
+  ctx.closePath();
+  ctx.fillStyle = '#d9c9a3'; // колір "паперу" під карткою
+  ctx.fill();
+  ctx.restore();
+
+  // ромбик-іконка в тому ж кутку
+  ctx.save();
+  ctx.translate(w*0.9, h*0.06);
+  ctx.rotate(Math.PI/4);
+  ctx.fillStyle = '#c9973f';
+  ctx.fillRect(-6,-6,12,12);
+  ctx.restore();
+}
+
+/* ======================================================================
+   ДАНІ 12 КАРТОК — палітра підібрана під колір кожної технології
+   з референсу (WordPress синій, PHP фіолетовий, React бурштиновий і т.д.)
+   ====================================================================== */
+const skills = [
+  { name:"WordPress",      desc:"Теми, плагіни, ACF, Gutenberg, Settings API, шорткоди",  level:4, base:"#1f333d", accents:["#3d6b8a","#5a86a3","#22384a","#b7c9d4"] },
+  { name:"PHP",            desc:"Серверна розробка, OOP, архітектура, інтеграції",         level:4, base:"#3a2540", accents:["#8a5a1f","#3e6157","#5a3a5f","#b5654a"] },
+  { name:"Frontend Core",  desc:"HTML5, CSS3/SCSS, JavaScript (ES6+), jQuery",             level:4, base:"#173534", accents:["#c9973f","#3a6ea5","#e0a63e","#2f5c52"] },
+  { name:"React & Next.js",desc:"Компоненти, хуки, SSR/SSG, маршрутизація, оптимізація",    level:4, base:"#5a3d14", accents:["#c9973f","#2e7d8a","#e0a63e","#7a4f1c"] },
+  { name:"Node.js",        desc:"Node.js, Express 5, REST API, Middlewares, TypeScript",   level:4, base:"#233522", accents:["#3f6b3a","#5a8a4a","#264024","#8ea86a"] },
+  { name:"TypeScript",     desc:"Типізація, інтерфейси, дженерики, надійний код",           level:4, base:"#222835", accents:["#3a5a9e","#5b7bc4","#22283f","#7f9cd8"] },
+  { name:"Databases",      desc:"Sequelize ORM, MariaDB/MySQL, міграції, зв'язки",          level:4, base:"#1c2e2e", accents:["#2e4a48","#4a706c","#1a2a2a","#6f938e"] },
+  { name:"Shopify",        desc:"Buy Button SDK, Shopify CLI, Liquid, кастомізація тем",    level:3, base:"#2e3a1e", accents:["#5a7d3a","#95b23f","#3c4d24","#c5d97a"] },
+  { name:"Upgates",        desc:"Адміністрування, керування магазинами, підтримка",         level:3, base:"#5c3016", accents:["#a85a22","#c97a3e","#7a3f1c","#e0a35c"] },
+  { name:"Git",            desc:"Версійний контроль, робота з командою, Git Flow",          level:4, base:"#5c2418", accents:["#b5432a","#d9603f","#7a2e1c","#e88a5c"] },
+  { name:"Docker",         desc:"Контейнери, ізоляція, Docker Compose, середовища",         level:4, base:"#12324a", accents:["#1f6fa8","#3a8fc9","#0f2a3f","#7ec3e8"] },
+  { name:"Gulp & Vite",    desc:"Автоматизація збірки, оптимізація, workflow",              level:3, base:"#4a2414", accents:["#a8461f","#d97a3e","#6b2e16","#e8a35c"] },
+];
+
+const MAX_PIPS = 6;
+const grid = document.getElementById('grid');
+
+skills.forEach(s => {
+  const wrap = document.createElement('article');
+  wrap.className = 'card';
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 212; canvas.height = 265;
+  wrap.appendChild(canvas);
+
+  const filled = "◆".repeat(s.level);
+  const empty  = "◇".repeat(MAX_PIPS - s.level);
+
+  const levelEl = document.createElement('div');
+  levelEl.className = 'level';
+  levelEl.textContent = s.level;
+  wrap.appendChild(levelEl);
+
+  const body = document.createElement('div');
+  body.className = 'body';
+  body.innerHTML = `
+    <p class="name">${s.name}</p>
+    <p class="desc">${s.desc}</p>
+    <div class="pips">${filled}<span class="empty">${empty}</span></div>
+  `;
+  wrap.appendChild(body);
+
+  grid.appendChild(wrap);
+
+  const ctx = canvas.getContext('2d');
+  drawCard(ctx, canvas.width, canvas.height, { base:s.base, accents:s.accents });
+});
+
+// Поважаємо prefers-reduced-motion: зупиняємо анімацію "живої олії"
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('animate').forEach(a => a.setAttribute('dur', '999999s'));
+}
+</script>
+
+</body>
+</html>

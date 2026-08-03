@@ -364,26 +364,140 @@ html.lenis body {
   mix-blend-mode: multiply;
 }
 
+/* Контейнер SVG-фільтрів не має займати місця в потоці. */
+.filter-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* ── Картка стеку ─────────────────────────────────────────────────
+   Мазки малює полотно (StackCardArt), текст лежить окремим шаром
+   поверх нього. Це не косметика: фільтр «живої олії» застосований
+   лише до полотна, тому підпис не тремтить і не розмивається. */
+.stack-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s ease;
+}
+
+.stack-card:hover {
+  transform: translateY(-3px);
+}
+
+.stack-card__art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 212 / 265;
+  filter: url(#livingOil);
+}
+
 /*
-  Painterly-підкладка карток стеку. Тон задає кожна картка через
-  --card-tone, а мазки імітуємо накладеними градієнтами — тобто
-  колір один, а поверхня виглядає нерівною, як у мокапі.
+  Під курсором картка переходить на плавний фільтр. Сенс не в
+  декорації: анімований feTurbulence рахується на CPU, тому тримати
+  60fps на тринадцяти полотнах одночасно дорого, а на одному — дешево.
+  focus-within додає те саме для навігації з клавіатури.
 */
-.rs-card {
-  background-color: var(--card-tone);
-  background-image:
-    radial-gradient(
-      ellipse 70% 55% at 22% 18%,
-      rgba(255, 250, 235, 0.26),
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 82% 88%,
-      rgba(0, 0, 0, 0.34),
-      transparent 68%
-    ),
-    linear-gradient(152deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.22));
-  box-shadow:
-    0 12px 28px -14px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(255, 250, 235, 0.12);
+.stack-card:hover .stack-card__art,
+.stack-card:focus-within .stack-card__art {
+  filter: url(#livingOilFlow);
+}
+
+.stack-card__level {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 2;
+  display: flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.42);
+  color: var(--de-paper);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/*
+  Градієнт під текстом обовʼязковий, а не декоративний: мазки
+  генеруються випадково, і без гарантованої підкладки підпис міг би
+  опинитися на світлій плямі й втратити контраст.
+*/
+.stack-card__body {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  padding: 10px 12px 12px;
+  background: linear-gradient(
+    to top,
+    rgba(12, 10, 8, 0.88),
+    rgba(12, 10, 8, 0.6) 62%,
+    transparent
+  );
+}
+
+.stack-card__name {
+  margin: 0 0 4px;
+  color: var(--de-paper);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stack-card__desc {
+  margin: 0;
+  color: var(--de-light);
+  font-size: 0.68rem;
+  line-height: 1.35;
+  opacity: 0.88;
+}
+
+.stack-card__pips {
+  margin: 6px 0 0;
+  color: var(--de-amber);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+}
+
+.stack-card__pips-empty {
+  opacity: 0.35;
+}
+
+/* Світлий варіант — картка AI Tools стоїть на папері. */
+.stack-card--light .stack-card__body {
+  background: linear-gradient(
+    to top,
+    rgba(244, 238, 226, 0.92),
+    rgba(244, 238, 226, 0.62) 62%,
+    transparent
+  );
+}
+
+.stack-card--light .stack-card__name,
+.stack-card--light .stack-card__desc {
+  color: #2a241c;
+}
+
+.stack-card--light .stack-card__level {
+  background: rgba(255, 252, 244, 0.55);
+  color: #2a241c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack-card {
+    transition: none;
+  }
+
+  .stack-card:hover {
+    transform: none;
+  }
 }
