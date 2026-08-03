@@ -19,6 +19,18 @@ const HOTSPOT_BY_ID = Object.fromEntries(
   HOTSPOTS.map((spot) => [spot.id, spot]),
 ) as Record<PanelId, Hotspot>;
 
+/**
+ * Точки, до яких кріпляться маркери й тултипи. Тримаємо їх поза
+ * розміткою предметів, бо шар маркерів малюється окремо, останнім.
+ */
+const ANCHORS: Record<PanelId, Point> = {
+  projects: iso(7.5, 0, 6.4),
+  about: iso(0, 2.5, 6.6),
+  contact: iso(1.4, 4.6, 3.1),
+  trivia: iso(4.9, 8.4, 2.1),
+  cv: iso(7.9, 7.2, 2.0),
+};
+
 interface RoomProps {
   locale: Locale;
   onHover: (hotspot: Hotspot | null) => void;
@@ -112,12 +124,16 @@ function Tooltip({ at, text }: { at: Point; text: string }) {
   );
 }
 
-/** Обгортка, що робить із групи доступну кнопку з маркером і тултипом. */
+/**
+ * Обгортка, що робить із групи доступну кнопку.
+ *
+ * Маркер і тултип свідомо НЕ всередині: вони розтягували bounding box
+ * групи, і браузер малював фокусну рамку по всьому цьому прямокутнику,
+ * а не по предмету. Тому вони живуть в окремому шарі поверх сцени.
+ */
 function Interactive({
   hotspot,
   locale,
-  anchor,
-  hoveredId,
   setHoveredId,
   onHover,
   onSelect,
@@ -125,15 +141,11 @@ function Interactive({
 }: {
   hotspot: Hotspot;
   locale: Locale;
-  anchor: Point;
-  hoveredId: PanelId | null;
   setHoveredId: (id: PanelId | null) => void;
   onHover: (hotspot: Hotspot | null) => void;
   onSelect: (panel: PanelId) => void;
   children: React.ReactNode;
 }) {
-  const active = hoveredId === hotspot.id;
-
   const enter = () => {
     setHoveredId(hotspot.id);
     onHover(hotspot);
@@ -164,8 +176,6 @@ function Interactive({
       onBlur={leave}
     >
       {children}
-      <Marker at={anchor} active={active} />
-      {active && <Tooltip at={anchor} text={hotspot.label[locale]} />}
     </g>
   );
 }
@@ -185,7 +195,7 @@ export function Room({
   const lampX = 5.2;
   const lampY = 5.2;
 
-  const shared = { locale, hoveredId, setHoveredId, onHover, onSelect };
+  const shared = { locale, setHoveredId, onHover, onSelect };
 
   return (
     <svg
@@ -379,7 +389,6 @@ export function Room({
       <Interactive
         {...shared}
         hotspot={HOTSPOT_BY_ID.projects}
-        anchor={iso(7.5, 0, 6.4)}
       >
         <polygon
           points={onBackWall(5.2, 9.9, 2.9, 6.0)}
@@ -431,7 +440,6 @@ export function Room({
       <Interactive
         {...shared}
         hotspot={HOTSPOT_BY_ID.about}
-        anchor={iso(0, 2.5, 6.6)}
       >
         <polygon
           points={onLeftWall(1.3, 3.7, 3.2, 6.2)}
@@ -462,7 +470,6 @@ export function Room({
       <Interactive
         {...shared}
         hotspot={HOTSPOT_BY_ID.contact}
-        anchor={iso(1.4, 4.6, 3.1)}
       >
         <Box
           spec={{ x: 0.8, y: 4.1, z: 1.75, w: 1.25, d: 1.15, h: 0.8 }}
@@ -521,7 +528,6 @@ export function Room({
       <Interactive
         {...shared}
         hotspot={HOTSPOT_BY_ID.trivia}
-        anchor={iso(4.9, 8.4, 2.1)}
       >
         <ellipse
           cx={iso(5.5, 8.6, 0)[0]}
@@ -557,7 +563,6 @@ export function Room({
       <Interactive
         {...shared}
         hotspot={HOTSPOT_BY_ID.cv}
-        anchor={iso(7.9, 7.2, 2.0)}
       >
         <Box
           spec={{ x: 6.7, y: 6.3, w: 2.5, d: 1.8, h: 0.8 }}
@@ -603,6 +608,29 @@ export function Room({
         style={{ opacity: "calc(0.5 - var(--de-ambient))" }}
         pointerEvents="none"
       />
+
+      {/*
+        Шар маркерів і тултипів. Малюється останнім, тому:
+        — маркери не тонуть у затемненні й не перекриваються предметами;
+        — фокусна рамка обводить лише сам предмет, а не bounding box
+          разом із тултипом, як було раніше.
+      */}
+      <g pointerEvents="none">
+        {HOTSPOTS.map((spot) => (
+          <Marker
+            key={spot.id}
+            at={ANCHORS[spot.id]}
+            active={hoveredId === spot.id}
+          />
+        ))}
+
+        {hoveredId && (
+          <Tooltip
+            at={ANCHORS[hoveredId]}
+            text={HOTSPOT_BY_ID[hoveredId].label[locale]}
+          />
+        )}
+      </g>
     </svg>
   );
 }
