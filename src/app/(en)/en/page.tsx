@@ -1,5 +1,5 @@
-import { Experience } from "@/components/scene/Experience";
+import { Resume } from "@/components/resume/Resume";
 
 export default function EnglishHomePage() {
-  return <Experience locale="en" />;
+  return <Resume locale="en" />;
 }

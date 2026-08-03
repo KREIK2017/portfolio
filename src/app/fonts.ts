@@ -1,4 +1,4 @@
-import { Cormorant, Lora } from "next/font/google";
+import { Cormorant, Lora, Oswald } from "next/font/google";
 
 /**
  * Обидві сімʼї обрані зі списку в ТЗ саме тому, що мають кирилицю.
@@ -14,6 +14,19 @@ export const fontDisplay = Cormorant({
 
 export const fontBody = Lora({
   variable: "--font-lora",
+  subsets: ["latin", "latin-ext", "cyrillic"],
+  display: "swap",
+});
+
+/**
+ * Жирний вузький гротеск для заголовків класичного режиму.
+ *
+ * У мокапі це схоже на Anton, але в Anton немає кирилиці — той самий
+ * капкан, що з Marcellus. Oswald — найближчий широкодоступний
+ * condensed-гротеск, який тримає українську.
+ */
+export const fontCondensed = Oswald({
+  variable: "--font-oswald",
   subsets: ["latin", "latin-ext", "cyrillic"],
   display: "swap",
 });

@@ -55,6 +55,39 @@ export const site = {
     ],
   } satisfies Localized<string[]>,
 
+  /** Цифри з мокапу «MY STACK». */
+  stats: [
+    {
+      value: "6+",
+      label: { uk: "Досвід", en: "Experience" },
+      note: { uk: "років", en: "years" },
+    },
+    {
+      value: "40+",
+      label: { uk: "Проєкти", en: "Projects" },
+      note: { uk: "завершено", en: "completed" },
+    },
+    {
+      value: "25+",
+      label: { uk: "Клієнти", en: "Clients" },
+      note: { uk: "по світу", en: "worldwide" },
+    },
+    {
+      value: "",
+      label: { uk: "Фокус", en: "Focus" },
+      note: { uk: "якість, не кількість", en: "quality over quantity" },
+    },
+  ] satisfies Array<{
+    value: string;
+    label: Localized;
+    note: Localized;
+  }>,
+
+  motto: {
+    uk: "Інструменти не роблять розробника. Це робить цікавість. Я будую. Я ламаю. Я вчуся. І знову.",
+    en: "Tools don't make the developer. Curiosity does. I build. I break. I learn. I repeat.",
+  } satisfies Localized,
+
   contacts,
 
   /** TODO: покласти файл у public/cv.pdf */

@@ -70,6 +70,31 @@ export interface Project {
   skillCheck?: SkillCheck;
 }
 
+/** Група технології — для сортування й кольорових акцентів у сітці. */
+export type StackGroup =
+  | "frontend"
+  | "backend"
+  | "commerce"
+  | "tools"
+  | "ai";
+
+export interface StackItem {
+  id: string;
+  /** Назви технологій не перекладаються. */
+  name: string;
+  summary: Localized;
+  /** Володіння за шкалою 1–5. */
+  level: number;
+  group: StackGroup;
+  /** Тон картки. Приглушений, щоб сітка не перетворилась на веселку. */
+  tone: string;
+  /**
+   * Шлях до логотипа в public/. Поки порожній — малюється монограма:
+   * логотипи технологій я не можу згенерувати, їх треба покласти файлами.
+   */
+  icon?: string;
+}
+
 /** Розділи сайту, до яких ведуть предмети в кімнаті. */
 export type PanelId = "projects" | "about" | "contact" | "cv" | "trivia";
 

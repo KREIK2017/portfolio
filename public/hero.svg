@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-label="Місто над водою">
+  <!-- Заглушка painterly-хедера. Замінити на власну ілюстрацію:
+       поклади файл у public/ і зміни шлях у HeroSection. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4d80ab"/>
+      <stop offset="55%" stop-color="#9dc0d4"/>
+      <stop offset="100%" stop-color="#dfe6e2"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.72" cy="0.3" r="0.4">
+      <stop offset="0%" stop-color="#f6e3bd" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#f6e3bd" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6f96b0"/>
+      <stop offset="100%" stop-color="#40606f"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="700" fill="url(#sky)"/>
+  <rect width="1200" height="700" fill="url(#sun)"/>
+
+  <!-- Хмари: перекриті еліпси замість рівних форм -->
+  <g fill="#f2e6d2" opacity="0.85">
+    <ellipse cx="300" cy="150" rx="180" ry="52"/>
+    <ellipse cx="410" cy="128" rx="120" ry="40"/>
+    <ellipse cx="880" cy="110" rx="210" ry="46"/>
+    <ellipse cx="1040" cy="145" rx="140" ry="38"/>
+  </g>
+  <g fill="#cbd8dd" opacity="0.6">
+    <ellipse cx="250" cy="182" rx="150" ry="30"/>
+    <ellipse cx="960" cy="158" rx="170" ry="26"/>
+  </g>
+
+  <!-- Далеке місто -->
+  <g fill="#5d7f92" opacity="0.55">
+    <rect x="60" y="330" width="54" height="120"/>
+    <rect x="130" y="292" width="42" height="158"/>
+    <rect x="188" y="352" width="66" height="98"/>
+    <rect x="980" y="300" width="48" height="150"/>
+    <rect x="1044" y="338" width="60" height="112"/>
+    <rect x="1118" y="284" width="40" height="166"/>
+  </g>
+
+  <!-- Кран -->
+  <g stroke="#e8dcc6" stroke-width="5" opacity="0.75" fill="none">
+    <path d="M700 120 V330"/>
+    <path d="M596 150 H840"/>
+    <path d="M700 120 L790 150 M700 120 L636 150"/>
+    <path d="M760 150 V196"/>
+  </g>
+
+  <!-- Ближні будинки -->
+  <g fill="#48606f">
+    <rect x="300" y="360" width="150" height="130"/>
+    <rect x="466" y="316" width="118" height="174"/>
+    <rect x="600" y="382" width="170" height="108"/>
+    <rect x="786" y="340" width="132" height="150"/>
+  </g>
+  <g fill="#e8dcc6" opacity="0.3">
+    <rect x="326" y="386" width="22" height="26"/>
+    <rect x="366" y="386" width="22" height="26"/>
+    <rect x="492" y="344" width="22" height="26"/>
+    <rect x="532" y="344" width="22" height="26"/>
+    <rect x="812" y="370" width="22" height="26"/>
+  </g>
+
+  <!-- Вода -->
+  <rect x="0" y="490" width="1200" height="210" fill="url(#water)"/>
+  <g stroke="#cfe0e6" stroke-width="3" opacity="0.3">
+    <path d="M80 540 H360 M420 570 H700 M760 542 H1040 M140 604 H500 M620 636 H980"/>
+  </g>
+
+  <!-- Виступ і постать -->
+  <path d="M840 508 L1200 480 V700 H820 Z" fill="#2c3a42"/>
+  <g fill="#22303a">
+    <ellipse cx="988" cy="452" rx="26" ry="30"/>
+    <path d="M962 470 q26 -14 52 0 l12 56 -76 0 z"/>
+  </g>
+  <path d="M950 526 q46 -10 84 4 l-6 34 -84 -6 z" fill="#c2502a"/>
+  <path d="M944 560 l30 6 -4 22 -28 -6 z" fill="#22303a"/>
+</svg>

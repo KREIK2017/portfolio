@@ -115,6 +115,52 @@ export const ui = {
     } satisfies Localized<string[]>,
   },
 
+  /** Тексти класичного режиму («Швидкий перегляд / Résumé»). */
+  resume: {
+    toResume: { uk: "Швидкий перегляд", en: "Quick view" },
+    toRoom: { uk: "Увійти в кімнату", en: "Enter the room" },
+
+    nav: {
+      home: { uk: "Головна", en: "Home" },
+      about: { uk: "Про мене", en: "About" },
+      work: { uk: "Роботи", en: "Work" },
+      stack: { uk: "Стек", en: "Stack" },
+      contact: { uk: "Контакти", en: "Contact" },
+    },
+
+    hero: {
+      eyebrow: { uk: "// Розробник", en: "// Developer" },
+      cta: { uk: "Дивитись роботи", en: "Explore my work" },
+    },
+
+    stackSection: {
+      eyebrow: { uk: "// Навички та технології", en: "// Skills & technologies" },
+      title: { uk: "Мій стек", en: "My stack" },
+      intro: {
+        uk: "Інструменти, якими я будую продукти й розвʼязую задачі. Постійно вчусь, постійно будую.",
+        en: "The tools I use to build digital experiences and solve complex problems. Always learning. Always building.",
+      },
+      points: { uk: "Очки навичок", en: "Skill points" },
+    },
+
+    workSection: {
+      eyebrow: { uk: "// Вибрані роботи", en: "// Selected work" },
+      title: { uk: "Роботи", en: "Work" },
+      cta: { uk: "Усі роботи", en: "View my work" },
+    },
+
+    aboutSection: {
+      eyebrow: { uk: "// Хто я", en: "// Who I am" },
+      title: { uk: "Про мене", en: "About" },
+      voices: { uk: "Голоси", en: "Voices" },
+    },
+
+    contactSection: {
+      eyebrow: { uk: "// Звʼязок", en: "// Get in touch" },
+      title: { uk: "Контакти", en: "Contact" },
+    },
+  },
+
   check: {
     title: { uk: "Перевірка навички", en: "Skill check" },
     success: { uk: "Успіх", en: "Success" },

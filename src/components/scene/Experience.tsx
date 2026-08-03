@@ -15,7 +15,7 @@ import { ui } from "@/content/dictionary";
 import { HOTSPOTS } from "@/content/hotspots";
 import { SKILLS, SKILL_BY_ID } from "@/content/skills";
 import { site } from "@/config/site";
-import { localePath } from "@/lib/i18n";
+import { resumePath, roomPath, writeMode } from "@/lib/mode";
 import type { Hotspot, Locale, PanelId, SkillId } from "@/types/content";
 
 const VOICE_LIFETIME = 7000;
@@ -43,6 +43,14 @@ export function Experience({ locale }: { locale: Locale }) {
   const nextVoiceId = useRef(0);
   const lastText = useRef<string>("");
   const timers = useRef<number[]>([]);
+
+  /**
+   * Запамʼятовуємо вибір: наступний візит у корінь приведе одразу
+   * сюди, а не в résumé. Редирект в інший бік робить сама Resume.
+   */
+  useEffect(() => {
+    writeMode("room");
+  }, []);
 
   useEffect(() => {
     // Масив той самий на весь час життя компонента, тому копія
@@ -147,6 +155,15 @@ export function Experience({ locale }: { locale: Locale }) {
         </div>
 
         <div className="flex items-center gap-4">
+          {/* Вихід у спокійну версію — завжди видимий, як вимагає ТЗ 2.1 */}
+          <Link
+            href={resumePath(locale)}
+            onClick={() => writeMode("resume")}
+            className="label text-light/50 transition-colors hover:text-amber"
+          >
+            {ui.resume.toResume[locale]} →
+          </Link>
+
           <button
             type="button"
             onClick={toggleTime}
@@ -158,7 +175,7 @@ export function Experience({ locale }: { locale: Locale }) {
           </button>
 
           <Link
-            href={localePath(otherLocale)}
+            href={roomPath(otherLocale)}
             hrefLang={otherLocale}
             className="label border border-light/20 px-3 py-2 text-light/60 transition-colors hover:border-amber/50 hover:text-amber"
           >
