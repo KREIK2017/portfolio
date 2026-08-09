@@ -44,7 +44,7 @@ export function LivingOilFilter() {
               attributeName="baseFrequency"
               dur="14s"
               repeatCount="indefinite"
-              calcMode="discrete"
+              // calcMode="discrete"
               values="0.0150 0.0200; 0.0156 0.0197; 0.0162 0.0193; 0.0168 0.0189;
                       0.0174 0.0185; 0.0180 0.0181; 0.0186 0.0177; 0.0190 0.0172;
                       0.0186 0.0168; 0.0180 0.0165; 0.0174 0.0169; 0.0168 0.0174;
