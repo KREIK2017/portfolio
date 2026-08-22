@@ -148,13 +148,15 @@ export function Resume({ locale }: { locale: Locale }) {
             <p className="rs-label text-rs-accent">
               {ui.resume.hero.eyebrow[locale]}
             </p>
-            <h1 className="rs-title mt-3 text-5xl sm:text-7xl">{site.name}</h1>
+            <h1 className="rs-title mt-3 text-5xl sm:text-7xl">
+              {site.name[locale]}
+            </h1>
             <p className="rs-label text-rs-muted mt-3 text-sm">
               {site.role[locale]}
             </p>
 
             <p className="mt-6 max-w-md leading-relaxed">
-              {site.description[locale]}
+              {site.tagline[locale]}
             </p>
 
             <a
@@ -163,15 +165,25 @@ export function Resume({ locale }: { locale: Locale }) {
             >
               {ui.resume.workSection.cta[locale]} →
             </a>
+
+            <figure className="border-rs-line mt-8 max-w-md border-l-2 pl-4">
+              <blockquote className="text-sm italic leading-relaxed">
+                {site.quip.text[locale]}
+              </blockquote>
+              <figcaption className="rs-label text-rs-muted mt-2 text-[0.62rem]">
+                {site.quip.author[locale]}
+              </figcaption>
+            </figure>
           </div>
 
           <div className="border-rs-line overflow-hidden border">
             <Image
-              src="/hero.svg"
-              alt=""
-              width={1200}
-              height={700}
+              src="/img/hero.webp"
+              alt={ui.resume.hero.photoAlt[locale]}
+              width={1280}
+              height={853}
               priority
+              sizes="(max-width: 1024px) 100vw, 55vw"
               className="h-auto w-full"
             />
           </div>

@@ -3,7 +3,7 @@ import { Experience } from "@/components/scene/Experience";
 import { site } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: `${site.name} — the room`,
+  title: `${site.name.en} — the room`,
   description:
     "A portfolio you walk into: objects lead to the sections, skill voices comment on what you do.",
   alternates: {

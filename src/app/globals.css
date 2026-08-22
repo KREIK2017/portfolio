@@ -387,22 +387,26 @@ html.lenis body {
   transform: translateY(-3px);
 }
 
+/*
+  brightness і saturate у базовому стані стоять неспроста. CSS
+  інтерполює filter лише коли обидва стани мають однакову структуру
+  списку: та сама кількість функцій і той самий порядок. Без нейтральних
+  одиниць тут перехід на наведенні став би стрибком.
+
+  Сам url() у списку не змінюється — інакше плавності не буде взагалі,
+  бо між двома різними фільтрами браузер інтерполювати не вміє.
+*/
 .stack-card__art {
   display: block;
   width: 100%;
   aspect-ratio: 212 / 265;
-  filter: url(#livingOil);
+  filter: url(#livingOil) brightness(1) saturate(1);
+  transition: filter 0.45s ease;
 }
 
-/*
-  Під курсором картка переходить на плавний фільтр. Сенс не в
-  декорації: анімований feTurbulence рахується на CPU, тому тримати
-  60fps на тринадцяти полотнах одночасно дорого, а на одному — дешево.
-  focus-within додає те саме для навігації з клавіатури.
-*/
 .stack-card:hover .stack-card__art,
 .stack-card:focus-within .stack-card__art {
-  filter: url(#livingOilFlow);
+  filter: url(#livingOil) brightness(1.08) saturate(1.07);
 }
 
 .stack-card__level {

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ui } from "@/content/dictionary";
 import { site } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -78,12 +79,19 @@ export function Sidebar({
       aria-label={ui.resume.nav.home[locale]}
     >
       {/*
-        Місце під портрет. Замінити на своє фото:
-        <Image src="/portrait.webp" ... /> замість монограми.
+        Портрет обрізаний окремим файлом, а не через next/image:
+        у статичному експорті оптимізатор вимкнений, тому повне фото
+        тягнулося б цілим — 183 КБ на слот шириною 44 пікселі.
       */}
       <div className="hidden justify-center pt-5 sm:flex">
-        <span className="rs-title flex size-11 items-center justify-center bg-[#2a251c] text-sm text-[#d9c9a3]">
-          MM
+        <span className="block h-14 w-11 overflow-hidden border border-white/15">
+          <Image
+            src="/img/avatar.webp"
+            alt={site.name[locale]}
+            width={176}
+            height={224}
+            className="size-full object-cover"
+          />
         </span>
       </div>
 
@@ -121,7 +129,7 @@ export function Sidebar({
       </ul>
 
       <p className="rs-label hidden px-2 pb-4 text-center text-[0.5rem] text-white/25 sm:absolute sm:bottom-0 sm:block">
-        {site.name}
+        {site.handle}
       </p>
     </nav>
   );

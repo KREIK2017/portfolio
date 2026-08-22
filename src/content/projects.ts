@@ -1,88 +1,99 @@
 import type { Project } from "@/types/content";
 
 /**
- * Дані проєктів. Щоб додати роботу — допиши об'єкт і поклади
- * зображення в public/projects/<slug>/cover.svg (або .webp).
+ * Проєкти в порядку показу: першим іде комерційний, далі власні.
  *
- * TODO: замінити ці три заглушки на реальні кейси.
+ * Щоб додати роботу — допиши обʼєкт і поклади зображення в
+ * public/projects/<slug>/. Обкладинки тримаємо в пропорції 1200×750:
+ * розміри в компонентах задані фіксовано, інакше при завантаженні
+ * буде стрибок верстки.
+ *
+ * Поле `year` поки проставлене приблизно — вивір і заміни.
  */
 export const PROJECTS: Project[] = [
   {
-    slug: "shopify-theme",
-    year: "2026",
+    slug: "codeunity",
+    year: "2025",
     title: {
-      uk: "Кастомна тема Shopify",
-      en: "Custom Shopify theme",
+      uk: "CodeUnity",
+      en: "CodeUnity",
     },
     summary: {
-      uk: "Тема для магазину одягу з нуля. Клієнт міг змінювати структуру головної сторінки сам, без розробника.",
-      en: "A clothing store theme built from scratch. The client could restructure the home page without a developer.",
+      uk: "Сайт-портфоліо агентства, зроблений як інтерактивна 3D-сцена: замість сторінок — віртуальний острів, яким користувач ходить сам.",
+      en: "An agency portfolio built as an interactive 3D scene: instead of pages, a virtual island the visitor walks around.",
     },
     role: {
-      uk: "Єдиний розробник: верстка, Liquid, налаштування редактора",
-      en: "Sole developer: markup, Liquid, theme editor setup",
+      uk: "Комерційний проєкт у TuiSpace: підтримка WordPress та адміністрування сайтів",
+      en: "Commercial project at TuiSpace: WordPress support and site administration",
     },
-    stack: ["Shopify", "Liquid", "JavaScript", "SCSS"],
+    stack: ["Three.js", "WordPress", "JavaScript"],
     result: {
-      uk: "Завантаження з 8 с до 1.4 с, Lighthouse Performance 96. Клієнт перестав звертатися за дрібними правками контенту.",
-      en: "Load time from 8 s to 1.4 s, Lighthouse Performance 96. The client stopped filing tickets for small content edits.",
+      uk: "Low-poly острів на Three.js із геймплейною навігацією, жовтим акцентом і фоновою музикою — сайт запамʼятовується як місце, а не як сторінка.",
+      en: "A low-poly Three.js island with gameplay-style navigation, a yellow accent and background music — the site is remembered as a place rather than a page.",
     },
-    liveUrl: "https://example.com",
-    image: "/projects/shopify-theme/cover.svg",
+    liveUrl: "https://codeunity.io/",
+    image: "/projects/codeunity/cover.webp",
+  },
+  {
+    slug: "kreik-gaming-merch",
+    year: "2026",
+    title: {
+      uk: "KREIK Gaming Merch",
+      en: "KREIK Gaming Merch",
+    },
+    summary: {
+      uk: "Магазин ігрового мерчу: WordPress як вітрина, товари й кошик — із Shopify через Buy Button SDK.",
+      en: "A gaming merch store: WordPress as the storefront, products and cart pulled from Shopify via the Buy Button SDK.",
+    },
+    role: {
+      uk: "Власний проєкт, усе сам: плагін, тема, інтеграція, оточення",
+      en: "Personal project, all of it mine: plugin, theme, integration, environment",
+    },
+    stack: ["WordPress", "PHP", "Shopify", "Liquid", "SCSS", "Gulp", "Docker"],
+    result: {
+      uk: "Власний плагін my-first-plugin 0.4.0 — Settings API, шорткоди, ACF-блоки та інтеграція з Shopify. Власна тема mfp-theme на SCSS і Gulp з лендінгом і блогом. Плюс окрема тема на Liquid для dev-стору через Shopify CLI. Усе оточення піднімається в Docker.",
+      en: "My own plugin, my-first-plugin 0.4.0 — Settings API, shortcodes, ACF blocks and the Shopify integration. A custom mfp-theme built on SCSS and Gulp, with a landing page and a blog. Plus a separate Liquid theme for the dev store via Shopify CLI. The whole environment runs in Docker.",
+    },
+    image: "/projects/kreik-gaming-merch/cover.svg",
     skillCheck: {
       skill: "logic",
       difficulty: 8,
       label: {
-        uk: "Переписати тему з нуля замість латання чужої",
-        en: "Rewrite the theme from scratch instead of patching someone else's",
+        uk: "Зшити WordPress і Shopify замість того, щоб вибрати одне",
+        en: "Stitch WordPress and Shopify together instead of picking one",
       },
     },
   },
   {
-    slug: "wordpress-corporate",
+    slug: "aio-dashboard",
     year: "2026",
     title: {
-      uk: "Корпоративний сайт на WordPress",
-      en: "WordPress corporate site",
+      uk: "AIO Dashboard",
+      en: "AIO Dashboard",
     },
     summary: {
-      uk: "Сайт послуг із кастомною темою й адмінкою, зрозумілою нетехнічному клієнту. Без візуальних білдерів.",
-      en: "A services site with a custom theme and an admin panel a non-technical client can actually use. No page builders.",
+      uk: "Внутрішній інструмент для IT-компанії: тікети, облік часу й білінг в одному вікні.",
+      en: "An internal tool for an IT company: tickets, time tracking and billing in a single window.",
     },
     role: {
-      uk: "Розробка теми, налаштування ACF, двомовність",
-      en: "Theme development, ACF setup, localisation",
+      uk: "Власний проєкт, fullstack: фронтенд, бекенд, база, оточення",
+      en: "Personal project, fullstack: frontend, backend, database, environment",
     },
-    stack: ["WordPress", "PHP", "ACF", "Tailwind CSS"],
+    stack: [
+      "React",
+      "Vite",
+      "Express 5",
+      "TypeScript",
+      "Sequelize",
+      "MariaDB",
+      "Docker",
+    ],
     result: {
-      uk: "Клієнт публікує новини й кейси самостійно. Сторінки важать утричі менше, ніж на попередній збірці з білдером.",
-      en: "The client publishes news and cases unaided. Pages weigh a third of the previous builder-based setup.",
+      uk: "Тікети, таймер, білінг, авторизація через JWT, аватари та згадки через @. Інтерфейс у темній темі з glassmorphism. Бекенд і база піднімаються в Docker однією командою.",
+      en: "Tickets, a timer, billing, JWT auth, avatars and @mentions. A dark-themed interface with glassmorphism. Backend and database come up in Docker with a single command.",
     },
-    liveUrl: "https://example.com",
-    image: "/projects/wordpress-corporate/cover.svg",
-  },
-  {
-    slug: "this-portfolio",
-    year: "2026",
-    title: {
-      uk: "Цей сайт",
-      en: "This very site",
-    },
-    summary: {
-      uk: "Портфоліо як інтерактивна сцена, а не стрічка блоків. Ізометрична кімната намальована векторами прямо в браузері.",
-      en: "A portfolio as an interactive scene rather than a stack of sections. The isometric room is drawn in vectors, in the browser.",
-    },
-    role: {
-      uk: "Концепція, дизайн, розробка, інфраструктура",
-      en: "Concept, design, development, infrastructure",
-    },
-    stack: ["Next.js", "TypeScript", "SVG", "Cloudflare Workers"],
-    result: {
-      uk: "Повністю статичний сайт: жодного сервера, жодної бази. Хостинг безкоштовний, деплой автоматичний з кожного пуша.",
-      en: "Fully static: no server, no database. Free hosting, automatic deploy on every push.",
-    },
-    repoUrl: "https://github.com/KREIK2017/portfolio",
-    image: "/projects/this-portfolio/cover.svg",
+    repoUrl: "https://github.com/KREIK2017/all-in-one-project",
+    image: "/projects/aio-dashboard/cover.svg",
   },
 ];
 

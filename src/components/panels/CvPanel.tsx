@@ -26,15 +26,6 @@ export function CvPanel({
       >
         ↓ {ui.cv.download[locale]}
       </a>
-
-      {/*
-        Наявність файлу в статичному експорті перевірити з клієнта
-        неможливо, тому підказку показуємо завжди — прибереш її,
-        коли покладеш cv.pdf.
-      */}
-      <p className="mt-5 text-sm italic text-[#5c4f3a]">
-        {ui.cv.missing[locale]}
-      </p>
     </Panel>
   );
 }

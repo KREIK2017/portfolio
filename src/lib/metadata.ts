@@ -23,7 +23,7 @@ export function buildMetadata(locale: Locale): Metadata {
       type: "website",
       locale: OG_LOCALE[locale],
       url: `${site.url}${localePath(locale)}`,
-      siteName: site.name,
+      siteName: site.name[locale],
       title: site.title[locale],
       description: site.description[locale],
     },

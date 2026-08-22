@@ -149,7 +149,7 @@ export function Experience({ locale }: { locale: Locale }) {
       <header className="relative z-30 flex items-center justify-between px-5 py-5 sm:px-8">
         <div>
           <p className="font-display text-lg leading-none text-light">
-            {site.name}
+            {site.name[locale]}
           </p>
           <p className="label mt-1 text-light/45">{site.role[locale]}</p>
         </div>

@@ -86,10 +86,6 @@ export const ui = {
       en: "The same thing, in dry language, on a single page.",
     },
     download: { uk: "Завантажити CV (PDF)", en: "Download CV (PDF)" },
-    missing: {
-      uk: "Файл ще не додано. Поклади cv.pdf у папку public/.",
-      en: "The file isn't there yet. Drop cv.pdf into the public/ folder.",
-    },
   },
 
   trivia: {
@@ -130,6 +126,10 @@ export const ui = {
 
     hero: {
       eyebrow: { uk: "// Розробник", en: "// Developer" },
+      photoAlt: {
+        uk: "Максим Мичко на природі, показує в камеру",
+        en: "Maksim Mychko outdoors, pointing at the camera",
+      },
       cta: { uk: "Дивитись роботи", en: "Explore my work" },
     },
 
