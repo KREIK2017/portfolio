@@ -76,7 +76,7 @@ function Stats({ locale }: { locale: Locale }) {
                 </span>
               </>
             ) : (
-              <span className="rs-label text-rs-accent text-[0.8rem]">
+              <span className="rs-label text-rs-accent text-[0.9rem]">
                 {stat.note[locale]}
               </span>
             )}
@@ -151,11 +151,11 @@ export function Resume({ locale }: { locale: Locale }) {
             <h1 className="rs-title mt-3 text-5xl sm:text-7xl">
               {site.name[locale]}
             </h1>
-            <p className="rs-label text-rs-muted mt-3 text-sm">
+            <p className="rs-label text-rs-muted mt-3 text-base">
               {site.role[locale]}
             </p>
 
-            <p className="mt-6 max-w-md leading-relaxed">
+            <p className="mt-6 max-w-md text-lg leading-relaxed">
               {site.tagline[locale]}
             </p>
 
@@ -167,10 +167,10 @@ export function Resume({ locale }: { locale: Locale }) {
             </a>
 
             <figure className="border-rs-line mt-8 max-w-md border-l-2 pl-4">
-              <blockquote className="text-sm italic leading-relaxed">
+              <blockquote className="text-base italic leading-relaxed">
                 {site.quip.text[locale]}
               </blockquote>
-              <figcaption className="rs-label text-rs-muted mt-2 text-[0.62rem]">
+              <figcaption className="rs-label text-rs-muted mt-2 text-[0.72rem]">
                 {site.quip.author[locale]}
               </figcaption>
             </figure>
@@ -201,7 +201,7 @@ export function Resume({ locale }: { locale: Locale }) {
         >
           <div className="max-w-2xl space-y-4">
             {site.bio[locale].map((paragraph) => (
-              <p key={paragraph} className="leading-relaxed">
+              <p key={paragraph} className="text-lg leading-relaxed">
                 {paragraph}
               </p>
             ))}
@@ -227,7 +227,7 @@ export function Resume({ locale }: { locale: Locale }) {
                   {skillsOf(attribute.id).map((skill) => (
                     <li key={skill.id}>
                       <div className="flex items-center justify-between gap-3">
-                        <span className="rs-label text-[0.68rem]">
+                        <span className="rs-label text-[0.78rem]">
                           {skill.name[locale]}
                         </span>
                         <span className="flex items-center gap-1">
@@ -242,7 +242,7 @@ export function Resume({ locale }: { locale: Locale }) {
                           ))}
                         </span>
                       </div>
-                      <p className="text-rs-muted mt-1 text-[0.8rem] leading-snug">
+                      <p className="text-rs-muted mt-1 text-[0.9rem] leading-snug">
                         {skill.blurb[locale]}
                       </p>
                     </li>
@@ -284,27 +284,27 @@ export function Resume({ locale }: { locale: Locale }) {
                     </span>
                   </div>
 
-                  <p className="text-rs-muted mt-2 flex-1 text-sm leading-relaxed">
+                  <p className="text-rs-muted mt-2 flex-1 text-base leading-relaxed">
                     {project.summary[locale]}
                   </p>
 
-                  <p className="rs-label text-rs-muted mt-4 text-[0.6rem]">
+                  <p className="rs-label text-rs-muted mt-4 text-[0.7rem]">
                     {ui.projects.role[locale]}
                   </p>
-                  <p className="text-sm">{project.role[locale]}</p>
+                  <p className="text-base">{project.role[locale]}</p>
 
                   <ul className="mt-4 flex flex-wrap gap-1.5">
                     {project.stack.map((tech) => (
                       <li
                         key={tech}
-                        className="rs-label border-rs-line text-rs-muted border px-2 py-1 text-[0.58rem]"
+                        className="rs-label border-rs-line text-rs-muted border px-2 py-1 text-[0.68rem]"
                       >
                         {tech}
                       </li>
                     ))}
                   </ul>
 
-                  <p className="border-rs-line mt-4 border-t pt-3 text-sm leading-relaxed">
+                  <p className="border-rs-line mt-4 border-t pt-3 text-base leading-relaxed">
                     {project.result[locale]}
                   </p>
 
@@ -345,7 +345,7 @@ export function Resume({ locale }: { locale: Locale }) {
           title={ui.resume.stackSection.title[locale]}
         >
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <p className="max-w-md leading-relaxed">
+            <p className="max-w-md text-lg leading-relaxed">
               {ui.resume.stackSection.intro[locale]}
             </p>
             <p className="rs-label text-rs-muted">

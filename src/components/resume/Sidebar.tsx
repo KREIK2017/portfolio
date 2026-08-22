@@ -112,7 +112,7 @@ export function Sidebar({
                 )}
               >
                 <Icon id={id} />
-                <span className="rs-label text-[0.58rem]">
+                <span className="rs-label text-[0.66rem]">
                   {ui.resume.nav[id][locale]}
                 </span>
 
