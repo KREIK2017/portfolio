@@ -35,6 +35,37 @@ export const PROJECTS: Project[] = [
     image: "/projects/codeunity/cover.webp",
   },
   {
+    slug: "site-watch-bot",
+    year: "2026",
+    title: {
+      uk: "Site Watch Bot",
+      en: "Site Watch Bot",
+    },
+    summary: {
+      uk: "Telegram-бот, який стежить за сторінками сайтів: ціна, наявність, доступність, зміни вмісту. Перевіряє кожні пʼять хвилин і пише, лише коли щось справді змінилось.",
+      en: "A Telegram bot that watches web pages: price, stock, uptime, content changes. Checks every five minutes and messages only when something actually changed.",
+    },
+    role: {
+      uk: "Власний проєкт, усе сам: архітектура, бекенд, інтеграції, деплой",
+      en: "Personal project, all of it mine: architecture, backend, integrations, deployment",
+    },
+    stack: [
+      "TypeScript",
+      "Cloudflare Workers",
+      "D1",
+      "Telegram Bot API",
+      "Claude API",
+      "Vitest",
+    ],
+    result: {
+      uk: "Живе в проді 24/7 на безкоштовному тарифі, без сервера — тільки edge-рантайм і крон. Ціну шукає каскадом: Steam API → Schema.org → Open Graph → евристика → ручний CSS-селектор, і памʼятає, наскільки джерелу можна довіряти. Claude дописує, що саме змінилось на сторінці. 59 unit-тестів, автодеплой із кожного пуша.",
+      en: "Live in production 24/7 on the free tier, with no server — just the edge runtime and a cron trigger. Price detection is a cascade: Steam API → Schema.org → Open Graph → heuristic → manual CSS selector, and each watch remembers how much its source can be trusted. Claude writes up what actually changed on a page. 59 unit tests, auto-deploy on every push.",
+    },
+    liveUrl: "https://t.me/site_watch_alerts_bot",
+    repoUrl: "https://github.com/KREIK2017/site-watch-bot",
+    image: "/projects/site-watch-bot/cover.svg",
+  },
+  {
     slug: "kreik-gaming-merch",
     year: "2026",
     title: {

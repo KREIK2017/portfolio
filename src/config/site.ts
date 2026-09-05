@@ -99,7 +99,7 @@ export const site = {
       note: { uk: "рік комерційно", en: "year commercially" },
     },
     {
-      value: "3",
+      value: "4",
       label: { uk: "Проєкти", en: "Projects" },
       note: { uk: "у портфоліо", en: "in the portfolio" },
     },
