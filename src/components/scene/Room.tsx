@@ -20,12 +20,11 @@ const POSITIONS: Record<PanelId, { x: number; y: number }> = {
 };
 
 const DEPTH_LAYERS = [
-  { name: "mirror", panel: "about", depth: 0.7, clip: "polygon(32% 13%, 46% 10%, 47% 47%, 34% 49%)" },
-  { name: "radio", panel: "contact", depth: 1.15, clip: "polygon(32% 34%, 45% 35%, 46% 55%, 32% 57%)" },
-  { name: "pinboard", panel: "projects", depth: 0.8, clip: "polygon(64% 13%, 91% 22%, 91% 59%, 64% 51%)" },
-  { name: "bottle", panel: "trivia", depth: 1.65, clip: "polygon(39% 63%, 52% 65%, 52% 89%, 39% 89%)" },
-  { name: "suitcase", panel: "cv", depth: 1.45, clip: "polygon(51% 61%, 74% 61%, 76% 88%, 53% 94%)" },
-  { name: "foreground", depth: 2, clip: "polygon(13% 61%, 89% 60%, 90% 100%, 11% 100%)" },
+  { name: "mirror", panel: "about", depth: 0.7, clip: "polygon(32% 13%, 46% 10%, 47% 47%, 34% 49%)", mask: "radial-gradient(ellipse 10% 23% at 39% 30%, #000 42%, transparent 78%)" },
+  { name: "radio", panel: "contact", depth: 1.15, clip: "polygon(32% 34%, 45% 35%, 46% 55%, 32% 57%)", mask: "radial-gradient(ellipse 10% 14% at 38.5% 45%, #000 38%, transparent 78%)" },
+  { name: "pinboard", panel: "projects", depth: 0.8, clip: "polygon(64% 13%, 91% 22%, 91% 59%, 64% 51%)", mask: "radial-gradient(ellipse 18% 25% at 77.5% 36%, #000 42%, transparent 80%)" },
+  { name: "bottle", panel: "trivia", depth: 1.65, clip: "polygon(39% 63%, 52% 65%, 52% 89%, 39% 89%)", mask: "radial-gradient(ellipse 8% 16% at 45.5% 76%, #000 35%, transparent 78%)" },
+  { name: "suitcase", panel: "cv", depth: 1.45, clip: "polygon(51% 61%, 74% 61%, 76% 88%, 53% 94%)", mask: "radial-gradient(ellipse 15% 18% at 63% 77%, #000 40%, transparent 80%)" },
 ] as const;
 
 interface RoomProps {
@@ -139,7 +138,7 @@ export function Room({
   return (
     <div
       ref={roomRef}
-      className="room-art"
+      className="room-art-shell"
       onPointerMove={moveScene}
       onPointerLeave={centerScene}
       role="group"
@@ -149,6 +148,7 @@ export function Room({
           : "An isometric workshop room with interactive objects"
       }
     >
+      <div className="room-art">
       <Image
         src="/img/room/workshop.webp"
         alt=""
@@ -171,6 +171,7 @@ export function Room({
             style={{
               "--depth": layer.depth,
               "--layer-clip": layer.clip,
+              "--layer-mask": layer.mask,
             } as CSSProperties}
           />
         ))}
@@ -199,6 +200,7 @@ export function Room({
           onSelect={() => onSelect(hotspot.id)}
         />
       ))}
+      </div>
     </div>
   );
 }

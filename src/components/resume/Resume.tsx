@@ -261,7 +261,7 @@ export function Resume({ locale }: { locale: Locale }) {
           className="bg-rs-paper-2/60"
         >
           <ul className="grid gap-6 md:grid-cols-2">
-            {PROJECTS.map((project) => (
+            {PROJECTS.map((project, index) => (
               <li
                 key={project.slug}
                 className="border-rs-line bg-rs-paper flex flex-col border"
@@ -272,6 +272,7 @@ export function Resume({ locale }: { locale: Locale }) {
                     alt={project.title[locale]}
                     width={project.imageWidth ?? 1200}
                     height={project.imageHeight ?? 750}
+                    loading={index === 0 ? "eager" : "lazy"}
                     className="h-auto w-full"
                   />
                 )}
