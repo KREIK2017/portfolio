@@ -62,3 +62,33 @@ test("primary navigation is keyboard reachable", async ({ page }) => {
 
   expect(undersizedTargets).toEqual([]);
 });
+
+test("room scene stays usable and opens its case files", async ({ page }, testInfo) => {
+  await page.addInitScript(() => localStorage.setItem("kreik-mode", "room"));
+  await page.goto("/room/");
+
+  const skip = page.getByRole("button", { name: /пропустити/i });
+  if (await skip.isVisible()) await skip.click();
+
+  await expect(page.getByRole("heading", { name: "МАЙСТЕРНЯ KREIK" })).toBeVisible();
+
+  const dimensions = await page.evaluate(() => ({
+    viewport: document.documentElement.clientWidth,
+    page: document.documentElement.scrollWidth,
+  }));
+  expect(dimensions.page).toBeLessThanOrEqual(dimensions.viewport);
+
+  if (testInfo.project.name === "mobile") {
+    await page.getByRole("navigation", { name: "Проєкти" })
+      .getByRole("button", { name: /Дошка з нотатками/ })
+      .click();
+  } else {
+    const scene = page.getByRole("group", {
+      name: "Ізометрична кімната готелю з інтерактивними предметами",
+    });
+    await scene.getByRole("button", { name: "Дошка з нотатками" }).click();
+  }
+  await expect(page.getByRole("dialog", { name: "Справи" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog", { name: "Справи" })).toBeHidden();
+});

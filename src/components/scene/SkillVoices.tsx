@@ -25,7 +25,7 @@ export function SkillVoices({
 
   return (
     <div
-      className="pointer-events-none fixed inset-x-4 bottom-4 z-40 space-y-3 sm:inset-x-auto sm:right-6 sm:bottom-auto sm:top-24 sm:w-72 lg:w-80"
+      className="pointer-events-none fixed inset-x-4 bottom-4 z-40 space-y-3 sm:inset-x-auto sm:right-6 sm:w-72 lg:w-80"
       aria-label={locale === "uk" ? "Голоси навичок" : "Skill voices"}
     >
       {voices.map((voice) => {

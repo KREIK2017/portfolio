@@ -77,14 +77,22 @@ function Marker({ at, active }: { at: Point; active: boolean }) {
       <circle
         cx={cx}
         cy={cy}
-        r={active ? 11 : 9}
+        r={active ? 13 : 10}
         fill="none"
         stroke="#a9b48d"
-        strokeWidth={1.6}
+        strokeWidth={1.2}
         opacity={active ? 0.95 : 0.6}
         className={active ? undefined : "marker-pulse"}
       />
-      <circle cx={cx} cy={cy} r={3} fill="#e8ddc4" opacity={active ? 1 : 0.8} />
+      <rect
+        x={cx - 3.5}
+        y={cy - 3.5}
+        width={7}
+        height={7}
+        transform={`rotate(45 ${cx} ${cy})`}
+        fill="#e8ddc4"
+        opacity={active ? 1 : 0.82}
+      />
     </g>
   );
 }
@@ -200,7 +208,7 @@ export function Room({
   return (
     <svg
       viewBox="-340 -258 680 656"
-      className="mx-auto block h-auto w-full max-w-[52rem]"
+      className="room-illustration mx-auto block h-auto w-full max-w-[64rem]"
       role="group"
       aria-label={
         locale === "uk"
@@ -240,12 +248,34 @@ export function Room({
           <stop offset="0%" stopColor="var(--de-glow)" stopOpacity="0.3" />
           <stop offset="100%" stopColor="var(--de-glow)" stopOpacity="0" />
         </linearGradient>
+        <filter id="roomPatina" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="19" result="noise" />
+          <feColorMatrix in="noise" type="matrix" values="0.35 0 0 0 0.2  0 0.28 0 0 0.15  0 0 0.18 0 0.1  0 0 0 0.22 0" result="tinted" />
+          <feBlend in="SourceGraphic" in2="tinted" mode="multiply" />
+        </filter>
+        <filter id="objectShadow" x="-30%" y="-30%" width="160%" height="180%">
+          <feDropShadow dx="0" dy="5" stdDeviation="4" floodColor="#090705" floodOpacity="0.62" />
+        </filter>
       </defs>
 
       {/* ── Оболонка кімнати ───────────────────────────────────── */}
       <polygon points={onBackWall(0, w, 0, h)} fill="url(#backWallGrad)" />
       <polygon points={onLeftWall(0, d, 0, h)} fill="url(#leftWallGrad)" />
       <polygon points={onFloor(0, w, 0, d)} fill="url(#floorGrad)" />
+
+      {/* Нерівна мальована фактура, спільна для стін і підлоги. */}
+      <g opacity={0.5} filter="url(#roomPatina)" pointerEvents="none">
+        <polygon points={onBackWall(0, w, 0, h)} fill="#8a7659" />
+        <polygon points={onLeftWall(0, d, 0, h)} fill="#695844" />
+        <polygon points={onFloor(0, w, 0, d)} fill="#564635" />
+      </g>
+
+      {/* Тріщини, потертості й старий ремонт: стіни більше не стерильні. */}
+      <g fill="none" stroke="#1c1712" strokeLinecap="round" pointerEvents="none">
+        <path d={`M ${iso(10.2, 0, 5.6).join(" ")} l -12 14 7 10 -15 18`} strokeWidth={1.1} opacity={0.32} />
+        <path d={`M ${iso(0, 7.7, 5.4).join(" ")} l 13 11 -5 16 14 9`} strokeWidth={0.9} opacity={0.28} />
+        <path d={`M ${iso(0, 4.9, 1.0).join(" ")} q 18 -8 30 2`} strokeWidth={4} opacity={0.1} />
+      </g>
 
       {/* Дошки підлоги */}
       <g stroke="rgba(0,0,0,0.26)" strokeWidth={0.8}>
@@ -315,6 +345,15 @@ export function Room({
           strokeWidth={1}
         />
         <polygon points={onBackWall(1.5, 4.1, 3.7, 6.2)} fill="url(#windowGrad)" />
+        {/* Далекий берег/місто за склом — натяк на Бургас без текстової локації. */}
+        <polygon points={onBackWall(1.5, 4.1, 3.7, 4.15)} fill="#22302f" opacity={0.52} />
+        <polyline
+          points={poly(iso(1.5, 0, 4.18), iso(2.0, 0, 4.45), iso(2.45, 0, 4.22), iso(3.05, 0, 4.52), iso(3.5, 0, 4.2), iso(4.1, 0, 4.4))}
+          fill="none"
+          stroke="#17211f"
+          strokeWidth={1.2}
+          opacity={0.7}
+        />
         <g stroke="#1a1611" strokeWidth={2.2}>
           <line
             x1={iso(2.8, 0, 3.7)[0]}
@@ -435,6 +474,13 @@ export function Room({
           return <circle key={`${x}-${z}`} cx={cx} cy={cy} r={2.6} fill="#b5654a" />;
         })}
       </Interactive>
+
+      {/* Чернетки на підлозі звʼязують дошку з робочим безладом. */}
+      <g pointerEvents="none" filter="url(#objectShadow)">
+        <polygon points={onFloor(7.2, 8.5, 3.6, 4.45)} fill="#cdbc96" opacity={0.78} />
+        <polygon points={onFloor(8.05, 9.15, 4.15, 4.9)} fill="#bba77e" opacity={0.72} />
+        <line x1={iso(7.45, 4.05, 0)[0]} y1={iso(7.45, 4.05, 0)[1]} x2={iso(8.05, 4.05, 0)[0]} y2={iso(8.05, 4.05, 0)[1]} stroke="#6d3d33" strokeWidth={0.8} />
+      </g>
 
       {/* ── Дзеркало → Про мене ────────────────────────────────── */}
       <Interactive

@@ -23,13 +23,6 @@ const AMBIENT_INTERVAL = 19000;
 /** Скільки тримати онбординг-підказку, якщо користувач нічого не робить. */
 const HINT_LIFETIME = 11000;
 
-const MINI_NAV: Array<{ id: PanelId; label: keyof typeof ui.nav }> = [
-  { id: "projects", label: "projects" },
-  { id: "about", label: "about" },
-  { id: "contact", label: "contact" },
-  { id: "cv", label: "cv" },
-];
-
 type Phase = "intro" | "room";
 type TimeOfDay = "day" | "night";
 
@@ -137,29 +130,42 @@ export function Experience({ locale }: { locale: Locale }) {
   );
 
   const otherLocale: Locale = locale === "uk" ? "en" : "uk";
+  const roomCopy = {
+    chapter: locale === "uk" ? "Внутрішня кімната · 04:17" : "Inner room · 04:17",
+    title: locale === "uk" ? "МАЙСТЕРНЯ KREIK" : "KREIK'S WORKSHOP",
+    subtitle:
+      locale === "uk"
+        ? "Пʼять предметів. Чотири проєкти. Один розробник, який усе ще не спить."
+        : "Five objects. Four projects. One developer who is still awake.",
+    objects: locale === "uk" ? "ОБʼЄКТИ СПРАВИ" : "CASE OBJECTS",
+    status: locale === "uk" ? "СЦЕНА АКТИВНА" : "SCENE ACTIVE",
+  };
 
   return (
-    <div data-time={time} className="relative min-h-dvh">
+    <div data-time={time} className="room-experience relative min-h-dvh overflow-hidden">
       <Grain />
 
       {phase === "intro" && (
         <Intro locale={locale} onEnter={() => setPhase("room")} />
       )}
 
-      <header className="relative z-30 flex items-center justify-between px-5 py-5 sm:px-8">
-        <div>
-          <p className="font-display text-lg leading-none text-light">
-            {site.name[locale]}
-          </p>
-          <p className="label mt-1 text-light/45">{site.role[locale]}</p>
+      <header className="relative z-30 flex items-start justify-between gap-4 border-b border-light/10 px-4 py-4 sm:px-7">
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 block size-2 rotate-45 bg-terracotta shadow-[0_0_16px_var(--de-terracotta)]" />
+          <div>
+            <p className="label text-terracotta">{roomCopy.chapter}</p>
+            <p className="mt-1 font-display text-lg leading-none text-light sm:text-xl">
+              {site.name[locale]}
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
           {/* Вихід у спокійну версію — завжди видимий, як вимагає ТЗ 2.1 */}
           <Link
             href={resumePath(locale)}
             onClick={() => writeMode("resume")}
-            className="label text-light/50 transition-colors hover:text-amber"
+            className="label inline-flex min-h-11 items-center border border-light/10 px-3 text-light/65 transition-colors hover:border-amber/50 hover:text-amber"
           >
             {ui.resume.toResume[locale]} →
           </Link>
@@ -167,7 +173,7 @@ export function Experience({ locale }: { locale: Locale }) {
           <button
             type="button"
             onClick={toggleTime}
-            className="label text-light/50 transition-colors hover:text-amber"
+            className="label inline-flex size-11 items-center justify-center border border-light/10 text-light/65 transition-colors hover:border-amber/50 hover:text-amber"
             aria-label={ui.dayNight[locale]}
             aria-pressed={time === "night"}
           >
@@ -177,7 +183,7 @@ export function Experience({ locale }: { locale: Locale }) {
           <Link
             href={roomPath(otherLocale)}
             hrefLang={otherLocale}
-            className="label border border-light/20 px-3 py-2 text-light/60 transition-colors hover:border-amber/50 hover:text-amber"
+            className="label inline-flex min-h-11 items-center border border-light/10 px-3 text-light/65 transition-colors hover:border-amber/50 hover:text-amber"
           >
             {ui.langSwitch[locale]}
           </Link>
@@ -192,9 +198,9 @@ export function Experience({ locale }: { locale: Locale }) {
       {phase === "room" && hintVisible && (
         <div
           role="status"
-          className="anim-fade-up pointer-events-none absolute left-1/2 top-24 z-40 w-[min(26rem,calc(100%-2rem))] -translate-x-1/2"
+          className="anim-fade-up pointer-events-none relative z-40 mx-auto mt-4 w-[min(36rem,calc(100%-2rem))]"
         >
-          <div className="pointer-events-auto flex items-start gap-3 border border-amber/40 bg-[#14120f]/95 px-4 py-3 backdrop-blur-sm">
+          <div className="pointer-events-auto flex items-start gap-3 border border-amber/40 bg-[#14120f]/95 px-4 py-3 shadow-2xl backdrop-blur-sm">
             <p className="flex-1 text-sm leading-relaxed text-light/85">
               {ui.roomHint[locale]}
             </p>
@@ -210,22 +216,89 @@ export function Experience({ locale }: { locale: Locale }) {
         </div>
       )}
 
-      <main className="relative z-20 px-3 pb-16 sm:px-6">
-        <Room
-          locale={locale}
-          onHover={handleHover}
-          onSelect={handleSelect}
-          onToggleTime={toggleTime}
-          timeLabel={ui.dayNight[locale]}
-        />
+      <main className="relative z-20 px-3 pb-8 pt-4 sm:px-6 lg:px-8">
+        <div className="mx-auto grid max-w-[96rem] gap-5 lg:grid-cols-[13rem_minmax(0,1fr)_13rem] lg:items-center">
+          <aside className="order-2 hidden lg:block">
+            <p className="label text-terracotta">{roomCopy.objects}</p>
+            <div className="mt-3 h-px bg-gradient-to-r from-terracotta/70 to-transparent" />
+            <nav className="mt-3" aria-label={ui.nav.about[locale]}>
+              <ol className="space-y-1">
+                {HOTSPOTS.map((spot, index) => {
+                  const skill = SKILL_BY_ID[spot.voice];
+                  return (
+                    <li key={spot.id}>
+                      <button
+                        type="button"
+                        onClick={() => handleSelect(spot.id)}
+                        className="group flex min-h-11 w-full items-center gap-3 border-b border-light/10 text-left"
+                      >
+                        <span className="font-condensed text-xs text-light/25">
+                          0{index + 1}
+                        </span>
+                        <span className="font-display text-base text-light/65 transition-colors group-hover:text-light">
+                          {spot.label[locale]}
+                        </span>
+                        <span className="ml-auto" style={{ color: skill.color }}>↗</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
+            </nav>
+          </aside>
+
+          <section className="room-stage order-1 lg:order-2" aria-labelledby="room-title">
+            <div className="room-stage__caption">
+              <div>
+                <p className="label text-terracotta">{roomCopy.status}</p>
+                <h1 id="room-title" className="mt-1 font-display text-2xl text-light sm:text-4xl">
+                  {roomCopy.title}
+                </h1>
+              </div>
+              <p className="hidden max-w-sm text-right text-sm leading-relaxed text-light/45 md:block">
+                {roomCopy.subtitle}
+              </p>
+            </div>
+
+            <Room
+              locale={locale}
+              onHover={handleHover}
+              onSelect={handleSelect}
+              onToggleTime={toggleTime}
+              timeLabel={ui.dayNight[locale]}
+            />
+
+            <span className="room-stage__coordinate room-stage__coordinate--left">X 04.17</span>
+            <span className="room-stage__coordinate room-stage__coordinate--right">Y 20.26</span>
+          </section>
+
+          <aside className="order-3 hidden lg:block">
+            <p className="label text-teal">SYSTEM / OBSERVATION</p>
+            <p className="mt-4 font-display text-2xl leading-tight text-light/85">
+              {locale === "uk" ? "Кімната памʼятає більше, ніж резюме." : "The room remembers more than the résumé."}
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-light/45">
+              {locale === "uk"
+                ? "Наведи курсор на предмет. Голоси підкажуть, що він приховує."
+                : "Hover an object. The voices will tell you what it hides."}
+            </p>
+            <div className="mt-6 border-l border-teal/50 pl-3">
+              <p className="label text-light/30">AMBIENT</p>
+              <p className="mt-1 text-sm text-light/60">
+                {time === "day" ? (locale === "uk" ? "холодне світло" : "cold daylight") : (locale === "uk" ? "лампа й тиша" : "lamp and silence")}
+              </p>
+            </div>
+          </aside>
+        </div>
 
         {/* Мобільний фолбек: дрібні предмети важко влучити пальцем. */}
         <nav
-          className="mx-auto mt-6 max-w-sm sm:hidden"
+          className="mx-auto mt-5 max-w-xl lg:hidden"
           aria-label={ui.nav.projects[locale]}
         >
-          <ul className="divide-y divide-light/10 border-y border-light/10">
-            {HOTSPOTS.map((spot) => {
+          <p className="label mb-3 text-terracotta">{roomCopy.objects}</p>
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {HOTSPOTS.map((spot, index) => {
               const skill = SKILL_BY_ID[spot.voice];
 
               return (
@@ -233,10 +306,11 @@ export function Experience({ locale }: { locale: Locale }) {
                   <button
                     type="button"
                     onClick={() => handleSelect(spot.id)}
-                    className="flex w-full items-center justify-between gap-3 py-4 text-left"
+                    className="flex min-h-14 w-full items-center justify-between gap-3 border border-light/10 bg-light/[0.025] px-3 py-3 text-left"
                   >
-                    <span className="font-display text-lg text-light/90">
-                      {spot.label[locale]}
+                    <span className="flex items-center gap-3">
+                      <span className="font-condensed text-xs text-light/25">0{index + 1}</span>
+                      <span className="font-display text-lg text-light/90">{spot.label[locale]}</span>
                     </span>
                     <span className="label" style={{ color: skill.color }}>
                       →
@@ -248,29 +322,6 @@ export function Experience({ locale }: { locale: Locale }) {
           </ul>
         </nav>
       </main>
-
-      {/*
-        Постійна міні-навігація: швидкий шлях до контенту повз метафори
-        кімнати. На мобільному не потрібна — там уже є список вище.
-      */}
-      <nav
-        className="fixed bottom-6 left-6 z-30 hidden sm:block"
-        aria-label={ui.nav.about[locale]}
-      >
-        <ul className="space-y-1.5">
-          {MINI_NAV.map((item) => (
-            <li key={item.id}>
-              <button
-                type="button"
-                onClick={() => handleSelect(item.id)}
-                className="label text-light/40 transition-colors hover:text-amber"
-              >
-                {ui.nav[item.label][locale]}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
 
       <SkillVoices voices={voices} locale={locale} />
 
