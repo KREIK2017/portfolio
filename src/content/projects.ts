@@ -35,6 +35,35 @@ export const PROJECTS: Project[] = [
     image: "/projects/codeunity/cover.webp",
   },
   {
+    slug: "filmcraft-electron",
+    year: "2026",
+    title: {
+      uk: "FilmCraft — Electron workflow",
+      en: "FilmCraft — Electron workflow",
+    },
+    summary: {
+      uk: "Адаптація open-source відеоредактора FilmCraft під захищену Electron-оболонку та більш знайомий CapCut-подібний процес монтажу.",
+      en: "An adaptation of the open-source FilmCraft video editor for a secure Electron shell and a more familiar CapCut-like editing workflow.",
+    },
+    role: {
+      uk: "Внесок у форк: Electron-інтеграція, імпорт медіа, proxy/export sidecar, оптимізація таймлайна, тести й документація",
+      en: "Fork contribution: Electron integration, media import, proxy/export sidecar, timeline optimisation, tests and documentation",
+    },
+    stack: [
+      "Rust",
+      "WebAssembly",
+      "Electron",
+      "TypeScript",
+      "WebGPU",
+      "WebCodecs",
+    ],
+    result: {
+      uk: "Повторно використав рушій FilmCraft, а власну роботу зосередив на desktop-шарі: sandboxed Electron shell, capability-based читання локальних файлів і керований Rust worker для проксі та експорту. Черги кадрів і waveform обмежені, щоб довгі таймлайни не блокували інтерфейс; Windows-сценарій перевірений наскрізно.",
+      en: "I reused FilmCraft's engine and focused my work on the desktop layer: a sandboxed Electron shell, capability-based local file access and a supervised Rust worker for proxies and export. Filmstrip and waveform queues are bounded so long timelines do not freeze the UI; the Windows flow has been validated end to end.",
+    },
+    image: "/projects/filmcraft-electron/cover.webp",
+  },
+  {
     slug: "site-watch-bot",
     year: "2026",
     title: {
@@ -66,36 +95,6 @@ export const PROJECTS: Project[] = [
     image: "/projects/site-watch-bot/cover.svg",
   },
   {
-    slug: "kreik-gaming-merch",
-    year: "2026",
-    title: {
-      uk: "KREIK Gaming Merch",
-      en: "KREIK Gaming Merch",
-    },
-    summary: {
-      uk: "Магазин ігрового мерчу: WordPress як вітрина, товари й кошик — із Shopify через Buy Button SDK.",
-      en: "A gaming merch store: WordPress as the storefront, products and cart pulled from Shopify via the Buy Button SDK.",
-    },
-    role: {
-      uk: "Власний проєкт, усе сам: плагін, тема, інтеграція, оточення",
-      en: "Personal project, all of it mine: plugin, theme, integration, environment",
-    },
-    stack: ["WordPress", "PHP", "Shopify", "Liquid", "SCSS", "Gulp", "Docker"],
-    result: {
-      uk: "Власний плагін my-first-plugin 0.4.0 — Settings API, шорткоди, ACF-блоки та інтеграція з Shopify. Власна тема mfp-theme на SCSS і Gulp з лендінгом і блогом. Плюс окрема тема на Liquid для dev-стору через Shopify CLI. Усе оточення піднімається в Docker.",
-      en: "My own plugin, my-first-plugin 0.4.0 — Settings API, shortcodes, ACF blocks and the Shopify integration. A custom mfp-theme built on SCSS and Gulp, with a landing page and a blog. Plus a separate Liquid theme for the dev store via Shopify CLI. The whole environment runs in Docker.",
-    },
-    image: "/projects/kreik-gaming-merch/cover.svg",
-    skillCheck: {
-      skill: "logic",
-      difficulty: 8,
-      label: {
-        uk: "Зшити WordPress і Shopify замість того, щоб вибрати одне",
-        en: "Stitch WordPress and Shopify together instead of picking one",
-      },
-    },
-  },
-  {
     slug: "aio-dashboard",
     year: "2026",
     title: {
@@ -124,7 +123,9 @@ export const PROJECTS: Project[] = [
       en: "Tickets, a timer, billing, JWT auth, avatars and @mentions. A dark-themed interface with glassmorphism. Backend and database come up in Docker with a single command.",
     },
     repoUrl: "https://github.com/KREIK2017/all-in-one-project",
-    image: "/projects/aio-dashboard/cover.svg",
+    image: "/projects/aio-dashboard/cover.png",
+    imageWidth: 1264,
+    imageHeight: 512,
   },
 ];
 

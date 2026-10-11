@@ -11,7 +11,7 @@
 Перемикач видимий у обох режимах, вибір зберігається в `localStorage`
 (ключ `kreik-mode`): хто раз обрав кімнату, того корінь одразу веде туди.
 
-Next.js 16 (App Router) + Tailwind CSS 4, статичний експорт.
+Next.js 16.4 (App Router) + Tailwind CSS 4, статичний експорт.
 Хостинг — Cloudflare Workers (static assets), домен і DNS — Cloudflare.
 
 ## Запуск
@@ -20,6 +20,7 @@ Next.js 16 (App Router) + Tailwind CSS 4, статичний експорт.
 npm run dev     # http://localhost:3000
 npm run build   # збірка статики в out/
 npm run lint
+npm run test:e2e # desktop/mobile smoke-тести у системному Chrome
 ```
 
 ## Структура
@@ -142,8 +143,9 @@ src/
 
 Фільтр застосований **тільки до полотна**, не до картки: `feDisplacementMap`
 не розрізняє фарбу й літери, тому підпис поверх нього тремтів би й
-розмивався. Анімація — `calcMode="discrete"`, бо `feTurbulence` рахується
-на CPU. Деталі в комментарях `LivingOilFilter.tsx`.
+розмивався. Карта зсуву згладжується через `feGaussianBlur`, використовує
+одну октаву шуму й повільно інтерполює `baseFrequency`: так «олія» рухається
+плавно без зайвої пікселізації. Деталі в коментарях `LivingOilFilter.tsx`.
 
 **Кімната — не картинка, а геометрія.** `src/lib/iso.ts` рахує паралельну
 проєкцію 30°, `Room.tsx` збирає сцену з кубів і площин. Масштабується без
@@ -199,13 +201,12 @@ Cloudflare роздає вміст `out/` зі свого CDN.
 
 ## Що лишилося заповнити
 
-- [ ] Реальні проєкти замість трьох заглушок у `content/projects.ts`
-- [ ] Біо в `config/site.ts`
-- [ ] Рівні голосів навичок у `content/skills.ts` — проставлені навмання
-- [ ] LinkedIn і Telegram у `config/site.ts` (порожні не показуються)
-- [ ] `public/cv.pdf`
-- [ ] **Логотипи технологій** у `public/stack/` — чужі торгові марки,
-      я їх не генерую; поки малюється монограма
-- [ ] **Портрет** у сайдбарі résumé — зараз монограма `MM`
-- [ ] `public/hero.svg` — намальована заглушка, замінити на власну ілюстрацію
-- [ ] Скриншоти проєктів замість SVG-заглушок у `public/projects/`
+- [x] Додати реальний скриншот AIO Dashboard
+- [ ] Уточнити роки проєктів і формулювання власного внеску в CodeUnity
+- [ ] Перевірити самооцінку рівнів у `content/stack.ts` і `content/skills.ts`
+- [ ] Опублікувати власний FilmCraft-форк і додати посилання на репозиторій
+- [x] Пройти mobile/desktop, клавіатурну навігацію, touch targets і контраст
+
+Обкладинка FilmCraft базується на скриншоті open-source проєкту FilmCraft.
+Джерело й ліцензійні примітки збережені в
+`assets/attribution/filmcraft-cover.txt`.

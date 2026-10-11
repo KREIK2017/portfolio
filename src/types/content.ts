@@ -67,6 +67,9 @@ export interface Project {
   liveUrl?: string;
   repoUrl?: string;
   image?: string;
+  /** Реальний розмір обкладинки — потрібен Next/Image для стабільного layout. */
+  imageWidth?: number;
+  imageHeight?: number;
   skillCheck?: SkillCheck;
 }
 

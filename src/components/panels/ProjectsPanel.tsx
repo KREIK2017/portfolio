@@ -87,8 +87,8 @@ function CaseDetail({
           <Image
             src={project.image}
             alt={project.title[locale]}
-            width={1200}
-            height={750}
+            width={project.imageWidth ?? 1200}
+            height={project.imageHeight ?? 750}
             className="h-auto w-full"
           />
         </div>

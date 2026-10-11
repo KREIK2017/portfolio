@@ -37,7 +37,8 @@
   --rs-paper-2: #e5dbc8;
   --rs-ink: #1a1815;
   --rs-muted: #6b6152;
-  --rs-accent: #c2502a;
+  /* 4.53:1 навіть на темнішому --rs-paper-2: WCAG AA для малого тексту. */
+  --rs-accent: #a64021;
   --rs-line: rgba(26, 24, 21, 0.14);
   --rs-sidebar: #17140f;
 }
@@ -128,6 +129,16 @@
   letter-spacing: 0.18em;
   font-size: 0.72rem;
   font-weight: 600;
+}
+
+/* Світлий résumé потребує темнішого focus ring, ніж темна кімната. */
+.bg-rs-paper :focus-visible {
+  outline-color: var(--rs-accent);
+}
+
+.bg-rs-paper nav :focus-visible {
+  outline-color: var(--rs-paper);
+  outline-offset: -3px;
 }
 
 /* ── Текстури ─────────────────────────────────────────────────────

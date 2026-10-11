@@ -125,7 +125,7 @@ export function Resume({ locale }: { locale: Locale }) {
           <Link
             href={resumePath(otherLocale)}
             hrefLang={otherLocale}
-            className="rs-label text-rs-muted hover:text-rs-ink transition-colors"
+            className="rs-label text-rs-muted hover:text-rs-ink inline-flex min-h-11 items-center transition-colors"
           >
             {ui.langSwitch[locale]}
           </Link>
@@ -133,7 +133,7 @@ export function Resume({ locale }: { locale: Locale }) {
           <Link
             href={roomPath(locale)}
             onClick={() => writeMode("room")}
-            className="rs-label text-rs-accent hover:underline"
+            className="rs-label text-rs-accent inline-flex min-h-11 items-center hover:underline"
           >
             {ui.resume.toRoom[locale]} →
           </Link>
@@ -260,7 +260,7 @@ export function Resume({ locale }: { locale: Locale }) {
           title={ui.resume.workSection.title[locale]}
           className="bg-rs-paper-2/60"
         >
-          <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid gap-6 md:grid-cols-2">
             {PROJECTS.map((project) => (
               <li
                 key={project.slug}
@@ -270,8 +270,8 @@ export function Resume({ locale }: { locale: Locale }) {
                   <Image
                     src={project.image}
                     alt={project.title[locale]}
-                    width={1200}
-                    height={750}
+                    width={project.imageWidth ?? 1200}
+                    height={project.imageHeight ?? 750}
                     className="h-auto w-full"
                   />
                 )}

@@ -1,0 +1,10 @@
+FilmCraft portfolio cover attribution
+
+Source project: FilmCraft
+Source repository: https://github.com/storytold/filmcraft
+Copyright: FilmCraft contributors
+License: MIT OR Apache-2.0
+
+The portfolio cover is an optimized crop of docs/images/filmcraft-hero.png.
+The source project's attribution notes identify the embedded NASA footage as
+public domain and the Chopin waveform asset as CC0.
