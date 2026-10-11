@@ -84,7 +84,7 @@ test("room scene stays usable and opens its case files", async ({ page }, testIn
       .click();
   } else {
     const scene = page.getByRole("group", {
-      name: "Ізометрична кімната готелю з інтерактивними предметами",
+      name: "Ізометрична кімната-майстерня з інтерактивними предметами",
     });
     await scene.getByRole("button", { name: "Дошка з нотатками" }).click();
   }
