@@ -155,6 +155,7 @@ export function Room({
         width={1672}
         height={941}
         priority
+        draggable={false}
         sizes="(max-width: 1024px) 100vw, 72vw"
         className="room-art__image room-art__base"
       />

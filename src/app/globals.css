@@ -210,6 +210,8 @@
   --room-y: 0;
   position: relative;
   perspective: 1500px;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .room-art {
@@ -243,6 +245,9 @@
   display: block;
   width: 100%;
   height: auto;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
   transition: filter 1.2s ease, transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
