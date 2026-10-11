@@ -206,6 +206,8 @@
 }
 
 .room-art {
+  --room-x: 0;
+  --room-y: 0;
   position: relative;
   isolation: isolate;
   width: 100%;
@@ -221,7 +223,7 @@
 .room-art::after {
   content: "";
   position: absolute;
-  z-index: 3;
+  z-index: 5;
   inset: 0;
   pointer-events: none;
   box-shadow: inset 0 0 70px 12px rgba(2, 2, 2, 0.6);
@@ -231,17 +233,102 @@
   display: block;
   width: 100%;
   height: auto;
-  transition: filter 1.2s ease;
+  transition: filter 1.2s ease, transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.room-art__base {
+  transform: scale(1.012)
+    translate(
+      calc(var(--room-x) * -2px),
+      calc(var(--room-y) * -1.5px)
+    );
+}
+
+.room-art__depth-map {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.room-art__depth-layer {
+  position: absolute;
+  inset: -1%;
+  background-image: url("/img/room/workshop.webp");
+  background-position: center;
+  background-size: 98.04% 98.04%;
+  background-repeat: no-repeat;
+  clip-path: var(--layer-clip);
+  transform: scale(1.012)
+    translate3d(
+      calc(var(--room-x) * var(--depth) * 3px),
+      calc(var(--room-y) * var(--depth) * 2px),
+      0
+    );
+  filter: drop-shadow(
+    calc(var(--room-x) * var(--depth) * -2px)
+    calc(var(--room-y) * var(--depth) * -2px)
+    5px rgba(0, 0, 0, 0.34)
+  );
+  transition: transform 0.42s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.35s ease;
+  will-change: transform;
+}
+
+.room-art__depth-layer[data-layer="foreground"] {
+  z-index: 0;
+}
+
+.room-art__depth-layer[data-active="true"] {
+  transform: scale(1.018)
+    translate3d(
+      calc(var(--room-x) * var(--depth) * 4px),
+      calc(var(--room-y) * var(--depth) * 3px - 3px),
+      0
+    );
+  filter: brightness(1.13) saturate(1.08)
+    drop-shadow(0 7px 7px rgba(0, 0, 0, 0.56))
+    drop-shadow(0 0 8px rgba(201, 151, 63, 0.28));
 }
 
 .room-art__light {
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   inset: 0;
   pointer-events: none;
   background: radial-gradient(circle at 59% 17%, rgba(210, 228, 221, 0.13), transparent 24%);
   mix-blend-mode: screen;
   transition: opacity 1.2s ease, background 1.2s ease;
+}
+
+.room-art__lamp-glow {
+  position: absolute;
+  z-index: 3;
+  left: 45.5%;
+  top: 34%;
+  width: 28%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 188, 85, 0.24), rgba(211, 108, 45, 0.08) 35%, transparent 68%);
+  mix-blend-mode: screen;
+  animation: room-lamp-breathe 4.8s ease-in-out infinite;
+}
+
+.room-art__dust {
+  position: absolute;
+  z-index: 4;
+  inset: 31% 26% 10% 29%;
+  pointer-events: none;
+  opacity: 0.34;
+  background-image:
+    radial-gradient(circle, rgba(255, 224, 172, 0.78) 0 1px, transparent 1.4px),
+    radial-gradient(circle, rgba(255, 218, 155, 0.56) 0 0.8px, transparent 1.3px);
+  background-position: 0 0, 23px 31px;
+  background-size: 61px 71px, 83px 91px;
+  mask-image: radial-gradient(ellipse, black, transparent 72%);
+  animation: room-dust-drift 12s linear infinite;
 }
 
 [data-time="night"] .room-art__image {
@@ -261,7 +348,7 @@
 
 .room-art-window {
   position: absolute;
-  z-index: 4;
+  z-index: 6;
   left: 52%;
   top: 5%;
   width: 15%;
@@ -278,7 +365,7 @@
 
 .room-art-hotspot {
   position: absolute;
-  z-index: 5;
+  z-index: 7;
   width: 46px;
   height: 46px;
   padding: 0;
@@ -428,6 +515,27 @@
   50% {
     opacity: 1;
   }
+}
+
+@keyframes room-lamp-breathe {
+  0%,
+  100% {
+    opacity: 0.72;
+    scale: 0.98;
+  }
+  48% {
+    opacity: 1;
+    scale: 1.035;
+  }
+  54% {
+    opacity: 0.86;
+    scale: 1.01;
+  }
+}
+
+@keyframes room-dust-drift {
+  from { transform: translate3d(-6px, 8px, 0); }
+  to { transform: translate3d(18px, -24px, 0); }
 }
 
 /*
@@ -692,6 +800,12 @@ html.lenis body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .room-art__base,
+  .room-art__depth-layer,
+  .room-art__depth-layer[data-active="true"] {
+    transform: none;
+  }
+
   .stack-card {
     transition: none;
   }
