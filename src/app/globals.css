@@ -722,28 +722,76 @@
 }
 
 .suitcase-photo {
-  padding: 7% 7% 13%;
-  background: linear-gradient(145deg, #f1e7d0, #d2c09b);
+  position: relative;
+  gap: 0;
+  padding: 7% 7% 5%;
+  background:
+    radial-gradient(ellipse at 10% 90%, rgba(122, 82, 44, 0.15), transparent 47%),
+    repeating-linear-gradient(92deg, transparent 0 3px, rgba(80, 58, 32, 0.018) 3px 4px),
+    linear-gradient(145deg, #f0e6d1, #d9c7a5);
   color: #4b3f31;
   text-align: center;
-  border: 1px solid rgba(90, 69, 43, 0.25);
+  border: 1px solid rgba(90, 69, 43, 0.28);
+  border-radius: 2px 1px 3px 1px;
+  box-shadow: 1px 2px 0 rgba(238, 224, 191, 0.35) inset, 0 9px 16px rgba(27, 20, 12, 0.5);
 }
 
-.suitcase-photo img {
+.suitcase-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 0 100%, rgba(105, 74, 43, 0.2), transparent 22%), radial-gradient(circle at 100% 0, rgba(82, 58, 35, 0.15), transparent 24%);
+  pointer-events: none;
+}
+
+.suitcase-photo__emulsion {
+  position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 0.88;
+  overflow: hidden;
+  background: #685d4c;
+  box-shadow: inset 0 0 0 1px rgba(24, 19, 15, 0.35);
+}
+
+.suitcase-photo__emulsion::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, transparent 44%, rgba(61, 42, 28, 0.3) 100%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.suitcase-photo__emulsion img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 0.79;
   object-fit: cover;
-  object-position: 50% 35%;
+  object-position: 50% 26%;
+  filter: sepia(0.12) saturate(0.82) contrast(1.03);
   pointer-events: none;
   -webkit-user-drag: none;
 }
 
-.suitcase-photo span {
-  padding-top: 7%;
+.suitcase-photo__caption {
+  display: block;
+  margin-top: 6%;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(0.75rem, 1.6vw, 1.1rem);
+  font-style: italic;
+  line-height: 1;
+  transform: rotate(-2deg);
+}
+
+.suitcase-photo__serial {
+  display: block;
+  align-self: flex-end;
+  margin-top: 3%;
+  color: #836f53;
   font-family: var(--font-oswald), sans-serif;
-  font-size: clamp(0.4rem, 1vw, 0.65rem);
-  letter-spacing: 0.1em;
+  font-size: clamp(0.38rem, 0.8vw, 0.55rem);
+  letter-spacing: 0.14em;
 }
 
 .suitcase-passport {
@@ -830,15 +878,80 @@
 }
 
 .suitcase-detail__paper--passport { width: min(100%, 53rem); }
-.suitcase-portrait-layout { display: grid; align-items: center; gap: 2rem; grid-template-columns: minmax(0, 240px) 1fr; }
-.suitcase-portrait-print {
-  padding: 0.75rem 0.75rem 0.4rem;
-  background: #f0e5cd;
-  box-shadow: 0 10px 25px rgba(47, 31, 19, 0.3);
+.suitcase-detail__paper--photo {
+  border-color: #80694b;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(142, 101, 57, 0.17), transparent 64%),
+    repeating-linear-gradient(92deg, transparent 0 52px, rgba(14, 10, 8, 0.045) 53px 55px),
+    linear-gradient(145deg, #392a23, #201a17 72%, #362820);
+  color: #e8d5b5;
+}
+.suitcase-detail__paper--photo::before { border-color: rgba(201, 159, 96, 0.2); }
+.suitcase-detail__paper--photo header { border-color: rgba(201, 159, 96, 0.28); }
+.suitcase-detail__paper--photo header .label { color: #c6a574; }
+.suitcase-detail__paper--photo header h3 { color: #e8d5b5; }
+.suitcase-detail__paper--photo header button { border-color: rgba(201, 159, 96, 0.48); color: #e8d5b5; }
+.suitcase-detail__paper--photo header button:hover { background: rgba(201, 159, 96, 0.16); }
+.suitcase-portrait-layout { display: grid; align-items: center; gap: 2rem; grid-template-columns: minmax(0, 17rem) 1fr; }
+.suitcase-photo-card {
+  display: block;
+  width: min(100%, 17rem);
+  aspect-ratio: 0.72;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  perspective: 1200px;
   rotate: -3deg;
+  transition: rotate 0.25s ease, translate 0.25s ease;
+}
+.suitcase-photo-card:hover { rotate: -1deg; translate: 0 -4px; }
+.suitcase-photo-card:focus-visible { outline: 3px solid #d5ae6c; outline-offset: 7px; }
+.suitcase-photo-card__inner {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.suitcase-photo-card.is-flipped .suitcase-photo-card__inner { transform: rotateY(180deg); }
+.suitcase-photo-card__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 17px 30px rgba(0, 0, 0, 0.48);
+}
+.suitcase-photo--large { width: 100%; height: 100%; padding: 6% 6% 4%; }
+.suitcase-photo--large .suitcase-photo__emulsion { flex: 1; min-height: 0; }
+.suitcase-photo--large img { width: 100%; height: 100%; aspect-ratio: auto; }
+.suitcase-photo--large .suitcase-photo__caption { align-self: flex-start; margin: 0.6rem 0 0; font-size: 1.5rem; }
+.suitcase-photo--large .suitcase-photo__serial { margin-top: 0; font-size: 0.55rem; }
+.suitcase-photo-card__back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border: 7px solid #e5d6b5;
+  color: #594331;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 26px, rgba(105, 80, 49, 0.12) 27px 28px),
+    linear-gradient(140deg, #e6d6b7, #c7ae82);
+  transform: rotateY(180deg);
   text-align: center;
 }
-.suitcase-portrait-print span { display: block; padding-top: 0.45rem; color: #766448; font-size: 0.7rem; letter-spacing: 0.2em; }
+.suitcase-photo-card__back-top,
+.suitcase-photo-card__back-bottom { font-family: var(--font-oswald), sans-serif; font-size: 0.65rem; letter-spacing: 0.17em; }
+.suitcase-photo-card__back-mark { color: #87533e; font-size: 2.1rem; }
+.suitcase-photo-card__back-name { font-family: var(--font-cormorant), Georgia, serif; font-size: 2rem; font-style: italic; }
+.suitcase-photo-card__back-role { font-size: 0.82rem; line-height: 1.5; }
+.suitcase-photo-caption .label { color: #bf995f; }
+.suitcase-photo-caption .text-2xl { color: #edddbf; }
+.suitcase-photo-caption p:not(.label, .text-2xl) { color: #c9b899; }
+.suitcase-photo-caption { border-left: 1px solid rgba(201, 159, 96, 0.28); padding-left: 1.5rem; }
 .suitcase-passport-spread {
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
@@ -880,7 +993,8 @@
 @media (max-width: 639px) {
   .suitcase-portrait-layout,
   .suitcase-passport-spread { grid-template-columns: 1fr; }
-  .suitcase-portrait-print { max-width: 14rem; margin-inline: auto; }
+  .suitcase-photo-card { width: min(100%, 14rem); margin-inline: auto; }
+  .suitcase-photo-caption { border-left: 0; border-top: 1px solid rgba(201, 159, 96, 0.28); padding: 1rem 0 0; }
   .suitcase-passport-spread__identity { min-height: 17rem; }
 }
 

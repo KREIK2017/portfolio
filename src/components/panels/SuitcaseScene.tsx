@@ -137,8 +137,11 @@ export function SuitcaseScene({
           >
             {item === "photo" && (
               <span className="suitcase-photo">
-                <Image src="/img/suitcase-photo.webp" alt="" width={720} height={1009} draggable={false} />
-                <span>МАКСИМ · KREIK</span>
+                <span className="suitcase-photo__emulsion">
+                  <Image src="/img/suitcase-photo.webp" alt="" width={720} height={1009} draggable={false} />
+                </span>
+                <span className="suitcase-photo__caption">{locale === "uk" ? "Максим Мичко" : "Maksim Mychko"}</span>
+                <span className="suitcase-photo__serial">KREIK · 01</span>
               </span>
             )}
             {item === "passport" && (

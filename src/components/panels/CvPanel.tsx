@@ -21,6 +21,7 @@ function ItemDetail({
   onClose: () => void;
 }) {
   const uk = locale === "uk";
+  const [photoFlipped, setPhotoFlipped] = useState(false);
   const title = {
     photo: uk ? "Фотокартка" : "Photo card",
     passport: uk ? "Паспорт навичок" : "Skills passport",
@@ -43,16 +44,37 @@ function ItemDetail({
 
         {item === "photo" && (
           <div className="suitcase-portrait-layout mt-6">
-            <div className="suitcase-portrait-print">
-              <Image src="/img/suitcase-photo.webp" alt={site.name[locale]} width={720} height={1009} className="h-auto w-full" />
-              <span>ARCHIVE / 01</span>
-            </div>
-            <div>
-              <p className="label text-[#8b4337]">{uk ? "ОСОБИСТА СПРАВА" : "PERSONAL FILE"}</p>
-              <p className="text-2xl text-[#2a241c]">{site.name[locale]}</p>
-              <p className="mt-2 leading-relaxed text-[#4a4032]">{site.role[locale]}</p>
-              <p className="mt-4 text-sm italic text-[#5c4f3a]">
-                {uk ? "Фото з особистого архіву. А за роботою — відкрий паспорт або CV." : "A photo from my personal archive. For the work, open the passport or CV."}
+            <button
+              type="button"
+              className={`suitcase-photo-card ${photoFlipped ? "is-flipped" : ""}`}
+              onClick={() => setPhotoFlipped((value) => !value)}
+              aria-label={photoFlipped ? (uk ? "Повернути фотокартку лицем" : "Turn photo face up") : (uk ? "Перевернути фотокартку" : "Turn photo over")}
+            >
+              <span className="suitcase-photo-card__inner">
+                <span className="suitcase-photo suitcase-photo--large suitcase-photo-card__face" aria-hidden={photoFlipped}>
+                  <span className="suitcase-photo__emulsion">
+                    <Image src="/img/suitcase-photo.webp" alt={site.name[locale]} width={720} height={1009} draggable={false} />
+                  </span>
+                  <span className="suitcase-photo__caption">{site.name[locale]}</span>
+                  <span className="suitcase-photo__serial">KREIK · 01</span>
+                </span>
+                <span className="suitcase-photo-card__back suitcase-photo-card__face" aria-hidden={!photoFlipped}>
+                  <span className="suitcase-photo-card__back-top">KREIK / {uk ? "ОСОБИСТА СПРАВА" : "PERSONAL FILE"}</span>
+                  <span className="suitcase-photo-card__back-mark" aria-hidden="true">✦</span>
+                  <span className="suitcase-photo-card__back-name">{site.name[locale]}</span>
+                  <span className="suitcase-photo-card__back-role">{site.role[locale]}</span>
+                  <span className="suitcase-photo-card__back-bottom">01 — {uk ? "ФОТОКАРТКА" : "PHOTO CARD"}</span>
+                </span>
+              </span>
+            </button>
+            <div className="suitcase-photo-caption">
+              <p className="label">{uk ? "З ОСОБИСТОГО АРХІВУ" : "FROM THE PERSONAL ARCHIVE"}</p>
+              <p className="text-2xl">{site.name[locale]}</p>
+              <p className="mt-2 leading-relaxed">{site.role[locale]}</p>
+              <p className="mt-5 text-sm italic">
+                {photoFlipped
+                  ? (uk ? "Натисни ще раз, щоб повернути фото." : "Tap again to turn the photo face up.")
+                  : (uk ? "Натисни на фотокартку, щоб побачити зворотний бік." : "Tap the photo to see the reverse side.")}
               </p>
             </div>
           </div>

@@ -203,6 +203,9 @@ test("suitcase objects can be inspected and repositioned", async ({ page }, test
   await suitcase.locator('[data-suitcase-item="photo"]').click();
   const photo = page.getByRole("dialog", { name: "Фотокартка" });
   await expect(photo.getByRole("img", { name: "Максим Мичко" })).toBeVisible();
+  await photo.getByRole("button", { name: "Перевернути фотокартку" }).click();
+  await expect(photo.getByRole("button", { name: "Повернути фотокартку лицем" })).toBeVisible();
+  await photo.getByRole("button", { name: "Повернути фотокартку лицем" }).click();
   await photo.getByRole("button", { name: /Піти геть/ }).click();
 
   await suitcase.locator('[data-suitcase-item="cv"]').click();
