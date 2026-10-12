@@ -93,6 +93,33 @@ test("room scene stays usable and opens its case files", async ({ page }, testIn
   await expect(page.getByRole("dialog", { name: "Справи" })).toBeHidden();
 });
 
+test("small screens show room objects before the scene without horizontal overflow", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 320, height: 700 });
+  await page.goto("/room/");
+  await page.locator(".intro-screen")
+    .getByRole("button", { name: /пропустити|розплющити очі/i }).click();
+
+  for (const width of [320, 768]) {
+    await page.setViewportSize({ width, height: 700 });
+
+    const navigation = page.getByRole("navigation", { name: "Проєкти" });
+    const room = page.getByRole("group", { name: "Ізометрична кімната-майстерня з інтерактивними предметами" });
+    await expect(navigation.getByRole("button")).toHaveCount(5);
+    expect((await navigation.boundingBox())!.y).toBeLessThan((await room.boundingBox())!.y);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+
+    await navigation.getByRole("button", { name: /Дошка з нотатками/ }).click();
+    const cases = page.getByRole("dialog", { name: "Справи" });
+    await cases.getByRole("button", { name: /CodeUnity/ }).click();
+    const dice = page.getByRole("dialog", { name: "Перевірка навички" });
+    await expect(dice.getByRole("button", { name: "Кинути кубики" })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    await dice.locator(".dice-overlay__close").click();
+    await cases.getByRole("button", { name: /Піти геть/ }).click();
+  }
+});
+
 test("room lamp can be switched off and back on", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("kreik-mode", "room"));
   await page.goto("/room/");
@@ -174,6 +201,23 @@ test("each case opens after a physical 2d6 check", async ({ page }, testInfo) =>
   await dice.getByRole("button", { name: "Відкрити справу" }).click();
   await expect(dice).toHaveCount(0);
   await expect(page.getByRole("dialog", { name: "Справи" }).getByRole("heading", { name: "CodeUnity" })).toBeVisible();
+});
+
+test("animated dice roll settles and reports a real 2d6 total", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === "mobile", "Animation is checked on desktop; mobile uses the same physics scene");
+  await page.goto("/room/");
+  await page.locator(".intro-screen")
+    .getByRole("button", { name: /пропустити|розплющити очі/i }).click();
+  await page.getByRole("group", { name: "Ізометрична кімната-майстерня з інтерактивними предметами" })
+    .getByRole("button", { name: "Дошка з нотатками" }).click();
+  await page.getByRole("dialog", { name: "Справи" })
+    .getByRole("button", { name: /CodeUnity/ }).click();
+
+  const dice = page.getByRole("dialog", { name: "Перевірка навички" });
+  await dice.getByRole("button", { name: "Кинути кубики" }).click();
+  await expect(dice.getByText("Кубики падають…")).toBeVisible();
+  await expect(dice.getByRole("status")).toContainText(/(?:Успіх|Провал) · [1-6] \+ [1-6] = (?:[2-9]|1[0-2])/);
+  await expect(dice.getByRole("button", { name: "Відкрити справу" })).toBeEnabled();
 });
 
 test("suitcase objects can be inspected and repositioned", async ({ page }, testInfo) => {

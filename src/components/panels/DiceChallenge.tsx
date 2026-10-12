@@ -62,69 +62,68 @@ export function DiceChallenge({
         <button type="button" className="dice-overlay__close label" onClick={onClose} aria-label={ui.close[locale]}>
           ✕
         </button>
-        <p className="label dice-overlay__eyebrow">✦ &nbsp; {ui.check.title[locale]} · 2D6 &nbsp; ✦</p>
-        <h3 className="mt-3 text-3xl text-[#2a241c] sm:text-4xl">{project.title[locale]}</h3>
-        <p className="mt-3 text-sm leading-relaxed text-[#4a4032] sm:text-base">
-          {uk
-            ? `Кинь два кубики, щоб відкрити справу. Потрібно ${difficulty} або більше; навіть провал не приховає роботу.`
-            : `Roll two dice to open this case. You need ${difficulty} or more; even a failed check won't hide the work.`}
-        </p>
-
-        <div className="dice-overlay__rule" aria-hidden="true"><span>◆</span></div>
-
-        <div className="dice-table">
-          {!unavailable && (
-            <DicePhysicsCanvas
-              rollToken={rollToken}
-              reducedMotion={reducedMotion}
-              onReady={onReady}
-              onSettled={onSettled}
-              onUnavailable={onUnavailable}
-            />
-          )}
-          {unavailable && (
-            <p className="px-6 text-sm text-[#7a2e2e]" role="alert">
-              {uk
-                ? "3D недоступне в цьому браузері. Можна кинути текстові кубики й відкрити справу."
-                : "3D is unavailable in this browser. You can roll text dice and open the case."}
-            </p>
-          )}
+        <div className="dice-overlay__scene">
+          <div className="dice-overlay__lamp" aria-hidden="true" />
+          <div className="dice-table">
+            {!unavailable && (
+              <DicePhysicsCanvas
+                rollToken={rollToken}
+                reducedMotion={reducedMotion}
+                onReady={onReady}
+                onSettled={onSettled}
+                onUnavailable={onUnavailable}
+              />
+            )}
+            {unavailable && (
+              <p className="dice-overlay__fallback" role="alert">
+                {uk
+                  ? "3D недоступне в цьому браузері. Можна кинути текстові кубики й відкрити справу."
+                  : "3D is unavailable in this browser. You can roll text dice and open the case."}
+              </p>
+            )}
+          </div>
+          <span className="dice-overlay__scene-caption label" aria-hidden="true">KREIK / 2D6</span>
         </div>
-
-        <p className="dice-overlay__threshold label">{uk ? "ПОРОГ УСПІХУ" : "SUCCESS THRESHOLD"} <span>{difficulty} / 12</span></p>
-
-        <div className="dice-overlay__result min-h-16 text-center" aria-live="polite">
-          {phase === "rolling" && <p className="text-[#5c4f3a]">{uk ? "Кубики падають…" : "The dice are falling…"}</p>}
-          {phase === "done" && dice && (
-            <p className={`text-xl ${success ? "text-[#3e6945]" : "text-[#853d32]"}`} role="status">
-              {success ? ui.check.success[locale] : ui.check.failure[locale]} · {dice[0]} + {dice[1]} = {total}
-            </p>
-          )}
+        <div className="dice-overlay__intro">
+          <p className="label dice-overlay__eyebrow">{uk ? "СПРАВА" : "CASE FILE"} · {project.year}</p>
+          <h3 className="dice-overlay__title">{project.title[locale]}</h3>
+          <p className="dice-overlay__summary">{project.summary[locale]}</p>
         </div>
-
-        <div className="mt-4 flex flex-wrap justify-center gap-3">
-          <button
-            type="button"
-            onClick={roll}
-            disabled={(!ready && !unavailable) || phase === "rolling"}
-            autoFocus
-            className="label min-h-11 border border-[#7a2e2e]/60 bg-[#7a2e2e] px-5 py-3 text-[#f2e8d5] transition-colors hover:bg-[#592525] disabled:opacity-50"
-          >
-            {!ready && !unavailable
-              ? (uk ? "Завантаження 3D…" : "Loading 3D…")
-              : phase === "done"
-                ? (uk ? "Кинути ще раз" : "Roll again")
-                : ui.check.roll[locale]}
-          </button>
-          {phase === "done" && (
+        <div className="dice-overlay__dossier">
+          <div className="dice-overlay__stats">
+            <div><span className="label">{ui.check.title[locale]}</span><strong>2D6</strong></div>
+            <div><span className="label">{uk ? "СКЛАДНІСТЬ" : "DIFFICULTY"}</span><strong>{difficulty} / 12</strong></div>
+          </div>
+          <div className="dice-overlay__result" aria-live="polite">
+            {phase === "idle" && <p className="dice-overlay__instruction">{uk ? "Кинь кубики, щоб відкрити справу. Навіть провал не приховає роботу." : "Roll to open the case. Even a failed check won't hide the work."}</p>}
+            {phase === "rolling" && <p className="dice-overlay__instruction">{uk ? "Кубики падають…" : "The dice are falling…"}</p>}
+            {phase === "done" && dice && (
+              <div className={`dice-overlay__stamp ${success ? "dice-overlay__stamp--success" : "dice-overlay__stamp--failure"}`} role="status">
+                <span className="dice-overlay__stamp-label">{success ? ui.check.success[locale] : ui.check.failure[locale]}</span>
+                <span className="dice-overlay__stamp-score"> · {dice[0]} + {dice[1]} = {total}</span>
+              </div>
+            )}
+          </div>
+          <div className="dice-overlay__actions">
             <button
               type="button"
-              onClick={onOpenProject}
-              className="label min-h-11 border border-[#5c4f3a]/50 px-5 py-3 text-[#3c3327] hover:bg-[#5c4f3a]/10"
+              onClick={roll}
+              disabled={(!ready && !unavailable) || phase === "rolling"}
+              autoFocus
+              className="dice-overlay__roll label"
             >
-              {uk ? "Відкрити справу" : "Open the case"} →
+              {!ready && !unavailable
+                ? (uk ? "Завантаження 3D…" : "Loading 3D…")
+                : phase === "done"
+                  ? (uk ? "Кинути ще раз" : "Roll again")
+                  : ui.check.roll[locale]}
             </button>
-          )}
+            {phase === "done" && (
+              <button type="button" onClick={onOpenProject} className="dice-overlay__open label">
+                {uk ? "Відкрити справу" : "Open the case"} →
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>,

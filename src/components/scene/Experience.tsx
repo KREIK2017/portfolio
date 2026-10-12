@@ -196,8 +196,8 @@ export function Experience({ locale }: { locale: Locale }) {
             <p className="flex-1 text-sm leading-relaxed text-light/85">
               <span className="lg:hidden">
                 {locale === "uk"
-                  ? "Озирнись. Обери предмет зі списку під кімнатою — він відкриє розділ портфоліо."
-                  : "Look around. Choose an object from the list below the room to open a portfolio section."}
+                  ? "Обери предмет нижче — він відкриє розділ портфоліо."
+                  : "Choose an object below to open a portfolio section."}
               </span>
               <span className="hidden lg:inline">{ui.roomHint[locale]}</span>
             </p>
@@ -224,10 +224,37 @@ export function Experience({ locale }: { locale: Locale }) {
                   {roomCopy.title}
                 </h1>
               </div>
-              <p className="hidden max-w-sm text-right text-sm leading-relaxed text-light/45 md:block">
+              <p className="hidden max-w-sm text-right text-sm leading-relaxed text-light/60 lg:block">
                 {roomCopy.subtitle}
               </p>
             </div>
+
+            {/* На дотику точки на ізометрії замалі: усі предмети доступні до сцени. */}
+            <nav
+              className="room-object-nav mb-4 lg:hidden"
+              aria-label={ui.nav.projects[locale]}
+            >
+              <p className="label mb-2 text-terracotta">{roomCopy.objects}</p>
+              <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+                {HOTSPOTS.map((spot, index) => {
+                  const skill = SKILL_BY_ID[spot.voice];
+
+                  return (
+                    <li key={spot.id}>
+                      <button
+                        type="button"
+                        onClick={() => handleSelect(spot.id)}
+                        className="room-object-nav__button"
+                      >
+                        <span className="room-object-nav__index">0{index + 1}</span>
+                        <span className="room-object-nav__name">{spot.label[locale]}</span>
+                        <span className="room-object-nav__arrow" style={{ color: skill.color }} aria-hidden="true">↗</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
 
             <Room
               locale={locale}
@@ -240,36 +267,6 @@ export function Experience({ locale }: { locale: Locale }) {
             />
         </section>
 
-        {/* Мобільний фолбек: дрібні предмети важко влучити пальцем. */}
-        <nav
-          className="mx-auto mt-5 max-w-xl lg:hidden"
-          aria-label={ui.nav.projects[locale]}
-        >
-          <p className="label mb-3 text-terracotta">{roomCopy.objects}</p>
-          <ul className="grid gap-2 sm:grid-cols-2">
-            {HOTSPOTS.map((spot, index) => {
-              const skill = SKILL_BY_ID[spot.voice];
-
-              return (
-                <li key={spot.id}>
-                  <button
-                    type="button"
-                    onClick={() => handleSelect(spot.id)}
-                    className="flex min-h-14 w-full items-center justify-between gap-3 border border-light/10 bg-light/[0.025] px-3 py-3 text-left"
-                  >
-                    <span className="flex items-center gap-3">
-                      <span className="font-condensed text-xs text-light/25">0{index + 1}</span>
-                      <span className="font-display text-lg text-light/90">{spot.label[locale]}</span>
-                    </span>
-                    <span className="label" style={{ color: skill.color }}>
-                      →
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
       </main>
 
       <SkillVoices voices={voices} locale={locale} />
