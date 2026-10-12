@@ -107,3 +107,61 @@ test("room lamp can be switched off and back on", async ({ page }) => {
   await page.getByRole("button", { name: "Лампа: увімкнути" }).click();
   await expect(experience).toHaveAttribute("data-lamp", "on");
 });
+
+test("home URL stays on the classic portfolio after visiting the room", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("kreik-mode", "room"));
+  await page.goto("/room/");
+  await page.goto("/");
+
+  await expect(page).toHaveURL("http://localhost:3000/");
+  await expect(page.locator(".bg-rs-paper h1")).toBeVisible();
+  await page.waitForTimeout(300);
+  await expect(page).toHaveURL("http://localhost:3000/");
+});
+
+test("moving the mouse does not shift the room", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === "mobile", "No mouse on a touch viewport");
+  await page.goto("/room/");
+  const skip = page.getByRole("button", { name: /пропустити/i });
+  if (await skip.isVisible()) await skip.click();
+
+  const scene = page.locator(".room-art");
+  const transform = () => scene.evaluate((element) => getComputedStyle(element).transform);
+  const initial = await transform();
+  const box = await scene.boundingBox();
+  if (!box) throw new Error("Room scene is not visible");
+  await page.mouse.move(box.x + box.width * 0.15, box.y + box.height * 0.2);
+  await page.waitForTimeout(550);
+  expect(await transform()).toBe(initial);
+  await page.mouse.move(box.x + box.width * 0.85, box.y + box.height * 0.8);
+  await page.waitForTimeout(550);
+  expect(await transform()).toBe(initial);
+});
+
+test("3D dice use the actual roll for success and failure", async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/room/");
+  await page.locator(".intro-screen")
+    .getByRole("button", { name: /пропустити|розплющити очі/i }).click();
+
+  if (testInfo.project.name === "mobile") {
+    await page.getByRole("navigation", { name: "Проєкти" })
+      .getByRole("button", { name: /Дошка з нотатками/ }).click();
+  } else {
+    await page.getByRole("group", { name: "Ізометрична кімната-майстерня з інтерактивними предметами" })
+      .getByRole("button", { name: "Дошка з нотатками" }).click();
+  }
+
+  await page.getByRole("button", { name: /Перевірка удачі/ }).click();
+  const dice = page.getByRole("dialog", { name: "Перевірка удачі" });
+  await expect(dice.locator(".dice-cube")).toHaveCount(2);
+  await expect(dice.locator(".dice-face")).toHaveCount(12);
+
+  await page.evaluate(() => { Math.random = () => 0.99; });
+  await dice.getByRole("button", { name: "Кинути кубики" }).click();
+  await expect(dice.getByText(/Успіх · 6 \+ 6 = 12/)).toBeVisible();
+
+  await page.evaluate(() => { Math.random = () => 0; });
+  await dice.getByRole("button", { name: "Кинути ще раз" }).click();
+  await expect(dice.getByText(/Провал · 1 \+ 1 = 2/)).toBeVisible();
+});

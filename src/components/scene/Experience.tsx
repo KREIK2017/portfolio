@@ -15,7 +15,7 @@ import { ui } from "@/content/dictionary";
 import { HOTSPOTS } from "@/content/hotspots";
 import { SKILLS, SKILL_BY_ID } from "@/content/skills";
 import { site } from "@/config/site";
-import { resumePath, roomPath, writeMode } from "@/lib/mode";
+import { resumePath, roomPath } from "@/lib/mode";
 import type { Hotspot, Locale, PanelId, SkillId } from "@/types/content";
 
 const VOICE_LIFETIME = 7000;
@@ -37,14 +37,6 @@ export function Experience({ locale }: { locale: Locale }) {
   const nextVoiceId = useRef(0);
   const lastText = useRef<string>("");
   const timers = useRef<number[]>([]);
-
-  /**
-   * Запамʼятовуємо вибір: наступний візит у корінь приведе одразу
-   * сюди, а не в résumé. Редирект в інший бік робить сама Resume.
-   */
-  useEffect(() => {
-    writeMode("room");
-  }, []);
 
   useEffect(() => {
     // Масив той самий на весь час життя компонента, тому копія
@@ -165,7 +157,6 @@ export function Experience({ locale }: { locale: Locale }) {
           {/* Вихід у спокійну версію — завжди видимий, як вимагає ТЗ 2.1 */}
           <Link
             href={resumePath(locale)}
-            onClick={() => writeMode("resume")}
             className="label inline-flex min-h-11 items-center border border-light/10 px-3 text-light/65 transition-colors hover:border-amber/50 hover:text-amber"
           >
             {ui.resume.toResume[locale]} →

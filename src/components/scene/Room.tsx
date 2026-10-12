@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type PointerEvent,
 } from "react";
 import { HOTSPOTS } from "@/content/hotspots";
 import type { Hotspot, Locale, PanelId } from "@/types/content";
@@ -25,35 +24,35 @@ const OBJECT_LAYERS = [
     panel: "about",
     src: "/img/room/mirror.webp",
     x: 35.3, y: 8.7, width: 8.08, height: 27.42,
-    imageWidth: 135, imageHeight: 258, depth: 0.7,
+    imageWidth: 135, imageHeight: 258,
   },
   {
     name: "pinboard",
     panel: "projects",
     src: "/img/room/pinboard.webp",
     x: 63.6, y: 15.8, width: 19.75, height: 40.9,
-    imageWidth: 330, imageHeight: 385, depth: 0.8,
+    imageWidth: 330, imageHeight: 385,
   },
   {
     name: "radio",
     panel: "contact",
     src: "/img/room/radio.webp",
     x: 36.6, y: 36.9, width: 6.76, height: 8.6,
-    imageWidth: 113, imageHeight: 81, depth: 1.15,
+    imageWidth: 113, imageHeight: 81,
   },
   {
     name: "suitcase",
     panel: "cv",
     src: "/img/room/suitcase.webp",
     x: 49.95, y: 67.16, width: 16.93, height: 19.45,
-    imageWidth: 283, imageHeight: 183, depth: 1.45,
+    imageWidth: 283, imageHeight: 183,
   },
   {
     name: "bottle",
     panel: "trivia",
     src: "/img/room/bottle-ashtray.webp",
     x: 40.9, y: 64.5, width: 6.88, height: 15.94,
-    imageWidth: 115, imageHeight: 150, depth: 1.65,
+    imageWidth: 115, imageHeight: 150,
   },
 ] as const;
 
@@ -148,42 +147,16 @@ export function Room({
 }: RoomProps) {
   const [hoveredId, setHoveredId] = useState<PanelId | null>(null);
   const [selectedId, setSelectedId] = useState<PanelId | null>(null);
-  const roomRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<number | null>(null);
   const selectTimerRef = useRef<number | null>(null);
 
   useEffect(
     () => () => {
-      if (frameRef.current !== null) {
-        window.cancelAnimationFrame(frameRef.current);
-      }
       if (selectTimerRef.current !== null) {
         window.clearTimeout(selectTimerRef.current);
       }
     },
     [],
   );
-
-  const moveScene = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === "touch") return;
-    const room = roomRef.current;
-    if (!room) return;
-
-    const bounds = room.getBoundingClientRect();
-    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
-    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
-
-    if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
-    frameRef.current = window.requestAnimationFrame(() => {
-      room.style.setProperty("--room-x", x.toFixed(3));
-      room.style.setProperty("--room-y", y.toFixed(3));
-    });
-  };
-
-  const centerScene = () => {
-    roomRef.current?.style.setProperty("--room-x", "0");
-    roomRef.current?.style.setProperty("--room-y", "0");
-  };
 
   const enter = (hotspot: Hotspot) => {
     setHoveredId(hotspot.id);
@@ -214,10 +187,7 @@ export function Room({
 
   return (
     <div
-      ref={roomRef}
       className="room-art-shell"
-      onPointerMove={moveScene}
-      onPointerLeave={centerScene}
       role="group"
       aria-label={
         locale === "uk"
@@ -261,7 +231,6 @@ export function Room({
                 left: `${layer.x}%`,
                 top: `${layer.y}%`,
                 width: `${layer.width}%`,
-                "--depth": layer.depth,
               } as CSSProperties}
             />
           ))}

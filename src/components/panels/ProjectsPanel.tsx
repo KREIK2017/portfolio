@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { DiceChallenge } from "./DiceChallenge";
 import { Divider, Panel } from "./Panel";
 import { SkillCheck } from "./SkillCheck";
 import { ui } from "@/content/dictionary";
@@ -156,6 +157,7 @@ export function ProjectsPanel({
   onClose: () => void;
 }) {
   const [openSlug, setOpenSlug] = useState<string | null>(null);
+  const [diceOpen, setDiceOpen] = useState(false);
   /** Слаги, для яких перевірку навички вже пройдено — щоб не повторювати. */
   const [resolved, setResolved] = useState<string[]>([]);
 
@@ -168,10 +170,19 @@ export function ProjectsPanel({
       title={ui.projects.title[locale]}
       subtitle={project ? undefined : ui.projects.subtitle[locale]}
       locale={locale}
-      onClose={onClose}
+      onClose={() => (diceOpen ? setDiceOpen(false) : onClose())}
     >
       {project == null && (
         <>
+          {PROJECTS.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setDiceOpen(true)}
+              className="label mb-6 min-h-11 border border-[#7a2e2e]/50 px-4 py-2 text-[#7a2e2e] transition-colors hover:bg-[#7a2e2e]/10"
+            >
+              ⚄ {locale === "uk" ? "Перевірка удачі · 2d6" : "Luck check · 2d6"} →
+            </button>
+          )}
           {PROJECTS.length === 0 ? (
             <p className="text-[#4a4032]">{ui.projects.empty[locale]}</p>
           ) : (
@@ -202,6 +213,17 @@ export function ProjectsPanel({
           project={project}
           locale={locale}
           onBack={() => setOpenSlug(null)}
+        />
+      )}
+
+      {diceOpen && (
+        <DiceChallenge
+          locale={locale}
+          onClose={() => setDiceOpen(false)}
+          onOpenProject={(slug) => {
+            setDiceOpen(false);
+            setOpenSlug(slug);
+          }}
         />
       )}
     </Panel>

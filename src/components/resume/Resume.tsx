@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { SECTIONS, Sidebar } from "./Sidebar";
 import { StackCard } from "./StackCard";
 import { LivingOilFilter } from "@/components/ui/LivingOilFilter";
@@ -13,7 +11,7 @@ import { ATTRIBUTES, MAX_SKILL_LEVEL, skillsOf } from "@/content/skills";
 import { STACK, STACK_POINTS } from "@/content/stack";
 import { site } from "@/config/site";
 import { useActiveSection, useSmoothScroll } from "@/lib/hooks";
-import { readMode, resumePath, roomPath, writeMode } from "@/lib/mode";
+import { resumePath, roomPath } from "@/lib/mode";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/types/content";
 
@@ -89,23 +87,7 @@ function Stats({ locale }: { locale: Locale }) {
 
 export function Resume({ locale }: { locale: Locale }) {
   const active = useActiveSection(SECTIONS);
-  const router = useRouter();
   useSmoothScroll(true);
-
-  /**
-   * Résumé — режим за замовчуванням, тому воно й лежить у корені.
-   * Але якщо минулого разу людина обрала кімнату — ведемо туди.
-   * Перевірка можлива лише на клієнті: у статичному експорті немає
-   * сервера, який прочитав би cookie до віддачі HTML.
-   */
-  useEffect(() => {
-    if (readMode() === "room") {
-      router.replace(roomPath(locale));
-      return;
-    }
-
-    writeMode("resume");
-  }, [router, locale]);
 
   const otherLocale: Locale = locale === "uk" ? "en" : "uk";
   const gridItems = STACK.filter((item) => item.group !== "ai");
@@ -132,7 +114,6 @@ export function Resume({ locale }: { locale: Locale }) {
           <span aria-hidden="true" className="bg-rs-line h-4 w-px" />
           <Link
             href={roomPath(locale)}
-            onClick={() => writeMode("room")}
             className="rs-label text-rs-accent inline-flex min-h-11 items-center hover:underline"
           >
             {ui.resume.toRoom[locale]} →
