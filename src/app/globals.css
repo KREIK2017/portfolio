@@ -232,6 +232,12 @@
   will-change: transform;
 }
 
+.room-art--focus {
+  transform-origin: var(--focus-x) var(--focus-y);
+  transform: rotateX(calc(var(--room-y) * -0.5deg))
+    rotateY(calc(var(--room-x) * 0.5deg)) scale(1.075);
+}
+
 .room-art::after {
   content: "";
   position: absolute;
@@ -303,6 +309,30 @@
     drop-shadow(0 0 8px rgba(201, 151, 63, 0.28));
 }
 
+.room-art__object {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  transform: translate3d(
+    calc(var(--room-x) * var(--depth) * 5px),
+    calc(var(--room-y) * var(--depth) * 4px),
+    0
+  );
+  filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.45));
+  transition: transform 0.42s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.3s ease;
+}
+
+.room-art__object[data-active="true"] {
+  transform: translate3d(
+    calc(var(--room-x) * var(--depth) * 6px),
+    calc(var(--room-y) * var(--depth) * 5px - 5px),
+    0
+  ) scale(1.025);
+  filter: brightness(1.13) drop-shadow(0 9px 10px rgba(0, 0, 0, 0.6));
+}
+
 .room-art__light {
   position: absolute;
   z-index: 3;
@@ -357,6 +387,11 @@
   filter: brightness(0.88) saturate(0.94) contrast(1.04);
 }
 
+[data-time="night"] .room-art__object {
+  filter: brightness(0.88) saturate(0.94)
+    drop-shadow(0 4px 5px rgba(0, 0, 0, 0.45));
+}
+
 [data-time="night"] .room-art__light {
   opacity: 0.45;
   background:
@@ -366,6 +401,16 @@
 
 [data-time="day"] .room-art__image {
   filter: brightness(1.08) saturate(0.88) contrast(0.98) sepia(0.06);
+}
+
+[data-time="day"] .room-art__object {
+  filter: brightness(1.08) saturate(0.88) contrast(0.98) sepia(0.06)
+    drop-shadow(0 4px 5px rgba(0, 0, 0, 0.45));
+}
+
+.room-art__object[data-active="true"] {
+  filter: brightness(1.14)
+    drop-shadow(0 9px 10px rgba(0, 0, 0, 0.6));
 }
 
 .room-art-window {
@@ -398,6 +443,25 @@
 }
 
 .room-art-hotspot:focus { outline: none; }
+
+.room-art-hotspot--object {
+  translate: none;
+}
+
+.room-art-hotspot--object .room-art-hotspot__ring {
+  inset: auto;
+  left: var(--marker-x);
+  top: var(--marker-y);
+  width: 32px;
+  height: 32px;
+  translate: -50% -50%;
+}
+
+.room-art-hotspot--object .room-art-hotspot__label {
+  left: var(--marker-x);
+  top: calc(var(--marker-y) - 56px);
+  bottom: auto;
+}
 
 .room-art-hotspot__ring {
   position: absolute;
@@ -837,6 +901,8 @@ html.lenis body {
   .room-art__base,
   .room-art__depth-layer,
   .room-art__depth-layer[data-active="true"],
+  .room-art__object,
+  .room-art__object[data-active="true"],
   .room-art__light,
   .room-art__lamp-glow {
     transform: none;
