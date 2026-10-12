@@ -159,8 +159,8 @@ export function SuitcaseScene({
           </button>
         ))}
       </div>
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-[#4a4032]">
+      <div className="suitcase-controls mt-3 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm">
           {locale === "uk"
             ? "Бери предмети, пересувай і відкривай. Стрілки теж працюють."
             : "Pick up, move and open the objects. Arrow keys work too."}
@@ -168,14 +168,14 @@ export function SuitcaseScene({
         <button
           type="button"
           onClick={() => { setPositions(INITIAL); setFront(null); }}
-          className="label min-h-11 border border-[#5c4f3a]/40 px-3 text-[#4a4032] hover:bg-[#5c4f3a]/10"
+          className="label min-h-11 border px-3"
         >
           {locale === "uk" ? "Скласти назад" : "Put things back"}
         </button>
       </div>
-      <nav className="mt-4 grid grid-cols-3 gap-2 lg:hidden" aria-label={locale === "uk" ? "Предмети валізи" : "Suitcase objects"}>
+      <nav className="suitcase-shortcuts mt-4 grid grid-cols-3 gap-2 lg:hidden" aria-label={locale === "uk" ? "Предмети валізи" : "Suitcase objects"}>
         {ITEMS.map((item) => (
-          <button key={item} type="button" onClick={() => onInspect(item)} className="min-h-12 border border-[#5c4f3a]/40 px-2 text-xs text-[#4a4032]">
+          <button key={item} type="button" onClick={() => onInspect(item)} className="min-h-12 border px-2 text-xs">
             {LABELS[item][locale]}
           </button>
         ))}

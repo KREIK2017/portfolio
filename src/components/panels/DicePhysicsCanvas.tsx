@@ -48,9 +48,9 @@ function tableTexture() {
   canvas.width = canvas.height = 512;
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Canvas 2D unavailable");
-  context.fillStyle = "#7e654d";
+  context.fillStyle = "#493732";
   context.fillRect(0, 0, 512, 512);
-  // Дрібні нерівні прожилки дерева — легка процедурна фактура без ассета.
+  // Приглушене сукно: нерівні волокна замість рівної плоскої заливки.
   let seed = 137;
   const random = () => {
     seed = (seed * 16807) % 2147483647;
@@ -59,9 +59,9 @@ function tableTexture() {
   for (let index = 0; index < 450; index += 1) {
     const y = random() * 512;
     const x = random() * 512;
-    context.strokeStyle = random() > 0.5 ? "#a78963" : "#4c3d31";
-    context.globalAlpha = 0.06 + random() * 0.16;
-    context.lineWidth = 0.5 + random() * 2;
+    context.strokeStyle = random() > 0.5 ? "#916f5e" : "#221b1b";
+    context.globalAlpha = 0.035 + random() * 0.1;
+    context.lineWidth = 0.5 + random() * 1.2;
     context.beginPath();
     context.moveTo(x, y);
     context.bezierCurveTo(x + 25, y - 3, x + 70, y + 3, x + 105 + random() * 100, y);
@@ -124,11 +124,11 @@ export default function DicePhysicsCanvas({
     mount.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
-    camera.position.set(0, 4.6, 6.8);
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+    camera.position.set(0, 4.0, 5.7);
     camera.lookAt(0, 0.55, 0);
 
-    scene.add(new THREE.HemisphereLight(0xffefd3, 0x493729, 2.0));
+    scene.add(new THREE.HemisphereLight(0xffefd3, 0x493729, 1.65));
     const lamp = new THREE.DirectionalLight(0xffddab, 3.1);
     lamp.position.set(-3, 7, 4);
     lamp.castShadow = true;
@@ -147,6 +147,27 @@ export default function DicePhysicsCanvas({
     floor.position.y = -0.04;
     floor.receiveShadow = true;
     scene.add(floor);
+
+    const rimMaterial = new THREE.MeshStandardMaterial({ color: 0x805634, roughness: 0.85 });
+    const brassMaterial = new THREE.MeshStandardMaterial({ color: 0x947344, metalness: 0.45, roughness: 0.5 });
+    const rimGeometry = new THREE.BoxGeometry(7.4, 0.23, 0.13);
+    for (const z of [-2.54, 2.54]) {
+      const rim = new THREE.Mesh(rimGeometry, rimMaterial);
+      rim.position.set(0, 0.07, z);
+      rim.receiveShadow = true;
+      scene.add(rim);
+    }
+    const sideRimGeometry = new THREE.BoxGeometry(0.13, 0.23, 5.1);
+    for (const x of [-3.64, 3.64]) {
+      const rim = new THREE.Mesh(sideRimGeometry, rimMaterial);
+      rim.position.set(x, 0.07, 0);
+      rim.receiveShadow = true;
+      scene.add(rim);
+    }
+    const accentGeometry = new THREE.BoxGeometry(7.15, 0.015, 0.02);
+    const accent = new THREE.Mesh(accentGeometry, brassMaterial);
+    accent.position.set(0, 0.2, 2.47);
+    scene.add(accent);
 
     const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -19, 0), allowSleep: true });
     world.defaultContactMaterial.friction = 0.42;
@@ -176,7 +197,7 @@ export default function DicePhysicsCanvas({
     for (let index = 0; index < 2; index += 1) {
       const mesh = new THREE.Mesh(geometry, materials);
       mesh.castShadow = true;
-      mesh.position.set(index === 0 ? -0.9 : 0.9, 0.43, 0);
+      mesh.position.set(index === 0 ? -0.7 : 0.7, 0.43, 0);
       scene.add(mesh);
       meshes.push(mesh);
 
@@ -262,6 +283,11 @@ export default function DicePhysicsCanvas({
       floorGeometry.dispose();
       floorMaterial.dispose();
       wood.dispose();
+      rimGeometry.dispose();
+      sideRimGeometry.dispose();
+      accentGeometry.dispose();
+      rimMaterial.dispose();
+      brassMaterial.dispose();
       materials.forEach((material) => material.dispose());
       textures.forEach((texture) => texture.dispose());
       renderer.dispose();

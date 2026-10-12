@@ -30,7 +30,7 @@ function ItemDetail({
   return createPortal(
     <div className="suitcase-detail" role="dialog" aria-modal="true" aria-label={title}>
       <button type="button" className="suitcase-detail__backdrop" tabIndex={-1} aria-hidden="true" onClick={onClose} />
-      <article className={`suitcase-detail__paper ${item === "cv" ? "suitcase-detail__paper--cv" : ""}`}>
+      <article className={`suitcase-detail__paper suitcase-detail__paper--${item}`}>
         <header className="flex items-start justify-between gap-5 border-b border-[#5c4f3a]/30 pb-4">
           <div>
             <p className="label text-[#7a2e2e]">KREIK · {item === "cv" ? "DOCUMENT 03" : item === "passport" ? "DOCUMENT 02" : "DOCUMENT 01"}</p>
@@ -42,11 +42,13 @@ function ItemDetail({
         </header>
 
         {item === "photo" && (
-          <div className="mt-5 grid items-center gap-5 sm:grid-cols-[minmax(0,240px)_1fr]">
-            <div className="border-8 border-[#f0e5cd] bg-[#f0e5cd] shadow-xl">
+          <div className="suitcase-portrait-layout mt-6">
+            <div className="suitcase-portrait-print">
               <Image src="/img/suitcase-photo.webp" alt={site.name[locale]} width={720} height={1009} className="h-auto w-full" />
+              <span>ARCHIVE / 01</span>
             </div>
             <div>
+              <p className="label text-[#8b4337]">{uk ? "ОСОБИСТА СПРАВА" : "PERSONAL FILE"}</p>
               <p className="text-2xl text-[#2a241c]">{site.name[locale]}</p>
               <p className="mt-2 leading-relaxed text-[#4a4032]">{site.role[locale]}</p>
               <p className="mt-4 text-sm italic text-[#5c4f3a]">
@@ -57,18 +59,30 @@ function ItemDetail({
         )}
 
         {item === "passport" && (
-          <div className="mt-5">
-            <p className="text-xl text-[#2a241c]">{site.name[locale]}</p>
-            <p className="mt-1 text-[#5c4f3a]">{site.role[locale]}</p>
-            <p className="mt-5 leading-relaxed text-[#4a4032]">
-              {uk
-                ? "Бакалавр інженерії програмного забезпечення, магістратура триває. Понад рік комерційної роботи з WordPress."
-                : "BSc in Software Engineering, MSc in progress. Over a year of commercial WordPress work."}
-            </p>
-            <p className="label mt-7 text-[#7a2e2e]">{uk ? "ІНСТРУМЕНТИ" : "TOOLS"}</p>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {SKILLS.map((skill) => <li key={skill} className="border border-[#5c4f3a]/40 px-2.5 py-1.5 text-sm text-[#3c3327]">{skill}</li>)}
-            </ul>
+          <div className="suitcase-passport-spread mt-6">
+            <div className="suitcase-passport-spread__identity">
+              <p className="label">KREIK / 02</p>
+              <div className="suitcase-passport-spread__portrait">
+                <Image src="/img/suitcase-photo.webp" alt="" width={720} height={1009} />
+              </div>
+              <span className="suitcase-passport-spread__seal" aria-hidden="true">✦</span>
+              <p className="text-xl">{site.name[locale]}</p>
+              <small>{site.role[locale]}</small>
+            </div>
+            <div className="suitcase-passport-spread__notes">
+              <p className="label text-[#7a2e2e]">{uk ? "КАРТКА ФАХІВЦЯ" : "DEVELOPER RECORD"}</p>
+              <h4>{uk ? "Профіль" : "Profile"}</h4>
+              <p>
+                {uk
+                  ? "Бакалавр інженерії програмного забезпечення, магістратура триває. Понад рік комерційної роботи з WordPress."
+                  : "BSc in Software Engineering, MSc in progress. Over a year of commercial WordPress work."}
+              </p>
+              <p className="label mt-7 text-[#7a2e2e]">{uk ? "ІНСТРУМЕНТИ" : "TOOLS"}</p>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {SKILLS.map((skill) => <li key={skill} className="border border-[#5c4f3a]/40 px-2.5 py-1.5 text-sm text-[#3c3327]">{skill}</li>)}
+              </ul>
+              <p className="suitcase-passport-spread__foot">KREIK · {uk ? "ПОРТФОЛІО" : "PORTFOLIO"} · 2026</p>
+            </div>
           </div>
         )}
 
@@ -121,6 +135,7 @@ export function CvPanel({
       locale={locale}
       onClose={() => (selected ? closeDetail() : onClose())}
       wide
+      className="suitcase-panel"
     >
       <SuitcaseScene locale={locale} onInspect={setSelected} />
       {selected && <ItemDetail item={selected} locale={locale} onClose={closeDetail} />}

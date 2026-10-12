@@ -62,13 +62,15 @@ export function DiceChallenge({
         <button type="button" className="dice-overlay__close label" onClick={onClose} aria-label={ui.close[locale]}>
           ✕
         </button>
-        <p className="label text-[#9b6145]">{ui.check.title[locale]} · 2D6</p>
+        <p className="label dice-overlay__eyebrow">✦ &nbsp; {ui.check.title[locale]} · 2D6 &nbsp; ✦</p>
         <h3 className="mt-3 text-3xl text-[#2a241c] sm:text-4xl">{project.title[locale]}</h3>
         <p className="mt-3 text-sm leading-relaxed text-[#4a4032] sm:text-base">
           {uk
             ? `Кинь два кубики, щоб відкрити справу. Потрібно ${difficulty} або більше; навіть провал не приховає роботу.`
             : `Roll two dice to open this case. You need ${difficulty} or more; even a failed check won't hide the work.`}
         </p>
+
+        <div className="dice-overlay__rule" aria-hidden="true"><span>◆</span></div>
 
         <div className="dice-table">
           {!unavailable && (
@@ -89,7 +91,9 @@ export function DiceChallenge({
           )}
         </div>
 
-        <div className="min-h-16 text-center" aria-live="polite">
+        <p className="dice-overlay__threshold label">{uk ? "ПОРОГ УСПІХУ" : "SUCCESS THRESHOLD"} <span>{difficulty} / 12</span></p>
+
+        <div className="dice-overlay__result min-h-16 text-center" aria-live="polite">
           {phase === "rolling" && <p className="text-[#5c4f3a]">{uk ? "Кубики падають…" : "The dice are falling…"}</p>}
           {phase === "done" && dice && (
             <p className={`text-xl ${success ? "text-[#3e6945]" : "text-[#853d32]"}`} role="status">

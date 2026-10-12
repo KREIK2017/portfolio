@@ -14,6 +14,7 @@ export function Panel({
   locale,
   onClose,
   wide = false,
+  className = "",
   children,
 }: {
   title: string;
@@ -22,6 +23,7 @@ export function Panel({
   onClose: () => void;
   /** Character sheet потребує трьох колонок, тому ширший аркуш. */
   wide?: boolean;
+  className?: string;
   children: React.ReactNode;
 }) {
   useEscape(onClose);
@@ -42,7 +44,7 @@ export function Panel({
       />
 
       <article
-        className={`paper paper-edge anim-fade-up relative flex max-h-full w-full flex-col ${
+        className={`paper paper-edge anim-fade-up relative flex max-h-full w-full flex-col ${className} ${
           wide ? "max-w-6xl" : "max-w-3xl"
         }`}
       >

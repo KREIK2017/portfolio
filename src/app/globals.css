@@ -569,12 +569,30 @@
   width: min(100%, 34rem);
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;
-  border: 1px solid rgba(96, 70, 45, 0.7);
+  border: 1px solid #9c7e55;
   padding: clamp(1.25rem, 4vw, 2.25rem);
-  background: #d2c09a;
+  background:
+    repeating-linear-gradient(95deg, transparent 0 3px, rgba(95, 74, 42, 0.022) 3px 4px),
+    radial-gradient(ellipse at 50% 27%, #e7d9ba, #c7b087 100%);
   box-shadow: 0 28px 90px rgba(0, 0, 0, 0.7), inset 0 0 70px rgba(90, 63, 36, 0.16);
   text-align: center;
 }
+
+.dice-overlay__card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(103, 78, 45, 0.23);
+  pointer-events: none;
+}
+
+.dice-overlay__eyebrow { color: #8e4c36; letter-spacing: 0.17em; }
+.dice-overlay__rule { display: flex; align-items: center; gap: 1rem; margin-top: 1.2rem; color: #8d6645; font-size: 0.7rem; }
+.dice-overlay__rule::before,
+.dice-overlay__rule::after { content: ""; flex: 1; height: 1px; background: rgba(105, 77, 45, 0.36); }
+.dice-overlay__threshold { display: flex; justify-content: space-between; padding: 0.55rem 0; color: #654d36; text-align: left; }
+.dice-overlay__threshold span { color: #803d31; font-size: 0.9rem; }
+.dice-overlay__result { border-top: 1px solid rgba(105, 77, 45, 0.25); padding-top: 0.9rem; }
 
 .dice-overlay__close {
   position: absolute;
@@ -591,13 +609,16 @@
   display: grid;
   place-items: center;
   min-height: 14rem;
-  margin: 1rem 0;
-  background: radial-gradient(ellipse at center, rgba(104, 68, 39, 0.24), transparent 72%);
+  margin: 1rem 0 0;
+  border: 6px solid #543c2b;
+  outline: 1px solid #a07d51;
+  box-shadow: inset 0 0 0 1px #a07d51, 0 8px 17px rgba(62, 39, 23, 0.25);
+  background: #382a27;
 }
 
 .dice-physics-canvas {
   width: 100%;
-  height: clamp(14rem, 32vh, 16rem);
+  height: clamp(14rem, 32vh, 17rem);
   overflow: hidden;
 }
 
@@ -613,9 +634,8 @@
   width: min(100%, 680px);
   margin-inline: auto;
   aspect-ratio: 1312 / 1199;
-  overflow: hidden;
-  background: radial-gradient(ellipse at 50% 50%, #554738, #26211d 76%);
-  border: 1px solid rgba(92, 79, 58, 0.5);
+  overflow: visible;
+  background: transparent;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -627,7 +647,37 @@
   object-fit: contain;
   pointer-events: none;
   -webkit-user-drag: none;
+  filter: drop-shadow(0 24px 17px rgba(0, 0, 0, 0.45));
 }
+
+/* Обкладинка валізи тепер лежить на стільниці, без темного прямокутника. */
+.paper.suitcase-panel {
+  border: 1px solid #806a4b;
+  background:
+    radial-gradient(ellipse at 51% 35%, rgba(154, 116, 65, 0.18), transparent 58%),
+    repeating-linear-gradient(91deg, transparent 0 72px, rgba(15, 11, 9, 0.055) 73px 76px, transparent 78px 135px),
+    linear-gradient(135deg, #3c2b22, #231c18 56%, #34271f);
+  box-shadow: 0 35px 100px rgba(0, 0, 0, 0.75), inset 0 0 90px rgba(0, 0, 0, 0.32);
+}
+
+.suitcase-panel.paper-edge::before,
+.suitcase-panel.paper-edge::after { border-color: rgba(204, 166, 106, 0.2); }
+.suitcase-panel > header h2 { color: #ead8b8; }
+.suitcase-panel > header p { color: #c2ae8b; font-size: 0.94rem; }
+.suitcase-panel > header button,
+.suitcase-controls button,
+.suitcase-shortcuts button {
+  border-color: rgba(211, 174, 110, 0.42);
+  color: #e1c69a;
+  background: rgba(10, 8, 7, 0.18);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.suitcase-panel > header button:hover,
+.suitcase-controls button:hover,
+.suitcase-shortcuts button:hover { background: rgba(196, 144, 71, 0.2); border-color: #d2ab6e; }
+.suitcase-controls { border-top: 1px solid rgba(211, 174, 110, 0.19); padding-top: 0.8rem; }
+.suitcase-controls p { color: #d7c5a4; }
+.suitcase-shortcuts button { line-height: 1.25; }
 
 .suitcase-item {
   position: absolute;
@@ -673,9 +723,10 @@
 
 .suitcase-photo {
   padding: 7% 7% 13%;
-  background: #e7ddc6;
+  background: linear-gradient(145deg, #f1e7d0, #d2c09b);
   color: #4b3f31;
   text-align: center;
+  border: 1px solid rgba(90, 69, 43, 0.25);
 }
 
 .suitcase-photo img {
@@ -701,7 +752,9 @@
   aspect-ratio: 0.8;
   padding: 12% 7%;
   border: 3px double #b3945e;
-  background: linear-gradient(145deg, #733c32, #4a2928 72%, #352022);
+  background:
+    repeating-linear-gradient(94deg, rgba(250, 215, 152, 0.025) 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at 20% 12%, #865348, #4d2928 70%, #301d1d);
   color: #d8bd81;
   font-family: Georgia, serif;
   font-size: clamp(0.7rem, 2vw, 1.3rem);
@@ -718,7 +771,9 @@
   aspect-ratio: 0.78;
   padding: 15% 12%;
   border: 1px solid #b8a17b;
-  background: linear-gradient(90deg, #e7d8b8 0 48%, #d0bc95 49%, #e9dbbc 51%, #e5d4af 100%);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(92, 72, 42, 0.025) 3px 4px),
+    linear-gradient(90deg, #e7d8b8 0 48%, #c4ae84 49%, #efe2c2 51%, #e5d4af 100%);
   color: #4c3c2b;
   font-family: Georgia, serif;
   text-align: center;
@@ -760,12 +815,74 @@
   overflow-y: auto;
   border: 1px solid #786145;
   padding: clamp(1.25rem, 4vw, 2rem);
-  background: #d9c8a5;
+  background:
+    repeating-linear-gradient(97deg, transparent 0 3px, rgba(79, 59, 33, 0.025) 3px 4px),
+    radial-gradient(ellipse at 38% 25%, #e8ddc5, #cbb58c 95%);
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.65), inset 0 0 70px rgba(111, 77, 39, 0.15);
 }
 
+.suitcase-detail__paper::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(91, 68, 43, 0.23);
+  pointer-events: none;
+}
+
+.suitcase-detail__paper--passport { width: min(100%, 53rem); }
+.suitcase-portrait-layout { display: grid; align-items: center; gap: 2rem; grid-template-columns: minmax(0, 240px) 1fr; }
+.suitcase-portrait-print {
+  padding: 0.75rem 0.75rem 0.4rem;
+  background: #f0e5cd;
+  box-shadow: 0 10px 25px rgba(47, 31, 19, 0.3);
+  rotate: -3deg;
+  text-align: center;
+}
+.suitcase-portrait-print span { display: block; padding-top: 0.45rem; color: #766448; font-size: 0.7rem; letter-spacing: 0.2em; }
+.suitcase-passport-spread {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  min-height: 22rem;
+  box-shadow: 0 12px 27px rgba(48, 31, 21, 0.26);
+}
+.suitcase-passport-spread__identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 1.5rem;
+  color: #e5cc95;
+  text-align: center;
+  border: 6px solid #5e3731;
+  outline: 1px solid rgba(212, 171, 103, 0.35);
+  outline-offset: -14px;
+  background: radial-gradient(ellipse at 20% 15%, #784b3e, #402523 80%);
+}
+.suitcase-passport-spread__portrait { width: 5.5rem; height: 7rem; margin: 0.35rem 0; padding: 0.25rem; background: #dac9a7; }
+.suitcase-passport-spread__portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.suitcase-passport-spread__seal { color: #c59a55; font-size: 1.5rem; }
+.suitcase-passport-spread__identity small { max-width: 13rem; color: #d0b78d; line-height: 1.5; }
+.suitcase-passport-spread__notes {
+  position: relative;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: linear-gradient(105deg, #c9b18a, #ebdec2 8%, #e0cfac);
+  box-shadow: inset 13px 0 15px -13px rgba(56, 36, 24, 0.6);
+  color: #403529;
+}
+.suitcase-passport-spread__notes h4 { margin: 0.7rem 0; font-size: 1.8rem; color: #2a241c; }
+.suitcase-passport-spread__notes > p:not(.label, .suitcase-passport-spread__foot) { line-height: 1.65; }
+.suitcase-passport-spread__foot { margin-top: 2rem; border-top: 1px solid rgba(92, 73, 46, 0.28); padding-top: 0.5rem; font-size: 0.7rem; letter-spacing: 0.13em; }
+
 .suitcase-detail__paper--cv { width: min(100%, 58rem); }
 .suitcase-pdf-frame { max-height: min(62vh, 48rem); overflow: auto; border: 1px solid #9b8767; background: #eee6d5; }
+
+@media (max-width: 639px) {
+  .suitcase-portrait-layout,
+  .suitcase-passport-spread { grid-template-columns: 1fr; }
+  .suitcase-portrait-print { max-width: 14rem; margin-inline: auto; }
+  .suitcase-passport-spread__identity { min-height: 17rem; }
+}
 
 @media (max-width: 639px) {
   .room-art-hotspot__ring { inset: 10px; }
