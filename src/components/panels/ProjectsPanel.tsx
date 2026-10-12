@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { DiceChallenge } from "./DiceChallenge";
 import { Divider, Panel } from "./Panel";
-import { SkillCheck } from "./SkillCheck";
 import { ui } from "@/content/dictionary";
 import { PROJECTS } from "@/content/projects";
 import type { Locale, Project } from "@/types/content";
@@ -55,11 +54,9 @@ function CaseCard({
         ))}
       </div>
 
-      {project.skillCheck && (
-        <p className="label mt-3 text-[#7a2e2e]/80">
-          {ui.check.title[locale]} →
-        </p>
-      )}
+      <p className="label mt-3 text-[#7a2e2e]/80">
+        {ui.check.title[locale]} →
+      </p>
     </button>
   );
 }
@@ -157,32 +154,20 @@ export function ProjectsPanel({
   onClose: () => void;
 }) {
   const [openSlug, setOpenSlug] = useState<string | null>(null);
-  const [diceOpen, setDiceOpen] = useState(false);
-  /** Слаги, для яких перевірку навички вже пройдено — щоб не повторювати. */
-  const [resolved, setResolved] = useState<string[]>([]);
+  const [pendingSlug, setPendingSlug] = useState<string | null>(null);
 
   const project = PROJECTS.find((item) => item.slug === openSlug) ?? null;
-  const needsCheck =
-    project?.skillCheck != null && !resolved.includes(project.slug);
+  const pendingProject = PROJECTS.find((item) => item.slug === pendingSlug) ?? null;
 
   return (
     <Panel
       title={ui.projects.title[locale]}
       subtitle={project ? undefined : ui.projects.subtitle[locale]}
       locale={locale}
-      onClose={() => (diceOpen ? setDiceOpen(false) : onClose())}
+      onClose={() => (pendingProject ? setPendingSlug(null) : onClose())}
     >
       {project == null && (
         <>
-          {PROJECTS.length > 0 && (
-            <button
-              type="button"
-              onClick={() => setDiceOpen(true)}
-              className="label mb-6 min-h-11 border border-[#7a2e2e]/50 px-4 py-2 text-[#7a2e2e] transition-colors hover:bg-[#7a2e2e]/10"
-            >
-              ⚄ {locale === "uk" ? "Перевірка удачі · 2d6" : "Luck check · 2d6"} →
-            </button>
-          )}
           {PROJECTS.length === 0 ? (
             <p className="text-[#4a4032]">{ui.projects.empty[locale]}</p>
           ) : (
@@ -192,7 +177,7 @@ export function ProjectsPanel({
                   key={item.slug}
                   project={item}
                   locale={locale}
-                  onOpen={() => setOpenSlug(item.slug)}
+                  onOpen={() => setPendingSlug(item.slug)}
                 />
               ))}
             </div>
@@ -200,15 +185,7 @@ export function ProjectsPanel({
         </>
       )}
 
-      {project != null && needsCheck && project.skillCheck && (
-        <SkillCheck
-          check={project.skillCheck}
-          locale={locale}
-          onResolved={() => setResolved((current) => [...current, project.slug])}
-        />
-      )}
-
-      {project != null && !needsCheck && (
+      {project != null && (
         <CaseDetail
           project={project}
           locale={locale}
@@ -216,13 +193,14 @@ export function ProjectsPanel({
         />
       )}
 
-      {diceOpen && (
+      {pendingProject && (
         <DiceChallenge
           locale={locale}
-          onClose={() => setDiceOpen(false)}
-          onOpenProject={(slug) => {
-            setDiceOpen(false);
-            setOpenSlug(slug);
+          project={pendingProject}
+          onClose={() => setPendingSlug(null)}
+          onOpenProject={() => {
+            setOpenSlug(pendingProject.slug);
+            setPendingSlug(null);
           }}
         />
       )}

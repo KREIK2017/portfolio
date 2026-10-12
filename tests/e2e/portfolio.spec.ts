@@ -138,7 +138,7 @@ test("moving the mouse does not shift the room", async ({ page }, testInfo) => {
   expect(await transform()).toBe(initial);
 });
 
-test("3D dice use the actual roll for success and failure", async ({ page }, testInfo) => {
+test("each case opens after a physical 2d6 check", async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/room/");
   await page.locator(".intro-screen")
@@ -152,16 +152,61 @@ test("3D dice use the actual roll for success and failure", async ({ page }, tes
       .getByRole("button", { name: "Дошка з нотатками" }).click();
   }
 
-  await page.getByRole("button", { name: /Перевірка удачі/ }).click();
-  const dice = page.getByRole("dialog", { name: "Перевірка удачі" });
-  await expect(dice.locator(".dice-cube")).toHaveCount(2);
-  await expect(dice.locator(".dice-face")).toHaveCount(12);
+  await page.getByRole("dialog", { name: "Справи" })
+    .getByRole("button", { name: /CodeUnity/ }).click();
+  const dice = page.getByRole("dialog", { name: "Перевірка навички" });
+  await expect(dice.getByRole("heading", { name: "CodeUnity" })).toBeVisible();
+  await expect(dice.locator("canvas")).toBeVisible();
+  await expect(dice.getByRole("button", { name: "Відкрити справу" })).toHaveCount(0);
 
-  await page.evaluate(() => { Math.random = () => 0.99; });
   await dice.getByRole("button", { name: "Кинути кубики" }).click();
-  await expect(dice.getByText(/Успіх · 6 \+ 6 = 12/)).toBeVisible();
+  const result = dice.getByRole("status");
+  await expect(result).toContainText(/(Успіх|Провал) · [1-6] \+ [1-6] = (?:[2-9]|1[0-2])/);
+  const text = await result.textContent();
+  const match = text?.match(/(\d) \+ (\d) = (\d+)/);
+  expect(match).toBeTruthy();
+  const first = Number(match?.[1]);
+  const second = Number(match?.[2]);
+  const total = Number(match?.[3]);
+  expect(first + second).toBe(total);
+  expect(text?.startsWith(total >= 7 ? "Успіх" : "Провал")).toBe(true);
 
-  await page.evaluate(() => { Math.random = () => 0; });
-  await dice.getByRole("button", { name: "Кинути ще раз" }).click();
-  await expect(dice.getByText(/Провал · 1 \+ 1 = 2/)).toBeVisible();
+  await dice.getByRole("button", { name: "Відкрити справу" }).click();
+  await expect(dice).toHaveCount(0);
+  await expect(page.getByRole("dialog", { name: "Справи" }).getByRole("heading", { name: "CodeUnity" })).toBeVisible();
+});
+
+test("suitcase objects can be inspected and repositioned", async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/room/");
+  await page.locator(".intro-screen")
+    .getByRole("button", { name: /пропустити|розплющити очі/i }).click();
+
+  if (testInfo.project.name === "mobile") {
+    await page.getByRole("navigation", { name: "Проєкти" })
+      .getByRole("button", { name: "Валіза" }).click();
+  } else {
+    await page.getByRole("group", { name: "Ізометрична кімната-майстерня з інтерактивними предметами" })
+      .getByRole("button", { name: "Валіза" }).click();
+  }
+
+  const suitcase = page.getByRole("dialog", { name: "Валіза" });
+  await expect(suitcase.getByRole("group", { name: "Відкрита валіза з предметами" })).toBeVisible();
+
+  const passport = suitcase.locator('[data-suitcase-item="passport"]');
+  const before = await passport.evaluate((element) => (element as HTMLElement).style.left);
+  await passport.focus();
+  await page.keyboard.press("ArrowRight");
+  const after = await passport.evaluate((element) => (element as HTMLElement).style.left);
+  expect(after).not.toBe(before);
+
+  await suitcase.locator('[data-suitcase-item="photo"]').click();
+  const photo = page.getByRole("dialog", { name: "Фотокартка" });
+  await expect(photo.getByRole("img", { name: "Максим Мичко" })).toBeVisible();
+  await photo.getByRole("button", { name: /Піти геть/ }).click();
+
+  await suitcase.locator('[data-suitcase-item="cv"]').click();
+  const cv = page.getByRole("dialog", { name: "Розгорнутий CV" });
+  await expect(cv.getByRole("img", { name: "Перша сторінка CV Максима Мичка" })).toBeVisible();
+  await expect(cv.getByRole("link", { name: /Завантажити/ })).toHaveAttribute("href", "/cv.pdf");
 });
