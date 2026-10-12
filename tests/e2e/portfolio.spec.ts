@@ -92,3 +92,18 @@ test("room scene stays usable and opens its case files", async ({ page }, testIn
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog", { name: "Справи" })).toBeHidden();
 });
+
+test("room lamp can be switched off and back on", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("kreik-mode", "room"));
+  await page.goto("/room/");
+  const skip = page.getByRole("button", { name: /пропустити/i });
+  if (await skip.isVisible()) await skip.click();
+
+  const experience = page.locator(".room-experience");
+  const lamp = page.getByRole("button", { name: "Лампа: вимкнути" });
+  await expect(experience).toHaveAttribute("data-lamp", "on");
+  await lamp.click();
+  await expect(experience).toHaveAttribute("data-lamp", "off");
+  await page.getByRole("button", { name: "Лампа: увімкнути" }).click();
+  await expect(experience).toHaveAttribute("data-lamp", "on");
+});

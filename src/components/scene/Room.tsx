@@ -19,24 +19,14 @@ const POSITIONS: Record<PanelId, { x: number; y: number }> = {
   cv: { x: 61.2, y: 72.2 },
 };
 
-const DEPTH_LAYERS = [
+const OBJECT_LAYERS = [
   {
     name: "mirror",
     panel: "about",
-    depth: 0.7,
-    clip: "polygon(32% 13%, 46% 10%, 47% 47%, 34% 49%)",
-    mask: "radial-gradient(ellipse 10% 23% at 39% 30%, #000 42%, transparent 78%)",
+    src: "/img/room/mirror.webp",
+    x: 35.3, y: 8.7, width: 8.08, height: 27.42,
+    imageWidth: 135, imageHeight: 258, depth: 0.7,
   },
-  {
-    name: "bottle",
-    panel: "trivia",
-    depth: 1.65,
-    clip: "polygon(39% 63%, 52% 65%, 52% 89%, 39% 89%)",
-    mask: "radial-gradient(ellipse 8% 16% at 45.5% 76%, #000 35%, transparent 78%)",
-  },
-] as const;
-
-const OBJECT_LAYERS = [
   {
     name: "pinboard",
     panel: "projects",
@@ -58,6 +48,13 @@ const OBJECT_LAYERS = [
     x: 49.95, y: 67.16, width: 16.93, height: 19.45,
     imageWidth: 283, imageHeight: 183, depth: 1.45,
   },
+  {
+    name: "bottle",
+    panel: "trivia",
+    src: "/img/room/bottle-ashtray.webp",
+    x: 40.9, y: 64.5, width: 6.88, height: 15.94,
+    imageWidth: 115, imageHeight: 150, depth: 1.65,
+  },
 ] as const;
 
 const OBJECT_HIT_AREAS = Object.fromEntries(
@@ -73,6 +70,8 @@ interface RoomProps {
   onSelect: (panel: PanelId) => void;
   onToggleTime: () => void;
   timeLabel: string;
+  lampOn: boolean;
+  onToggleLamp: () => void;
 }
 
 function HotspotButton({
@@ -144,6 +143,8 @@ export function Room({
   onSelect,
   onToggleTime,
   timeLabel,
+  lampOn,
+  onToggleLamp,
 }: RoomProps) {
   const [hoveredId, setHoveredId] = useState<PanelId | null>(null);
   const [selectedId, setSelectedId] = useState<PanelId | null>(null);
@@ -234,7 +235,7 @@ export function Room({
           : undefined}
       >
         <Image
-          src="/img/room/workshop-clean.webp"
+          src="/img/room/workshop-empty.webp"
           alt=""
           width={1672}
           height={941}
@@ -245,19 +246,6 @@ export function Room({
         />
 
         <div className="room-art__depth-map" aria-hidden="true">
-          {DEPTH_LAYERS.map((layer) => (
-            <span
-              key={layer.name}
-              className="room-art__depth-layer"
-              data-layer={layer.name}
-              data-active={layer.panel === hoveredId || undefined}
-              style={{
-                "--depth": layer.depth,
-                "--layer-clip": layer.clip,
-                "--layer-mask": layer.mask,
-              } as CSSProperties}
-            />
-          ))}
           {OBJECT_LAYERS.map((layer) => (
             <Image
               key={layer.name}
@@ -281,7 +269,22 @@ export function Room({
 
         <div className="room-art__light" aria-hidden="true" />
         <div className="room-art__lamp-glow" aria-hidden="true" />
+        <div className="room-art__window-glow" aria-hidden="true" />
+        <div className="room-art__lamp-shade" aria-hidden="true" />
         <div className="room-art__dust" aria-hidden="true" />
+
+        <button
+          type="button"
+          onClick={onToggleLamp}
+          aria-label={locale === "uk"
+            ? `Лампа: ${lampOn ? "вимкнути" : "увімкнути"}`
+            : `Lamp: turn ${lampOn ? "off" : "on"}`}
+          aria-pressed={lampOn}
+          className="room-art-lamp"
+          title={locale === "uk" ? "Увімкнути / вимкнути лампу" : "Toggle lamp"}
+        >
+          <span className="room-art-lamp__marker" aria-hidden="true" />
+        </button>
 
         <button
           type="button"

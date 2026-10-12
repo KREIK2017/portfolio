@@ -273,42 +273,6 @@
   pointer-events: none;
 }
 
-.room-art__depth-layer {
-  position: absolute;
-  inset: -1%;
-  background-image: url("/img/room/workshop.webp");
-  background-position: center;
-  background-size: 98.04% 98.04%;
-  background-repeat: no-repeat;
-  clip-path: var(--layer-clip);
-  mask-image: var(--layer-mask);
-  transform: scale(1.012)
-    translate3d(
-      calc(var(--room-x) * var(--depth) * 3px),
-      calc(var(--room-y) * var(--depth) * 3px),
-      0
-    );
-  filter: drop-shadow(
-    calc(var(--room-x) * var(--depth) * -2px)
-    calc(var(--room-y) * var(--depth) * -2px)
-    5px rgba(0, 0, 0, 0.34)
-  );
-  transition: transform 0.42s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.35s ease;
-  will-change: transform;
-}
-
-.room-art__depth-layer[data-active="true"] {
-  transform: scale(1.018)
-    translate3d(
-      calc(var(--room-x) * var(--depth) * 4px),
-      calc(var(--room-y) * var(--depth) * 3px - 3px),
-      0
-    );
-  filter: brightness(1.13) saturate(1.08)
-    drop-shadow(0 7px 7px rgba(0, 0, 0, 0.56))
-    drop-shadow(0 0 8px rgba(201, 151, 63, 0.28));
-}
-
 .room-art__object {
   position: absolute;
   height: auto;
@@ -351,8 +315,8 @@
 .room-art__lamp-glow {
   position: absolute;
   z-index: 3;
-  left: 45.5%;
-  top: 34%;
+  left: 48.3%;
+  top: 40%;
   width: 28%;
   aspect-ratio: 1;
   translate: -50% -50%;
@@ -366,6 +330,51 @@
     calc(var(--room-y) * -3px),
     0
   );
+}
+
+.room-art__window-glow,
+.room-art__lamp-shade {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.room-art__window-glow {
+  background: radial-gradient(ellipse at 55% 27%, rgba(57, 115, 151, 0.28), transparent 24%);
+  mix-blend-mode: screen;
+}
+
+.room-art__lamp-shade {
+  background: radial-gradient(circle at 48.3% 40%, rgba(7, 12, 20, 0.74), rgba(8, 13, 20, 0.3) 18%, transparent 40%);
+}
+
+[data-lamp="off"][data-time] .room-art__base {
+  filter: brightness(0.58) saturate(0.72);
+}
+
+[data-lamp="off"][data-time] .room-art__object {
+  filter: brightness(0.58) saturate(0.72) drop-shadow(0 4px 5px rgba(0, 0, 0, 0.45));
+}
+
+[data-lamp="off"][data-time] .room-art__object[data-active="true"] {
+  filter: brightness(0.82) drop-shadow(0 9px 10px rgba(0, 0, 0, 0.6));
+}
+
+[data-lamp="off"] .room-art__lamp-glow {
+  opacity: 0;
+  animation: none;
+}
+
+[data-lamp="off"] .room-art__window-glow,
+[data-lamp="off"] .room-art__lamp-shade {
+  opacity: 1;
+}
+
+[data-lamp="off"] .room-art__dust {
+  opacity: 0.08;
 }
 
 .room-art__dust {
@@ -423,6 +432,54 @@
   cursor: pointer;
   border: 0;
   background: transparent;
+}
+
+.room-art-lamp {
+  position: absolute;
+  z-index: 8;
+  left: 45.8%;
+  top: 34.5%;
+  width: 5.2%;
+  height: 11%;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+}
+
+.room-art-lamp__marker {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(244, 203, 126, 0.72);
+  border-radius: 50%;
+  background: rgba(18, 15, 11, 0.78);
+  box-shadow: 0 0 12px rgba(244, 175, 70, 0.5);
+  color: #f4cb7e;
+  font-size: 17px;
+  line-height: 1;
+  transition: scale 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.room-art-lamp__marker::before { content: "⏻"; }
+
+.room-art-lamp:hover .room-art-lamp__marker,
+.room-art-lamp:focus-visible .room-art-lamp__marker { scale: 1.25; }
+
+.room-art-lamp:focus-visible {
+  outline: 2px solid var(--de-amber);
+  outline-offset: 2px;
+}
+
+[data-lamp="off"] .room-art-lamp__marker {
+  border-color: rgba(125, 166, 187, 0.72);
+  box-shadow: 0 0 10px rgba(73, 130, 170, 0.35);
+  color: #93b6c8;
 }
 
 .room-art-window:focus-visible {
@@ -899,8 +956,6 @@ html.lenis body {
 @media (prefers-reduced-motion: reduce) {
   .room-art,
   .room-art__base,
-  .room-art__depth-layer,
-  .room-art__depth-layer[data-active="true"],
   .room-art__object,
   .room-art__object[data-active="true"],
   .room-art__light,

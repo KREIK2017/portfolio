@@ -30,6 +30,7 @@ export function Experience({ locale }: { locale: Locale }) {
   const [phase, setPhase] = useState<Phase>("intro");
   const [panel, setPanel] = useState<PanelId | null>(null);
   const [time, setTime] = useState<TimeOfDay>("day");
+  const [lampOn, setLampOn] = useState(true);
   const [voices, setVoices] = useState<Voice[]>([]);
   const [hintVisible, setHintVisible] = useState(true);
 
@@ -128,10 +129,11 @@ export function Experience({ locale }: { locale: Locale }) {
     () => setTime((current) => (current === "day" ? "night" : "day")),
     [],
   );
+  const toggleLamp = useCallback(() => setLampOn((current) => !current), []);
 
   const otherLocale: Locale = locale === "uk" ? "en" : "uk";
   const roomCopy = {
-    chapter: locale === "uk" ? "Внутрішня кімната · 04:17" : "Inner room · 04:17",
+    chapter: locale === "uk" ? "Інтерактивне портфоліо" : "Interactive portfolio",
     title: locale === "uk" ? "МАЙСТЕРНЯ KREIK" : "KREIK'S WORKSHOP",
     subtitle:
       locale === "uk"
@@ -141,7 +143,7 @@ export function Experience({ locale }: { locale: Locale }) {
   };
 
   return (
-    <div data-time={time} className="room-experience relative min-h-dvh overflow-hidden">
+    <div data-time={time} data-lamp={lampOn ? "on" : "off"} className="room-experience relative min-h-dvh overflow-hidden">
       <Grain />
 
       {phase === "intro" && (
@@ -201,7 +203,12 @@ export function Experience({ locale }: { locale: Locale }) {
         >
           <div className="pointer-events-auto flex items-start gap-3 border border-amber/40 bg-[#14120f]/95 px-4 py-3 shadow-2xl backdrop-blur-sm">
             <p className="flex-1 text-sm leading-relaxed text-light/85">
-              {ui.roomHint[locale]}
+              <span className="lg:hidden">
+                {locale === "uk"
+                  ? "Озирнись. Обери предмет зі списку під кімнатою — він відкриє розділ портфоліо."
+                  : "Look around. Choose an object from the list below the room to open a portfolio section."}
+              </span>
+              <span className="hidden lg:inline">{ui.roomHint[locale]}</span>
             </p>
             <button
               type="button"
@@ -237,6 +244,8 @@ export function Experience({ locale }: { locale: Locale }) {
               onSelect={handleSelect}
               onToggleTime={toggleTime}
               timeLabel={ui.dayNight[locale]}
+              lampOn={lampOn}
+              onToggleLamp={toggleLamp}
             />
         </section>
 
