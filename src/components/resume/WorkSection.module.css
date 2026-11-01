@@ -89,6 +89,9 @@
   list-style: none;
 }
 
+.mobileFolderCover,
+.mobileSticker { display: none; }
+
 .featured {
   display: grid;
   grid-template-columns: minmax(0, 56%) minmax(0, 44%);
@@ -324,7 +327,7 @@
    лишається доступним на телефоні, низькому екрані та без анімацій. */
 .scrollRegion { display: none; }
 
-@media (min-width: 1024px) and (min-height: 740px) and (prefers-reduced-motion: no-preference) {
+@media (min-width: 1024px) and (min-height: 820px) and (prefers-reduced-motion: no-preference) {
   .scrollRegion { display: block; height: 330dvh; }
   .staticCases { display: none; }
 
@@ -350,11 +353,11 @@
 
   .folderDesk {
     position: relative;
-    height: clamp(28rem, 53vh, 35rem);
+    height: clamp(30rem, 60vh, 38rem);
     perspective: 1100px;
   }
 
-  .caseBundle { position: absolute; inset: 0; transform: translate3d(0, var(--case-fall, -150%), 0); will-change: transform; }
+  .caseBundle { position: absolute; inset: 0; }
   .caseBundle:nth-child(1) { z-index: 1; }
   .caseBundle:nth-child(2) { z-index: 2; }
   .caseBundle:nth-child(3) { z-index: 3; }
@@ -363,17 +366,24 @@
   .caseFolder {
     position: absolute;
     z-index: 1;
-    inset: -0.7rem -0.8rem -0.8rem;
+    top: 3%;
+    right: 1%;
+    width: 48%;
+    height: 94%;
+    opacity: var(--case-opacity, 0);
+    transform: translate3d(var(--case-x, 250%), var(--case-y, -380%), 0) rotate(var(--case-rotation, -20deg));
+    transform-origin: 45% 70%;
+    will-change: transform;
     pointer-events: none;
   }
 
   .caseFolderBack {
     position: absolute;
     inset: 0;
-    border: 1px solid #745333;
-    border-radius: 4px;
-    background: repeating-linear-gradient(0deg, #b89967 0 2px, #bfa473 3px 12px);
-    box-shadow: 0 5px 0 #82643d, 0 25px 36px rgba(40, 24, 11, 0.38);
+    border: 1px solid #634326;
+    border-radius: 0;
+    background: #9b6d3d;
+    box-shadow: 8px 8px 0 #6a4729, 0 23px 35px rgba(40, 24, 11, 0.35);
   }
 
   .caseFolderTab {
@@ -383,9 +393,9 @@
     padding: 0.4rem 1.2rem 0.3rem;
     border: 1px solid #745333;
     border-bottom: 0;
-    border-radius: 5px 5px 0 0;
+    border-radius: 0;
     color: #4b3626;
-    background: #bfa473;
+    background: #ad804e;
     font-family: var(--font-oswald), Arial, sans-serif;
     font-size: 0.78rem;
     letter-spacing: 0.15em;
@@ -399,11 +409,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.3rem;
-    border: 1px solid #765837;
-    border-radius: 4px;
-    color: #5a3b28;
-    background: repeating-linear-gradient(23deg, #cbb081 0 3px, #c3a575 4px 9px);
+    gap: 0.3rem;
+    padding: 2rem;
+    border: 1px solid #6d4726;
+    border-radius: 0;
+    color: #321f13;
+    background:
+      radial-gradient(ellipse at 82% 12%, rgba(54, 29, 11, 0.21), transparent 33%),
+      repeating-linear-gradient(105deg, transparent 0 13px, rgba(64, 35, 17, 0.035) 14px 15px),
+      #ac7a45;
     box-shadow: 0 8px 14px rgba(49, 28, 13, 0.25);
     backface-visibility: hidden;
     transform-origin: 50% 100%;
@@ -411,41 +425,54 @@
     will-change: transform;
   }
   .caseFolderCover span { font-family: var(--font-oswald), Arial, sans-serif; letter-spacing: 0.2em; }
-  .caseFolderCover strong { font-family: var(--font-cormorant), Georgia, serif; font-size: 4rem; font-weight: 500; }
+  .caseFolderCover .folderStamp { position: absolute; top: 1.5rem; right: 1.2rem; padding: 0.25rem 0.45rem; border: 2px solid #8b3525; color: #8b3525; font-size: 0.72rem; letter-spacing: 0.07em; transform: rotate(7deg); }
+  .folderSeal { margin-bottom: 0.8rem; border: 2px solid currentColor; border-radius: 50%; padding: 1.2rem 0.5rem; font-size: 0.8rem; }
+  .folderDossier { font-family: var(--font-cormorant), Georgia, serif !important; font-size: clamp(3.5rem, 5vw, 5.5rem); font-weight: 700; letter-spacing: 0.04em !important; line-height: 1; }
+  .folderCaseNo { margin-top: 0.6rem; padding-top: 0.7rem; border-top: 2px solid currentColor; font-size: 0.95rem; }
+  .folderCaseNo b { color: #8f2f20; font-size: 1.4rem; }
+  .caseFolderCover .folderTitle { display: block; margin-top: 1.4rem; padding: 0.5rem 1.2rem; background: #d1aa76; font-family: var(--font-cormorant), Georgia, serif; font-size: clamp(1.6rem, 2.8vw, 2.8rem); font-weight: 600; }
+  .folderCategory { margin-top: 1rem; font-size: 0.7rem; }
 
-  .projectCard {
+  .projectPhoto {
     position: absolute;
-    z-index: 2;
-    inset: 0.45rem 0.55rem 0.5rem;
-    display: grid;
-    grid-template-columns: minmax(0, 43%) minmax(0, 57%);
-    min-width: 0;
-    border: 1px solid #8b6c48;
-    background: #e4d4b3;
-    box-shadow: 0 3px 0 #a98b61, 0 7px 0 #957750, 0 16px 25px rgba(37, 24, 13, 0.28);
-    opacity: var(--card-opacity, 0);
-    transform: translate3d(0, var(--card-rise, 85%), 0) scale(var(--card-scale, 0.78));
-    transform-origin: 50% 100%;
+    z-index: 3;
+    top: 9%;
+    left: 3%;
+    width: 46%;
+    height: 36%;
+    overflow: hidden;
+    padding: 0.6rem;
+    border: 1px solid #ab9678;
+    background: #e6dac0;
+    box-shadow: 5px 8px 0 #a9906c, 0 22px 28px rgba(37, 24, 13, 0.32);
+    opacity: var(--photo-opacity, 0);
+    transform: translate3d(var(--photo-x, 125%), var(--photo-y, 95%), 0) scale(var(--photo-scale, 0.24)) rotate(var(--photo-rotation, 22deg));
+    transform-origin: 70% 90%;
     will-change: transform;
   }
 
   .languageSticker {
     position: absolute;
-    z-index: 2;
-    top: -0.75rem;
-    right: 1.5rem;
-    padding: 0.42rem 0.7rem;
+    z-index: 4;
+    top: 4%;
+    left: 37%;
+    right: auto;
+    padding: 0.65rem 0.9rem;
     color: #513822;
     background: #e8cb84;
     box-shadow: 1px 2px 5px rgba(52, 35, 17, 0.25);
-    font-family: var(--font-oswald), Arial, sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.13em;
-    transform: rotate(3deg);
+    font-family: var(--font-cormorant), Georgia, serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.08;
+    opacity: var(--sticker-opacity, 0);
+    transform: translate3d(var(--sticker-x, 650%), var(--sticker-y, 820%), 0) rotate(var(--sticker-rotation, -25deg));
+    will-change: transform;
   }
+  .languageSticker small { display: block; font-size: 0.9rem; }
+  .languageSticker strong { display: block; border-bottom: 1px solid #a43c2b; font-size: 1.4rem; font-weight: 700; }
 
-  .folderVisual { position: relative; min-width: 0; overflow: hidden; background: #303b3b; }
-  .folderVisual > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .projectPhoto > img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .folderImageLabel {
     position: absolute;
     bottom: 1rem;
@@ -458,34 +485,40 @@
     letter-spacing: 0.12em;
   }
 
-  .folderContent {
-    display: flex;
+  .projectSheet {
+    position: absolute;
+    z-index: 2;
+    top: 2%;
+    left: 1%;
+    width: 52%;
+    height: 96%;
+    display: block;
     min-width: 0;
-    flex-direction: column;
-    overflow-y: auto;
-    padding: clamp(1.4rem, 2.5vw, 2.3rem);
+    overflow: hidden;
+    padding: 1.3rem 1.5rem;
+    border: 1px solid #a99679;
     scrollbar-width: thin;
     scrollbar-color: #9c805e transparent;
+    box-shadow: 4px 7px 0 #b4a07e, 0 17px 30px rgba(37, 24, 13, 0.23);
+    opacity: var(--sheet-opacity, 0);
+    transform: translate3d(var(--sheet-x, 100%), var(--sheet-y, 70%), 0) scale(var(--sheet-scale, 0.18)) rotate(var(--sheet-rotation, -18deg));
+    transform-origin: 10% 85%;
+    will-change: transform;
     background:
-      linear-gradient(120deg, rgba(255, 251, 235, 0.65), transparent 65%),
-      repeating-linear-gradient(0deg, transparent 0 29px, rgba(80, 54, 38, 0.035) 30px 31px);
+      radial-gradient(circle at 8% 85%, rgba(110, 56, 27, 0.13), transparent 26%),
+      repeating-linear-gradient(0deg, #d8c5a5 0 31px, #d3bd99 32px 33px);
   }
-
-  .folderContent .kicker { color: #8a3b27; }
-  .folderContent h3 {
-    margin: 0.35rem 0 0.55rem;
-    font-family: var(--font-cormorant), Georgia, serif;
-    font-size: clamp(2.7rem, 4vw, 4.3rem);
-    line-height: 0.95;
-  }
-  .folderSummary { margin: 0; font-size: clamp(1rem, 1.2vw, 1.15rem); line-height: 1.35; }
-  .folderRule { height: 1px; margin: 1.05rem 0; background: #9e8b72; }
-  .folderRole { margin: 0.4rem 0 0; color: #4b4035; font-size: 1rem; line-height: 1.35; }
-  .folderContent .stack { margin-top: 0.8rem; }
-  .folderContent .stack li { border-color: #b9a88e; color: #574839; }
-  .folderResult { margin: 0.8rem 0 0; color: #584a3a; font-size: 0.92rem; line-height: 1.35; }
-  .folderContent .links { gap: 0.45rem 1.2rem; padding-top: 0.6rem; }
-  .folderContent .links a { color: #893e29; }
+  .sheetCaseLabel { display: block; color: #51311d; font-family: var(--font-oswald), Arial, sans-serif; font-size: 0.85rem; letter-spacing: 0.12em; }
+  .sheetBody { position: absolute; top: 51%; right: 1.5rem; bottom: 0.7rem; left: 1.5rem; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #9c805e transparent; }
+  .sheetLine { display: flex; gap: 0.9rem; margin: 0.2rem 0; font-size: 1.04rem; }
+  .sheetLine span { min-width: 5.2rem; font-weight: 700; }
+  .sheetLine strong { color: #34231b; font-size: 1.2rem; }
+  .projectSheet .stack { margin-top: 0.55rem; }
+  .projectSheet .stack li { border-color: #967c5f; color: #443122; }
+  .sheetSummary, .sheetRole { margin: 0.55rem 0 0; font-size: 0.97rem; line-height: 1.28; }
+  .projectSheet .details { margin-top: 0.4rem; }
+  .projectSheet .links { gap: 0.4rem 1rem; padding-top: 0.2rem; }
+  .projectSheet .links a { color: #893e29; }
 
   .folderNav { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: clamp(1.5rem, 3vh, 2rem); }
   .folderNav button {
@@ -513,26 +546,42 @@
 @media (max-width: 800px) {
   .heading { display: block; margin-bottom: 1.6rem; }
   .heading p { max-width: 38rem; margin-top: 1rem; }
-  .featured { grid-template-columns: 1fr; }
+  .featured, .smallCase { display: flex; flex-direction: column; border: 1px solid #9b7650; background: #dcc9a6; box-shadow: 5px 6px 0 #b6a17f, 0 18px 24px -16px #4e3825; }
+  .mobileFolderCover { display: flex; min-height: 5.6rem; flex-direction: column; justify-content: center; gap: 0.25rem; padding: 0.85rem 1.3rem; border-bottom: 1px solid #835934; color: #392819; background: repeating-linear-gradient(100deg, transparent 0 19px, #865b3210 20px 21px), #ad7f4d; }
+  .mobileFolderCover span { font-family: var(--font-oswald), Arial, sans-serif; font-size: 0.72rem; letter-spacing: 0.14em; }
+  .mobileFolderCover strong { font-family: var(--font-cormorant), Georgia, serif; font-size: clamp(1.6rem, 5vw, 2.15rem); line-height: 1; }
+  .featuredVisual, .smallVisual { margin: 1.2rem 1.2rem 0; border: 7px solid #e9dcc4; box-shadow: 3px 4px 0 #a9916d; background: #d4c5aa; }
   .featuredVisual { aspect-ratio: 16 / 10; }
-  .featuredContent { min-height: 0; padding: 1.6rem; }
-  .featuredContent h3 { font-size: 3.5rem; }
+  .featuredVisual::after { display: none; }
+  .featuredContent, .smallContent { min-height: 0; margin: 0.7rem 1.2rem 1.2rem; padding: 1.15rem 1.3rem; border: 1px solid #b39e7e; color: #35271d; background: repeating-linear-gradient(0deg, #e9ddc5 0 31px, #decdb0 32px 33px); }
+  .featuredContent h3, .smallContent h3 { margin-top: 0.45rem; font-size: clamp(2.25rem, 6vw, 3rem); }
+  .featuredSummary, .featuredRole p, .featuredResult, .smallSummary, .smallRole, .details p { color: #48392b; }
+  .featuredRole { border-color: #b39e7e; }
+  .kicker, .smallMeta { color: #793c25; }
+  .featuredContent .stack li, .smallContent .stack li { border-color: #a28a6d; color: #513e2c; }
+  .featuredContent .links a, .smallContent .links a { color: #793c25; }
+  .featuredContent .links a:hover, .smallContent .links a:hover { color: #512515; }
+  .mobileSticker { position: absolute; z-index: 2; top: 0.65rem; right: 0.65rem; display: block; max-width: 50%; padding: 0.4rem 0.6rem; color: #3f3020; background: #e8cd87; box-shadow: 2px 3px 4px #241c1766; font-family: var(--font-cormorant), Georgia, serif; font-size: 0.85rem; line-height: 1.1; }
+  .mobileSticker strong { display: block; margin-top: 0.15rem; border-bottom: 1px solid #a5402c; font-size: 1.1rem; }
   .otherList { grid-template-columns: 1fr; }
-  .smallVisual { height: auto; aspect-ratio: 2.4 / 1; }
+  .smallVisual { height: auto; aspect-ratio: 16 / 10; }
+  .subhead { margin-top: 2rem; }
 }
 
 @media (max-width: 480px) {
   .topline { font-size: 0.72rem; letter-spacing: 0.07em; }
   .heading h2 { font-size: clamp(2.8rem, 12vw, 4rem); }
   .heading p { font-size: 1rem; }
-  .featuredVisual { aspect-ratio: 4 / 3; }
+  .featuredVisual, .smallVisual { aspect-ratio: 4 / 3; }
   .caseNumber { top: 0.85rem; left: 0.85rem; font-size: 0.68rem; }
-  .featuredContent { padding: 1.35rem; }
-  .featuredContent h3 { font-size: 3rem; }
+  .featuredVisual, .smallVisual { margin: 0.85rem 0.85rem 0; border-width: 5px; }
+  .featuredContent, .smallContent { margin: 0.55rem 0.85rem 0.85rem; padding: 1rem; }
+  .featuredContent h3 { font-size: 2.65rem; }
   .featuredSummary { font-size: 1.08rem; }
-  .smallVisual { height: clamp(14rem, 65vw, 16rem); aspect-ratio: auto; }
-  .smallContent { padding: 1.2rem; }
+  .smallVisual { height: auto; }
   .smallContent h3 { font-size: 2.25rem; }
+  .mobileSticker { top: 0.55rem; right: 0.55rem; padding: 0.3rem 0.45rem; font-size: 0.72rem; }
+  .mobileSticker strong { font-size: 0.95rem; }
   .botCover { padding: 2.2rem 1rem 0; }
   .botPaper { min-height: 0; }
   .botMessage { margin-left: 0.35rem; font-size: 1.05rem; }
