@@ -102,7 +102,9 @@ export function useActiveSection(ids: readonly string[]): string {
       },
       // Вікно спостереження зсунуте до верхньої третини екрана:
       // так активним стає розділ, який читають, а не той, що знизу.
-      { rootMargin: "-20% 0px -60% 0px", threshold: [0.1, 0.5, 0.9] },
+      // Довга pinned-секція може займати кілька екранів: її видима
+      // частка менша за 0.1, тому поріг 0 не пропускає її з навігації.
+      { rootMargin: "-20% 0px -60% 0px", threshold: 0 },
     );
 
     sections.forEach((section) => observer.observe(section));

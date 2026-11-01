@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { site } from "@/config/site";
 import { ui } from "@/content/dictionary";
 import { PROJECTS } from "@/content/projects";
@@ -155,21 +158,142 @@ function SmallCase({ project, locale, index }: { project: Project; locale: Local
   );
 }
 
+function WorkHeading({ locale }: { locale: Locale }) {
+  return (
+    <>
+      <div className={styles.topline}>
+        <span>{"//"} {ui.resume.workSection.dossier[locale]}</span>
+        <span>01 / {String(PROJECTS.length).padStart(2, "0")}</span>
+      </div>
+      <div className={styles.heading}>
+        <h2>{ui.resume.workSection.heading[locale]}</h2>
+        <p>{ui.resume.workSection.introduction[locale]}</p>
+      </div>
+    </>
+  );
+}
+
+function FolderCase({ project, locale, index, active }: { project: Project; locale: Locale; index: number; active: boolean }) {
+  return (
+    <div className={styles.caseBundle} data-folder={index} data-active={active}>
+      <div className={styles.caseFolder} aria-hidden="true">
+        <div className={styles.caseFolderBack}>
+          <span className={styles.caseFolderTab}>{locale === "uk" ? "СПРАВА" : "CASE"} {String(index + 1).padStart(2, "0")}</span>
+        </div>
+        <div className={styles.caseFolderCover}>
+          <span>KREIK / {locale === "uk" ? "СПРАВА" : "CASE"} {String(index + 1).padStart(2, "0")}</span>
+          <strong>{project.title[locale]}</strong>
+        </div>
+      </div>
+      <article className={styles.projectCard} inert={!active}>
+      <span className={styles.languageSticker}>{project.slug === "codeunity" ? "JAVASCRIPT" : "TYPESCRIPT"}</span>
+      <div className={styles.folderVisual}>
+        {project.slug === "site-watch-bot" ? <BotCover locale={locale} /> : project.image && (
+          <Image
+            src={project.image}
+            alt={project.slug === "codeunity" ? (locale === "uk" ? "Інтерактивний острів CodeUnity" : "CodeUnity interactive island") : (locale === "uk" ? "Інтерфейс AIO Dashboard" : "AIO Dashboard interface")}
+            width={project.imageWidth ?? 1200}
+            height={project.imageHeight ?? 750}
+            sizes="(max-width: 1200px) 45vw, 550px"
+            loading="lazy"
+          />
+        )}
+        <span className={styles.folderImageLabel}>{project.year} / {index === 0 ? "TUISPACE" : "KREIK"}</span>
+      </div>
+      <div className={styles.folderContent}>
+        <span className={styles.kicker}>{String(index + 1).padStart(2, "0")} / {index === 0 ? ui.resume.workSection.commercial[locale] : ui.resume.workSection.ownProject[locale]}</span>
+        <h3>{project.title[locale]}</h3>
+        <p className={styles.folderSummary}>{project.summary[locale]}</p>
+        <div className={styles.folderRule} aria-hidden="true" />
+        <span className={styles.kicker}>{ui.resume.workSection.contribution[locale]}</span>
+        <p className={styles.folderRole}>{project.role[locale]}</p>
+        <ProjectStack project={project} locale={locale} compact />
+        <p className={styles.folderResult}>{project.result[locale]}</p>
+        <ProjectLinks project={project} locale={locale} />
+      </div>
+      </article>
+    </div>
+  );
+}
+
+function FolderStack({ locale }: { locale: Locale }) {
+  const region = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const element = region.current;
+    if (!element) return;
+    let frame = 0;
+    const cards = [...element.querySelectorAll<HTMLElement>("[data-folder]")];
+    const clamp = (value: number) => Math.min(1, Math.max(0, value));
+    const update = () => {
+      frame = 0;
+      if (!window.matchMedia("(min-width: 1024px) and (min-height: 740px) and (prefers-reduced-motion: no-preference)").matches) return;
+      const travel = Math.max(1, element.offsetHeight - window.innerHeight);
+      const sectionTop = element.getBoundingClientRect().top;
+      const progress = clamp(-sectionTop / travel);
+      const firstFall = clamp((window.innerHeight - sectionTop) / (window.innerHeight * 0.7));
+      cards.forEach((card, index) => {
+        const phase = index === 0 ? firstFall : index === 1 ? clamp((progress - 0.33) / 0.18) : clamp((progress - 0.66) / 0.18);
+        const landing = phase < 0.65 ? -150 * (1 - phase / 0.65) : 5 * Math.sin(((phase - 0.65) / 0.35) * Math.PI);
+        const reveal = clamp((phase - 0.83) / 0.17);
+        card.style.setProperty("--case-fall", `${landing.toFixed(2)}%`);
+        card.style.setProperty("--case-open", `${(clamp((phase - 0.68) / 0.32) * 155).toFixed(2)}deg`);
+        card.style.setProperty("--card-rise", `${(85 * (1 - reveal)).toFixed(2)}%`);
+        card.style.setProperty("--card-scale", `${(0.78 + 0.22 * reveal).toFixed(3)}`);
+        card.style.setProperty("--card-opacity", `${clamp(reveal * 2).toFixed(3)}`);
+      });
+      setActive(progress >= 0.83 ? 2 : progress >= 0.5 ? 1 : 0);
+    };
+    const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  const goToCase = (index: number) => {
+    const element = region.current;
+    if (!element) return;
+    const progress = [0.17, 0.54, 0.88][index] ?? 0;
+    const top = element.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: top + progress * (element.offsetHeight - window.innerHeight), behavior: "smooth" });
+  };
+
+  return (
+    <div className={styles.scrollRegion} ref={region}>
+      <div className={styles.stickyStage}>
+        <div className={styles.inner}>
+          <WorkHeading locale={locale} />
+          <div className={styles.folderDesk}>
+            {PROJECTS.map((project, index) => <FolderCase key={project.slug} project={project} locale={locale} index={index} active={active === index} />)}
+          </div>
+          <nav className={styles.folderNav} aria-label={locale === "uk" ? "Вибрати справу" : "Select a case"}>
+            {PROJECTS.map((project, index) => (
+              <button key={project.slug} type="button" onClick={() => goToCase(index)} aria-current={active === index ? "step" : undefined}>
+                <span>{String(index + 1).padStart(2, "0")}</span> {project.title[locale]}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function WorkSection({ locale }: { locale: Locale }) {
   const [featured, ...others] = PROJECTS;
   if (!featured) return null;
 
   return (
-    <section id="work" className={styles.section} aria-labelledby="work-title">
-      <div className={styles.inner}>
-        <div className={styles.topline}>
-          <span>{"//"} {ui.resume.workSection.dossier[locale]}</span>
-          <span>01 / {String(PROJECTS.length).padStart(2, "0")}</span>
-        </div>
-        <div className={styles.heading}>
-          <h2 id="work-title">{ui.resume.workSection.heading[locale]}</h2>
-          <p>{ui.resume.workSection.introduction[locale]}</p>
-        </div>
+    <section id="work" className={styles.section} aria-label={ui.resume.workSection.heading[locale]}>
+      <FolderStack locale={locale} />
+      <div className={`${styles.inner} ${styles.staticCases}`}>
+        <WorkHeading locale={locale} />
 
         <ul className={styles.featuredList}>
           <FeaturedCase project={featured} locale={locale} />

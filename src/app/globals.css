@@ -27,12 +27,11 @@
   --de-glow: #d9b877;
   --de-window: #b9c4bb;
   --de-ambient: 0.5;
+}
 
-  /*
-    Класичний режим («Résumé») за мокапом MY STACK. Свідомо світлий:
-    користувач обрав палітру мокапу, а не темну з розділу 4 ТЗ.
-    Токени окремі, щоб два режими не перетиралися.
-  */
+/* Палітра основного портфоліо живе лише в його корені. Кімната має
+   окремі --de-* токени та не успадковує оформлення паперового досьє. */
+.resume-page {
   --rs-paper: #f2ece0;
   --rs-paper-2: #e5dbc8;
   --rs-ink: #1a1815;
@@ -1306,18 +1305,16 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* ── Класичний режим ──────────────────────────────────────────────
-   Типографіка мокапу: важкий вузький капс для заголовків, розріджений
-   капс для міток. Обидва — Oswald, різні ваги й трекінг. */
-.rs-title {
-  font-family: var(--font-oswald), Impact, sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: -0.005em;
-  line-height: 0.92;
+/* Класична сторінка: заголовки як у досьє, службові підписи — вузьким гротеском.
+   Усі правила обмежені resume-page, щоб не переносити цю типографіку до кімнати. */
+.resume-page .rs-title {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
 }
 
-.rs-label {
+.resume-page .rs-label {
   font-family: var(--font-oswald), sans-serif;
   font-weight: 500;
   text-transform: uppercase;
@@ -1326,7 +1323,7 @@ html.lenis body {
   line-height: 1.3;
 }
 
-.rs-sans {
+.resume-page .rs-sans {
   font-family: var(--font-oswald), sans-serif;
   font-weight: 300;
 }

@@ -14,6 +14,7 @@ import { useActiveSection, useSmoothScroll } from "@/lib/hooks";
 import { resumePath, roomPath } from "@/lib/mode";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/types/content";
+import styles from "./Resume.module.css";
 
 function Grain() {
   return (
@@ -48,11 +49,13 @@ function Section({
   return (
     <section
       id={id}
-      className={cn("scroll-mt-8 px-5 py-14 sm:px-10 sm:py-16 lg:px-14", className)}
+      className={cn(styles.section, className)}
     >
-      <p className="rs-label text-rs-accent">{eyebrow}</p>
-      <h2 className="rs-title mt-2 text-4xl sm:text-6xl">{title}</h2>
-      <div className="mt-8">{children}</div>
+      <div className={styles.container}>
+        <p className="rs-label text-rs-accent">{eyebrow}</p>
+        <h2 className="rs-title mt-2 text-4xl sm:text-6xl">{title}</h2>
+        <div className="mt-8">{children}</div>
+      </div>
     </section>
   );
 }
@@ -94,7 +97,7 @@ export function Resume({ locale }: { locale: Locale }) {
   const aiItem = STACK.find((item) => item.group === "ai");
 
   return (
-    <div className="bg-rs-paper text-rs-ink min-h-dvh">
+    <div className={cn("resume-page", styles.page, "bg-rs-paper text-rs-ink min-h-dvh")}>
       <Grain />
       {/* Оголошується один раз на сторінку, застосовується в CSS
           до полотна кожної картки через filter: url(#livingOil). */}
@@ -103,70 +106,59 @@ export function Resume({ locale }: { locale: Locale }) {
 
       <div className="pb-24 sm:pb-0 sm:pl-20">
         {/* Перемикачі режиму й мови — завжди доступні, як вимагає ТЗ */}
-        <div className="border-rs-line flex items-center justify-end gap-3 border-b px-5 py-3 sm:px-10">
-          <Link
-            href={resumePath(otherLocale)}
-            hrefLang={otherLocale}
-            className="rs-label text-rs-muted hover:text-rs-ink inline-flex min-h-11 items-center transition-colors"
-          >
-            {ui.langSwitch[locale]}
-          </Link>
-          <span aria-hidden="true" className="bg-rs-line h-4 w-px" />
-          <Link
-            href={roomPath(locale)}
-            className="rs-label text-rs-accent inline-flex min-h-11 items-center hover:underline"
-          >
-            {ui.resume.toRoom[locale]} →
-          </Link>
+        <div className="border-rs-line border-b">
+          <div className={cn(styles.container, "flex items-center justify-end gap-3 py-3")}>
+            <Link
+              href={resumePath(otherLocale)}
+              hrefLang={otherLocale}
+              className="rs-label text-rs-muted hover:text-rs-ink inline-flex min-h-11 items-center transition-colors"
+            >
+              {ui.langSwitch[locale]}
+            </Link>
+            <span aria-hidden="true" className="bg-rs-line h-4 w-px" />
+            <Link
+              href={roomPath(locale)}
+              className="rs-label text-rs-accent inline-flex min-h-11 items-center hover:underline"
+            >
+              {ui.resume.toRoom[locale]} →
+            </Link>
+          </div>
         </div>
 
         {/* ── Головна ─────────────────────────────────────────────── */}
-        <section
-          id="home"
-          className="grid gap-8 px-5 pb-8 pt-12 sm:px-10 sm:pb-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:px-14"
-        >
-          <div>
-            <p className="rs-label text-rs-accent">
-              {ui.resume.hero.eyebrow[locale]}
-            </p>
-            <h1 className="rs-title mt-3 text-5xl sm:text-7xl">
-              {site.name[locale]}
-            </h1>
-            <p className="rs-label text-rs-muted mt-3 text-base">
-              {site.role[locale]}
-            </p>
+        <section id="home" className={styles.hero}>
+          <div className={cn(styles.container, "grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-center")}>
+            <div>
+              <p className="rs-label text-rs-accent">{ui.resume.hero.eyebrow[locale]}</p>
+              <h1 className="rs-title mt-3 text-5xl sm:text-7xl">{site.name[locale]}</h1>
+              <p className="rs-label text-rs-muted mt-3 text-base">{site.role[locale]}</p>
 
-            <p className="mt-6 max-w-md text-lg leading-relaxed">
-              {site.tagline[locale]}
-            </p>
+              <p className="mt-6 max-w-md text-lg leading-relaxed">{site.tagline[locale]}</p>
 
-            <a
-              href="#work"
-              className="rs-label text-rs-accent mt-7 inline-flex items-center gap-2 hover:underline"
-            >
-              {ui.resume.workSection.cta[locale]} →
-            </a>
+              <a
+                href="#work"
+                className="rs-label text-rs-accent mt-7 inline-flex items-center gap-2 hover:underline"
+              >
+                {ui.resume.workSection.cta[locale]} →
+              </a>
 
-            <figure className="border-rs-line mt-8 max-w-md border-l-2 pl-4">
-              <blockquote className="text-base italic leading-relaxed">
-                {site.quip.text[locale]}
-              </blockquote>
-              <figcaption className="rs-label text-rs-muted mt-2 text-[0.72rem]">
-                {site.quip.author[locale]}
-              </figcaption>
-            </figure>
-          </div>
+              <figure className="border-rs-line mt-8 max-w-md border-l-2 pl-4">
+                <blockquote className="text-base italic leading-relaxed">{site.quip.text[locale]}</blockquote>
+                <figcaption className="rs-label text-rs-muted mt-2 text-[0.72rem]">{site.quip.author[locale]}</figcaption>
+              </figure>
+            </div>
 
-          <div className="border-rs-line overflow-hidden border">
-            <Image
-              src="/img/hero.webp"
-              alt={ui.resume.hero.photoAlt[locale]}
-              width={1280}
-              height={853}
-              priority
-              sizes="(max-width: 1024px) 100vw, 55vw"
-              className="h-auto w-full"
-            />
+            <div className="border-rs-line overflow-hidden border">
+              <Image
+                src="/img/hero.webp"
+                alt={ui.resume.hero.photoAlt[locale]}
+                width={1280}
+                height={853}
+                priority
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                className="h-auto w-full"
+              />
+            </div>
           </div>
         </section>
 
@@ -176,57 +168,52 @@ export function Resume({ locale }: { locale: Locale }) {
           eyebrow={ui.resume.aboutSection.eyebrow[locale]}
           title={ui.resume.aboutSection.title[locale]}
         >
-          <div className="max-w-2xl space-y-4">
-            {site.bio[locale].map((paragraph) => (
-              <p key={paragraph} className="text-lg leading-relaxed">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-
-          <p className="rs-label text-rs-accent mt-10">
-            {ui.resume.aboutSection.voices[locale]}
-          </p>
-
-          <div className="mt-5 grid gap-8 sm:grid-cols-3">
-            {ATTRIBUTES.map((attribute) => (
-              <div key={attribute.id}>
-                <p
-                  className="rs-label border-rs-line border-b pb-2"
-                  style={{
-                    color: `color-mix(in srgb, ${attribute.color} 60%, #1a1815)`,
-                  }}
-                >
-                  {attribute.name[locale]}
+          <div className={styles.aboutGrid}>
+            <div className="max-w-2xl space-y-4">
+              {site.bio[locale].map((paragraph) => (
+                <p key={paragraph} className="text-lg leading-relaxed">
+                  {paragraph}
                 </p>
+              ))}
+            </div>
 
-                <ul className="mt-3 space-y-3">
-                  {skillsOf(attribute.id).map((skill) => (
-                    <li key={skill.id}>
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="rs-label text-[0.78rem]">
-                          {skill.name[locale]}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          {Array.from({ length: MAX_SKILL_LEVEL }, (_, i) => (
-                            <span
-                              key={i}
-                              className={cn(
-                                "size-[6px] rotate-45 border border-[#1a1815]/50",
-                                i < skill.level && "bg-[#1a1815]/75",
-                              )}
-                            />
-                          ))}
-                        </span>
-                      </div>
-                      <p className="text-rs-muted mt-1 text-[0.9rem] leading-snug">
-                        {skill.blurb[locale]}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+            <div className={styles.voices}>
+              <p className="rs-label text-rs-accent mb-5">
+                {ui.resume.aboutSection.voices[locale]}
+              </p>
+
+              <div className={styles.voiceGroups}>
+                {ATTRIBUTES.map((attribute) => (
+                  <div key={attribute.id}>
+                    <p
+                      className="rs-label border-rs-line border-b pb-2"
+                      style={{ color: `color-mix(in srgb, ${attribute.color} 60%, #1a1815)` }}
+                    >
+                      {attribute.name[locale]}
+                    </p>
+
+                    <ul className="mt-3 space-y-3">
+                      {skillsOf(attribute.id).map((skill) => (
+                        <li key={skill.id}>
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="rs-label text-[0.78rem]">{skill.name[locale]}</span>
+                            <span className="flex items-center gap-1">
+                              {Array.from({ length: MAX_SKILL_LEVEL }, (_, i) => (
+                                <span
+                                  key={i}
+                                  className={cn("size-[6px] rotate-45 border border-[#1a1815]/50", i < skill.level && "bg-[#1a1815]/75")}
+                                />
+                              ))}
+                            </span>
+                          </div>
+                          <p className="text-rs-muted mt-1 text-[0.9rem] leading-snug">{skill.blurb[locale]}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </Section>
 
