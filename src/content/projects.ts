@@ -8,7 +8,7 @@ import type { Project } from "@/types/content";
  * розміри в компонентах задані фіксовано, інакше при завантаженні
  * буде стрибок верстки.
  *
- * Поле `year` поки проставлене приблизно — вивір і заміни.
+ * Роки та формулювання власного внеску звіряй перед публікацією.
  */
 export const PROJECTS: Project[] = [
   {
@@ -33,35 +33,6 @@ export const PROJECTS: Project[] = [
     },
     liveUrl: "https://codeunity.io/",
     image: "/projects/codeunity/cover.webp",
-  },
-  {
-    slug: "filmcraft-electron",
-    year: "2026",
-    title: {
-      uk: "FilmCraft — Electron workflow",
-      en: "FilmCraft — Electron workflow",
-    },
-    summary: {
-      uk: "Адаптація open-source відеоредактора FilmCraft під захищену Electron-оболонку та більш знайомий CapCut-подібний процес монтажу.",
-      en: "An adaptation of the open-source FilmCraft video editor for a secure Electron shell and a more familiar CapCut-like editing workflow.",
-    },
-    role: {
-      uk: "Внесок у форк: Electron-інтеграція, імпорт медіа, proxy/export sidecar, оптимізація таймлайна, тести й документація",
-      en: "Fork contribution: Electron integration, media import, proxy/export sidecar, timeline optimisation, tests and documentation",
-    },
-    stack: [
-      "Rust",
-      "WebAssembly",
-      "Electron",
-      "TypeScript",
-      "WebGPU",
-      "WebCodecs",
-    ],
-    result: {
-      uk: "Повторно використав рушій FilmCraft, а власну роботу зосередив на desktop-шарі: sandboxed Electron shell, capability-based читання локальних файлів і керований Rust worker для проксі та експорту. Черги кадрів і waveform обмежені, щоб довгі таймлайни не блокували інтерфейс; Windows-сценарій перевірений наскрізно.",
-      en: "I reused FilmCraft's engine and focused my work on the desktop layer: a sandboxed Electron shell, capability-based local file access and a supervised Rust worker for proxies and export. Filmstrip and waveform queues are bounded so long timelines do not freeze the UI; the Windows flow has been validated end to end.",
-    },
-    image: "/projects/filmcraft-electron/cover.webp",
   },
   {
     slug: "site-watch-bot",

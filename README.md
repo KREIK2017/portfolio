@@ -204,9 +204,9 @@ Cloudflare роздає вміст `out/` зі свого CDN.
 - [x] Додати реальний скриншот AIO Dashboard
 - [ ] Уточнити роки проєктів і формулювання власного внеску в CodeUnity
 - [ ] Перевірити самооцінку рівнів у `content/stack.ts` і `content/skills.ts`
-- [ ] Опублікувати власний FilmCraft-форк і додати посилання на репозиторій
+- [x] Прибрати FilmCraft із кейсів портфоліо; згадувати лише як вивчення відкритого коду
 - [x] Пройти mobile/desktop, клавіатурну навігацію, touch targets і контраст
 
-Обкладинка FilmCraft базується на скриншоті open-source проєкту FilmCraft.
+Невикористана обкладинка FilmCraft базується на скриншоті open-source проєкту FilmCraft.
 Джерело й ліцензійні примітки збережені в
 `assets/attribution/filmcraft-cover.txt`.

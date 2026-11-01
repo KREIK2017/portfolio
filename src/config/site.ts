@@ -44,8 +44,8 @@ export const site = {
   } satisfies Localized,
 
   description: {
-    uk: "Портфоліо WordPress- і fullstack-розробника: теми й плагіни WordPress, інтеграції з Shopify, застосунки на React і Next.js.",
-    en: "Portfolio of a WordPress and fullstack developer: WordPress themes and plugins, Shopify integrations, React and Next.js applications.",
+    uk: "Портфоліо WordPress- і fullstack-розробника: комерційна підтримка сайтів, застосунки на React і Next.js, власний Telegram-бот.",
+    en: "Portfolio of a WordPress and fullstack developer: commercial website support, React and Next.js applications, and a personal Telegram bot.",
   } satisfies Localized,
 
   /**
@@ -75,15 +75,15 @@ export const site = {
       "WordPress-розробник з комерційним досвідом понад рік — підтримка та розробка вебрішень для бізнесу.",
       "За освітою інженер програмного забезпечення: маю диплом бакалавра й продовжую навчання в магістратурі за тією ж спеціальністю. Завдяки базі у C# та C++ підходжу до архітектури коду системно.",
       "Активно впроваджую AI-інструменти у робочий процес — це помітно прискорює розробку та підвищує якість результату.",
-      "Паралельно веду власні проєкти, де закриваю весь цикл: від плагіна й теми до бази на MySQL в Docker.",
-      "Найцікавіше мені там, де WordPress треба з чимось зшити — із Shopify, із власним API або з інструментом, якого ще не існує.",
+      "Паралельно створюю власні проєкти: Telegram-бота для моніторингу сайтів і fullstack-панель із базою MariaDB у Docker.",
+      "Окремо вивчаю відкритий код FilmCraft: розбираюся, як працює редактор і як його можна покращити. Це дослідження чужого проєкту, а не мій авторський продукт.",
     ],
     en: [
       "A WordPress developer with over a year of commercial experience — support and development of web solutions for business.",
       "I'm a software engineer by training: I hold a bachelor's degree and am continuing with a master's in the same field. A grounding in C# and C++ means I approach code architecture systematically.",
       "I bring AI tools into my workflow every day — it speeds up development noticeably and raises the quality of the result.",
-      "Alongside that I run my own projects, covering the whole cycle: from a plugin and a theme to a MySQL database in Docker.",
-      "The work I find most interesting is where WordPress has to be stitched to something else — Shopify, my own API, or a tool that doesn't exist yet.",
+      "Alongside that, I build my own projects: a Telegram bot for website monitoring and a fullstack dashboard backed by MariaDB in Docker.",
+      "I also study FilmCraft's open-source code to understand how the editor works and explore ways to improve it. This is an exploration of someone else's project, not my original product.",
     ],
   } satisfies Localized<string[]>,
 
@@ -99,7 +99,7 @@ export const site = {
       note: { uk: "рік комерційно", en: "year commercially" },
     },
     {
-      value: "4",
+      value: "3",
       label: { uk: "Проєкти", en: "Projects" },
       note: { uk: "у портфоліо", en: "in the portfolio" },
     },

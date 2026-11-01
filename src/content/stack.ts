@@ -104,8 +104,8 @@ export const STACK: StackItem[] = [
     base: "#2e3a1e",
     accents: ["#5a7d3a", "#95b23f", "#3c4d24", "#c5d97a"],
     summary: {
-      uk: "Buy Button SDK, Shopify CLI, Liquid, кастомізація тем",
-      en: "Buy Button SDK, Shopify CLI, Liquid, theme customisation",
+      uk: "Навчальні спроби з Buy Button SDK, Shopify CLI та Liquid",
+      en: "Hands-on exploration of Buy Button SDK, Shopify CLI and Liquid",
     },
   },
   {

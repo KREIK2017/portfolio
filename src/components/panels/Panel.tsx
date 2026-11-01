@@ -48,29 +48,29 @@ export function Panel({
           wide ? "max-w-6xl" : "max-w-3xl"
         }`}
       >
-        <header className="flex items-start justify-between gap-6 px-7 pt-7 sm:px-10 sm:pt-9">
-          <div>
+        <header className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2 px-5 pt-5 sm:px-10 sm:pt-9">
+          <div className="min-w-0">
             <h2 className="text-3xl leading-tight text-[#2a241c] sm:text-4xl">
               {title}
             </h2>
-            {subtitle && (
-              <p className="mt-2 max-w-md text-sm italic text-[#5c4f3a]">
-                {subtitle}
-              </p>
-            )}
           </div>
 
           <button
             type="button"
             onClick={onClose}
             autoFocus
-            className="label shrink-0 border border-[#7a2e2e]/40 px-3 py-2 text-[#7a2e2e] transition-colors hover:bg-[#7a2e2e]/10"
+            className="label inline-flex min-h-11 shrink-0 items-center border border-[#7a2e2e]/40 px-3 text-[#7a2e2e] transition-colors hover:bg-[#7a2e2e]/10"
           >
             ← {ui.back[locale]}
           </button>
+          {subtitle && (
+            <p className="col-span-2 max-w-md text-sm italic leading-relaxed text-[#5c4f3a]">
+              {subtitle}
+            </p>
+          )}
         </header>
 
-        <div className="thin-scroll overflow-y-auto px-7 pb-8 pt-6 sm:px-10 sm:pb-10">
+        <div className="thin-scroll overflow-y-auto px-5 pb-8 pt-6 sm:px-10 sm:pb-10">
           {children}
         </div>
       </article>

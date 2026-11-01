@@ -32,13 +32,13 @@ function ItemDetail({
     <div className="suitcase-detail" role="dialog" aria-modal="true" aria-label={title}>
       <button type="button" className="suitcase-detail__backdrop" tabIndex={-1} aria-hidden="true" onClick={onClose} />
       <article className={`suitcase-detail__paper suitcase-detail__paper--${item}`}>
-        <header className="flex items-start justify-between gap-5 border-b border-[#5c4f3a]/30 pb-4">
-          <div>
+        <header className="flex items-start justify-between gap-3 border-b border-[#5c4f3a]/30 pb-4 sm:gap-5">
+          <div className="min-w-0">
             <p className="label text-[#7a2e2e]">KREIK · {item === "cv" ? "DOCUMENT 03" : item === "passport" ? "DOCUMENT 02" : "DOCUMENT 01"}</p>
             <h3 className="mt-1 text-3xl text-[#2a241c]">{title}</h3>
           </div>
-          <button type="button" onClick={onClose} autoFocus className="label min-h-11 border border-[#7a2e2e]/40 px-3 text-[#7a2e2e]">
-            ← {ui.back[locale]}
+          <button type="button" onClick={onClose} autoFocus className="label inline-flex min-h-11 shrink-0 items-center gap-1 border border-[#7a2e2e]/40 px-3 text-[#7a2e2e]">
+            ← <span className="sm:hidden">{uk ? "Назад" : "Back"}</span><span className="hidden sm:inline">{ui.back[locale]}</span>
           </button>
         </header>
 

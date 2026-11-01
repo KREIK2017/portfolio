@@ -17,10 +17,9 @@ test("resume has no horizontal overflow", async ({ page }) => {
 test("projects keep their order and all covers load", async ({ page }) => {
   const cards = page.locator("#work li").filter({ has: page.locator("h3") });
 
-  await expect(cards).toHaveCount(4);
+  await expect(cards).toHaveCount(3);
   await expect(cards.locator("h3")).toHaveText([
     "CodeUnity",
-    "FilmCraft — Electron workflow",
     "Site Watch Bot",
     "AIO Dashboard",
   ]);
@@ -39,6 +38,20 @@ test("projects keep their order and all covers load", async ({ page }) => {
   );
 
   expect(failedCovers).toEqual([]);
+});
+
+test("project cases stay readable in one column on phones", async ({ page }) => {
+  const cards = page.locator("#work li").filter({ has: page.locator("h3") });
+
+  for (const width of [320, 390, 768]) {
+    await page.setViewportSize({ width, height: 800 });
+    const boxes = await Promise.all([0, 1, 2].map((index) => cards.nth(index).boundingBox()));
+
+    expect(boxes.every(Boolean)).toBe(true);
+    expect(boxes[1]!.y).toBeGreaterThanOrEqual(boxes[0]!.y + boxes[0]!.height);
+    expect(boxes[2]!.y).toBeGreaterThanOrEqual(boxes[1]!.y + boxes[1]!.height);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  }
 });
 
 test("primary navigation is keyboard reachable", async ({ page }) => {

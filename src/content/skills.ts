@@ -119,13 +119,13 @@ export const SKILLS: Skill[] = [
     lines: {
       uk: [
         "Ізометрія: паралельна проєкція, кути 30°. Жодної перспективи, жодної точки зникнення.",
-        "Ця кімната намальована векторами, не картинкою. Тому масштабується без втрат.",
+        "Ця кімната поєднує зображення й окремі інтерактивні шари. Кожен предмет має свою дію.",
         "Готель у Мартінезі, звідки все почалося. Не тут. Там. Але ідея та сама.",
         "Охра, теракота, бурштин — пігменти, доступні до появи синтетичних барвників.",
       ],
       en: [
         "Isometric: parallel projection, thirty-degree angles. No perspective, no vanishing point.",
-        "This room is drawn in vectors, not pixels. That is why it scales without loss.",
+        "This room combines an image with separate interactive layers. Each object has its own action.",
         "A hotel in Martinaise, where it all began. Not here. There. But the idea is the same.",
         "Ochre, terracotta, amber — pigments available long before synthetic dyes existed.",
       ],

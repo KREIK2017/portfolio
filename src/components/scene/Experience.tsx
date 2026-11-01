@@ -157,7 +157,7 @@ export function Experience({ locale }: { locale: Locale }) {
           {/* Вихід у спокійну версію — завжди видимий, як вимагає ТЗ 2.1 */}
           <Link
             href={resumePath(locale)}
-            className="label inline-flex min-h-11 items-center border border-light/10 px-3 text-light/65 transition-colors hover:border-amber/50 hover:text-amber"
+            className="label inline-flex min-h-11 items-center border border-amber/40 px-3 text-light/90 transition-colors hover:border-amber hover:text-amber"
           >
             {ui.resume.toResume[locale]} →
           </Link>
@@ -235,7 +235,7 @@ export function Experience({ locale }: { locale: Locale }) {
               aria-label={ui.nav.projects[locale]}
             >
               <p className="label mb-2 text-terracotta">{roomCopy.objects}</p>
-              <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+              <ul className="grid grid-cols-3 gap-2">
                 {HOTSPOTS.map((spot, index) => {
                   const skill = SKILL_BY_ID[spot.voice];
 
@@ -253,6 +253,22 @@ export function Experience({ locale }: { locale: Locale }) {
                     </li>
                   );
                 })}
+                <li>
+                  <button
+                    type="button"
+                    onClick={toggleLamp}
+                    aria-pressed={lampOn}
+                    className="room-object-nav__button"
+                  >
+                    <span className="room-object-nav__index">06</span>
+                    <span className="room-object-nav__name">
+                      {locale === "uk"
+                        ? `Лампа ${lampOn ? "увімкнена" : "вимкнена"}`
+                        : `Lamp ${lampOn ? "on" : "off"}`}
+                    </span>
+                    <span className="room-object-nav__arrow" aria-hidden="true">⏻</span>
+                  </button>
+                </li>
               </ul>
             </nav>
 

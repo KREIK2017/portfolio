@@ -4,9 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { SECTIONS, Sidebar } from "./Sidebar";
 import { StackCard } from "./StackCard";
+import { WorkSection } from "./WorkSection";
 import { LivingOilFilter } from "@/components/ui/LivingOilFilter";
 import { ui } from "@/content/dictionary";
-import { PROJECTS } from "@/content/projects";
 import { ATTRIBUTES, MAX_SKILL_LEVEL, skillsOf } from "@/content/skills";
 import { STACK, STACK_POINTS } from "@/content/stack";
 import { site } from "@/config/site";
@@ -48,7 +48,7 @@ function Section({
   return (
     <section
       id={id}
-      className={cn("scroll-mt-8 px-5 py-16 sm:px-10 lg:px-14", className)}
+      className={cn("scroll-mt-8 px-5 py-14 sm:px-10 sm:py-16 lg:px-14", className)}
     >
       <p className="rs-label text-rs-accent">{eyebrow}</p>
       <h2 className="rs-title mt-2 text-4xl sm:text-6xl">{title}</h2>
@@ -123,7 +123,7 @@ export function Resume({ locale }: { locale: Locale }) {
         {/* ── Головна ─────────────────────────────────────────────── */}
         <section
           id="home"
-          className="grid gap-8 px-5 pb-14 pt-12 sm:px-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:px-14"
+          className="grid gap-8 px-5 pb-8 pt-12 sm:px-10 sm:pb-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:px-14"
         >
           <div>
             <p className="rs-label text-rs-accent">
@@ -169,10 +169,6 @@ export function Resume({ locale }: { locale: Locale }) {
             />
           </div>
         </section>
-
-        <div className="px-5 sm:px-10 lg:px-14">
-          <Stats locale={locale} />
-        </div>
 
         {/* ── Про мене ────────────────────────────────────────────── */}
         <Section
@@ -235,90 +231,7 @@ export function Resume({ locale }: { locale: Locale }) {
         </Section>
 
         {/* ── Роботи ──────────────────────────────────────────────── */}
-        <Section
-          id="work"
-          eyebrow={ui.resume.workSection.eyebrow[locale]}
-          title={ui.resume.workSection.title[locale]}
-          className="bg-rs-paper-2/60"
-        >
-          <ul className="grid gap-6 md:grid-cols-2">
-            {PROJECTS.map((project, index) => (
-              <li
-                key={project.slug}
-                className="border-rs-line bg-rs-paper flex flex-col border"
-              >
-                {project.image && (
-                  <Image
-                    src={project.image}
-                    alt={project.title[locale]}
-                    width={project.imageWidth ?? 1200}
-                    height={project.imageHeight ?? 750}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    className="h-auto w-full"
-                  />
-                )}
-
-                <div className="flex flex-1 flex-col p-5">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <h3 className="rs-title text-xl">{project.title[locale]}</h3>
-                    <span className="rs-label text-rs-accent shrink-0">
-                      {project.year}
-                    </span>
-                  </div>
-
-                  <p className="text-rs-muted mt-2 flex-1 text-base leading-relaxed">
-                    {project.summary[locale]}
-                  </p>
-
-                  <p className="rs-label text-rs-muted mt-4 text-[0.7rem]">
-                    {ui.projects.role[locale]}
-                  </p>
-                  <p className="text-base">{project.role[locale]}</p>
-
-                  <ul className="mt-4 flex flex-wrap gap-1.5">
-                    {project.stack.map((tech) => (
-                      <li
-                        key={tech}
-                        className="rs-label border-rs-line text-rs-muted border px-2 py-1 text-[0.68rem]"
-                      >
-                        {tech}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <p className="border-rs-line mt-4 border-t pt-3 text-base leading-relaxed">
-                    {project.result[locale]}
-                  </p>
-
-                  {(project.liveUrl || project.repoUrl) && (
-                    <div className="mt-4 flex flex-wrap gap-4">
-                      {project.liveUrl && (
-                        <a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="rs-label text-rs-accent hover:underline"
-                        >
-                          {ui.projects.live[locale]} ↗
-                        </a>
-                      )}
-                      {project.repoUrl && (
-                        <a
-                          href={project.repoUrl}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="rs-label text-rs-muted hover:text-rs-ink transition-colors"
-                        >
-                          {ui.projects.repo[locale]} ↗
-                        </a>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </Section>
+        <WorkSection locale={locale} />
 
         {/* ── Стек ────────────────────────────────────────────────── */}
         <Section
@@ -338,7 +251,7 @@ export function Resume({ locale }: { locale: Locale }) {
             </p>
           </div>
 
-          <ul className="mt-7 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+          <ul className="mt-7 grid grid-cols-1 gap-4 min-[360px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
             {gridItems.map((item) => (
               <li key={item.id}>
                 <StackCard item={item} locale={locale} />
@@ -404,7 +317,7 @@ export function Resume({ locale }: { locale: Locale }) {
                 return (
                   <li
                     key={link.label}
-                    className="flex items-center justify-between gap-4 py-4"
+                    className="flex items-center justify-between gap-4 py-4 max-[359px]:flex-col max-[359px]:items-start max-[359px]:gap-1"
                   >
                     <span className="rs-label text-rs-muted">{link.label}</span>
                     <a

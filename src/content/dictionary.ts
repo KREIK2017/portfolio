@@ -91,29 +91,28 @@ export const ui = {
   trivia: {
     title: { uk: "Попільничка", en: "The ashtray" },
     subtitle: {
-      uk: "Те, що не входить у резюме.",
-      en: "The parts that don't belong on a CV.",
+      uk: "Кілька фактів без вигаданих легенд.",
+      en: "A few facts, without invented stories.",
     },
-    // TODO: замінити на свої факти
     items: {
       uk: [
-        "Перший сайт зробив на таблицях. Тоді це вважалося нормою.",
-        "Досі вважаю, що CSS складніший за бекенд, і не жартую.",
-        "Ця кімната намальована кодом. Жодного зображення, тільки вектори й математика.",
-        "Найдовший баг у моєму житті виявився зайвою комою.",
+        "Понад рік комерційно підтримую WordPress-сайти й адмініструю їх.",
+        "Маю диплом бакалавра з інженерії програмного забезпечення й продовжую навчання в магістратурі.",
+        "Власні проєкти — бот для моніторингу сайтів і fullstack-панель для тікетів та обліку часу.",
+        "FilmCraft вивчаю як відкритий проєкт: розбираю його код і шукаю, що можна поліпшити.",
       ],
       en: [
-        "My first website used table layouts. At the time that was considered correct.",
-        "I still maintain CSS is harder than backend, and I am not joking.",
-        "This room is drawn in code. Not a single image — just vectors and arithmetic.",
-        "The longest bug of my life turned out to be one extra comma.",
+        "I have over a year of commercial experience supporting and administering WordPress sites.",
+        "I hold a bachelor's degree in software engineering and am continuing with a master's degree.",
+        "My own projects include a website monitoring bot and a fullstack dashboard for tickets and time tracking.",
+        "I study FilmCraft as an open-source project: reading its code and exploring what could be improved.",
       ],
     } satisfies Localized<string[]>,
   },
 
   /** Тексти класичного режиму («Швидкий перегляд / Résumé»). */
   resume: {
-    toResume: { uk: "Швидкий перегляд", en: "Quick view" },
+    toResume: { uk: "На головну", en: "Home" },
     toRoom: { uk: "Увійти в кімнату", en: "Enter the room" },
 
     nav: {
@@ -147,6 +146,23 @@ export const ui = {
       eyebrow: { uk: "// Вибрані роботи", en: "// Selected work" },
       title: { uk: "Роботи", en: "Work" },
       cta: { uk: "Усі роботи", en: "View my work" },
+      dossier: { uk: "Досьє KREIK — вибрані справи", en: "KREIK dossier — selected work" },
+      heading: { uk: "Роботи, за які відповідаю.", en: "Work I stand behind." },
+      introduction: {
+        uk: "Три різні задачі. У кожній — моя роль, рішення й те, що можна побачити самому.",
+        en: "Three different challenges. Each one shows my role, the solution and something you can inspect yourself.",
+      },
+      commercial: { uk: "Комерційна робота", en: "Commercial work" },
+      ownProject: { uk: "Власний проєкт", en: "Personal project" },
+      otherCases: { uk: "Інші справи", en: "Other cases" },
+      contribution: { uk: "Мій внесок", en: "My contribution" },
+      solution: { uk: "Технічне рішення", en: "Technical solution" },
+      openSite: { uk: "Відкрити сайт", en: "Visit site" },
+      openBot: { uk: "Відкрити бота", en: "Open bot" },
+      viewCode: { uk: "Переглянути код", en: "View code" },
+      botPreview: { uk: "Приклад сповіщення", en: "Sample notification" },
+      botPrice: { uk: "Ціна змінилася", en: "Price changed" },
+      botStatus: { uk: "Сайт доступний", en: "Website is online" },
     },
 
     aboutSection: {
