@@ -85,6 +85,28 @@ test("folder scroll becomes a selectable carousel after the first pass", async (
   await expect(scrollRegion).toHaveAttribute("data-carousel", "true");
 });
 
+test("finishing folder scroll keeps the next section in view", async ({ page }, testInfo) => {
+  if (testInfo.project.name !== "desktop") test.skip();
+  await page.setViewportSize({ width: 1152, height: 720 });
+
+  const region = page.locator("#work [class*='scrollRegion']");
+  await page.evaluate(() => {
+    const element = document.querySelector<HTMLElement>("#work [class*='scrollRegion']")!;
+    window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY + element.offsetHeight - window.innerHeight * 1.2);
+  });
+  await page.waitForTimeout(250);
+  await page.mouse.wheel(0, 700);
+  await expect(region).toHaveAttribute("data-carousel", "true");
+  await page.waitForTimeout(2500);
+
+  const position = await page.evaluate(() => {
+    const work = document.querySelector("#work")!;
+    return { nextTop: work.nextElementSibling!.getBoundingClientRect().top, scrollY: window.scrollY };
+  });
+  expect(position.nextTop).toBeGreaterThan(-720);
+  expect(position.nextTop).toBeLessThan(720);
+});
+
 test("folder animation fits zoomed laptop viewports", async ({ page }, testInfo) => {
   if (testInfo.project.name !== "desktop") test.skip();
 

@@ -1,8 +1,20 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
+import type Lenis from "lenis";
 
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+let activeSmoothScroll: Lenis | null = null;
+
+/** Синхронізує миттєвий перехід з Lenis після зміни висоти сторінки. */
+export function jumpToScrollPosition(position: number): void {
+  if (activeSmoothScroll) {
+    activeSmoothScroll.resize();
+    activeSmoothScroll.scrollTo(position, { immediate: true, force: true });
+  } else {
+    window.scrollTo({ top: position, behavior: "instant" });
+  }
+}
 
 function subscribeToMotionPreference(onChange: () => void) {
   const query = window.matchMedia(REDUCED_MOTION);
@@ -52,14 +64,14 @@ export function useSmoothScroll(enabled: boolean): void {
     if (!enabled || reduced) return;
 
     let cancelled = false;
-    let instance: { raf: (time: number) => void; destroy: () => void } | null =
-      null;
+    let instance: Lenis | null = null;
     let frame = 0;
 
     void import("lenis").then(({ default: Lenis }) => {
       if (cancelled) return;
 
       instance = new Lenis({ duration: 1.05 });
+      activeSmoothScroll = instance;
 
       const loop = (time: number) => {
         instance?.raf(time);
@@ -72,6 +84,7 @@ export function useSmoothScroll(enabled: boolean): void {
     return () => {
       cancelled = true;
       window.cancelAnimationFrame(frame);
+      if (activeSmoothScroll === instance) activeSmoothScroll = null;
       instance?.destroy();
     };
   }, [enabled, reduced]);

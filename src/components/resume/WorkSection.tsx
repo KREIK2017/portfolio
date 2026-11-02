@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { site } from "@/config/site";
 import { ui } from "@/content/dictionary";
 import { PROJECTS } from "@/content/projects";
+import { jumpToScrollPosition } from "@/lib/hooks";
 import type { Locale, Project } from "@/types/content";
 import styles from "./WorkSection.module.css";
 
@@ -235,8 +236,8 @@ function FolderStack({ locale }: { locale: Locale }) {
     if (!element) return;
     let frame = 0;
     const cards = [...element.querySelectorAll<HTMLElement>("[data-folder]")];
-    let selected = -1;
-    let carousel = false;
+    let selected = Number(element.dataset.activeCase ?? -1);
+    let carousel = element.dataset.carousel === "true";
     let scrollFrame = 0;
     const clamp = (value: number) => Math.min(1, Math.max(0, value));
     const paint = (card: HTMLElement, phase: number) => {
@@ -267,9 +268,17 @@ function FolderStack({ locale }: { locale: Locale }) {
         card.style.setProperty("--sticker-rotation", `${(-25 * (1 - sticker) + 4 * sticker).toFixed(2)}deg`);
         card.style.setProperty("--sticker-opacity", `${clamp(sticker * 3).toFixed(3)}`);
     };
+    if (carousel && selected >= 0 && cards[selected]) {
+      cards.forEach((card, index) => {
+        paint(card, index === selected ? 1 : 0);
+        card.style.setProperty("--case-retire", String(Number(index === selected)));
+      });
+      setActive(selected);
+    }
     const openCase = (index: number) => {
       if (index === selected || !cards[index]) return;
       selected = index;
+      element.dataset.activeCase = String(index);
       window.cancelAnimationFrame(frame);
       cards.forEach((card, cardIndex) => {
         card.style.setProperty("--case-retire", String(Number(cardIndex === index)));
@@ -299,16 +308,18 @@ function FolderStack({ locale }: { locale: Locale }) {
       });
       if (selected !== current) {
         selected = current;
+        element.dataset.activeCase = String(current);
         setActive(current);
       }
       // Once the first pass leaves the stage, remove the long scroll track.
       // Compensate the scroll position so the following content stays in place.
       if (bounds.bottom <= window.innerHeight && phases.every((phase) => phase === 1)) {
         const oldHeight = element.offsetHeight;
+        const oldScrollY = window.scrollY;
         element.dataset.carousel = "true";
         carousel = true;
         const removedHeight = oldHeight - element.offsetHeight;
-        window.scrollTo({ top: window.scrollY - removedHeight, behavior: "instant" });
+        jumpToScrollPosition(oldScrollY - removedHeight);
         cards.forEach((card, index) => card.style.setProperty("--case-retire", String(Number(index === current))));
       }
     };
