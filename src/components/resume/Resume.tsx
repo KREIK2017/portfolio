@@ -16,23 +16,6 @@ import { cn } from "@/lib/utils";
 import type { Locale } from "@/types/content";
 import styles from "./Resume.module.css";
 
-function Grain() {
-  return (
-    <svg className="grain-light" aria-hidden="true" focusable="false">
-      <filter id="paperGrain">
-        <feTurbulence
-          type="fractalNoise"
-          baseFrequency="0.9"
-          numOctaves="3"
-          stitchTiles="stitch"
-        />
-        <feColorMatrix type="saturate" values="0" />
-      </filter>
-      <rect width="100%" height="100%" filter="url(#paperGrain)" />
-    </svg>
-  );
-}
-
 function Section({
   id,
   eyebrow,
@@ -98,7 +81,6 @@ export function Resume({ locale }: { locale: Locale }) {
 
   return (
     <div className={cn("resume-page", styles.page, "bg-rs-paper text-rs-ink min-h-dvh")}>
-      <Grain />
       {/* Оголошується один раз на сторінку, застосовується в CSS
           до полотна кожної картки через filter: url(#livingOil). */}
       <LivingOilFilter />

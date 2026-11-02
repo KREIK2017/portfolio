@@ -328,7 +328,7 @@
 .scrollRegion { display: none; }
 
 @media (min-width: 1024px) and (min-height: 820px) and (prefers-reduced-motion: no-preference) {
-  .scrollRegion { display: block; height: 330dvh; }
+  .scrollRegion { display: block; height: 650dvh; }
   .staticCases { display: none; }
 
   .stickyStage {
@@ -357,7 +357,7 @@
     perspective: 1100px;
   }
 
-  .caseBundle { position: absolute; inset: 0; }
+  .caseBundle { position: absolute; inset: 0; opacity: var(--case-retire, 1); }
   .caseBundle:nth-child(1) { z-index: 1; }
   .caseBundle:nth-child(2) { z-index: 2; }
   .caseBundle:nth-child(3) { z-index: 3; }
@@ -371,7 +371,7 @@
     width: 48%;
     height: 94%;
     opacity: var(--case-opacity, 0);
-    transform: translate3d(var(--case-x, 250%), var(--case-y, -380%), 0) rotate(var(--case-rotation, -20deg));
+    transform: translate3d(var(--case-x, 145%), var(--case-y, 115%), 0) rotate(var(--case-rotation, 14deg));
     transform-origin: 45% 70%;
     will-change: transform;
     pointer-events: none;
@@ -446,8 +446,8 @@
     background: #e6dac0;
     box-shadow: 5px 8px 0 #a9906c, 0 22px 28px rgba(37, 24, 13, 0.32);
     opacity: var(--photo-opacity, 0);
-    transform: translate3d(var(--photo-x, 125%), var(--photo-y, 95%), 0) scale(var(--photo-scale, 0.24)) rotate(var(--photo-rotation, 22deg));
-    transform-origin: 70% 90%;
+    transform: translate3d(var(--photo-x, 107%), var(--photo-y, 64%), 0) scale(var(--photo-scale, 0.3)) rotate(var(--photo-rotation, -7deg));
+    transform-origin: center;
     will-change: transform;
   }
 
@@ -501,8 +501,8 @@
     scrollbar-color: #9c805e transparent;
     box-shadow: 4px 7px 0 #b4a07e, 0 17px 30px rgba(37, 24, 13, 0.23);
     opacity: var(--sheet-opacity, 0);
-    transform: translate3d(var(--sheet-x, 100%), var(--sheet-y, 70%), 0) scale(var(--sheet-scale, 0.18)) rotate(var(--sheet-rotation, -18deg));
-    transform-origin: 10% 85%;
+    transform: translate3d(var(--sheet-x, 92%), var(--sheet-y, 0%), 0) scale(var(--sheet-scale, 0.22)) rotate(var(--sheet-rotation, 8deg));
+    transform-origin: center;
     will-change: transform;
     background:
       radial-gradient(circle at 8% 85%, rgba(110, 56, 27, 0.13), transparent 26%),

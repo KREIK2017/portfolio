@@ -1328,17 +1328,6 @@ html.lenis body {
   font-weight: 300;
 }
 
-/* Зерно на світлому тлі працює через multiply, а не overlay:
-   на папері overlay дає сірий бруд замість текстури. */
-.grain-light {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.2;
-  mix-blend-mode: multiply;
-}
-
 /* Контейнер SVG-фільтрів не має займати місця в потоці. */
 .filter-defs {
   position: absolute;

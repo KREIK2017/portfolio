@@ -238,39 +238,42 @@ function FolderStack({ locale }: { locale: Locale }) {
     const update = () => {
       frame = 0;
       if (!window.matchMedia("(min-width: 1024px) and (min-height: 820px) and (prefers-reduced-motion: no-preference)").matches) return;
-      const travel = Math.max(1, element.offsetHeight - window.innerHeight);
       const sectionTop = element.getBoundingClientRect().top;
-      const progress = clamp(-sectionTop / travel);
-      const firstFall = clamp((window.innerHeight - sectionTop) / (window.innerHeight * 0.7));
+      const offset = Math.max(0, -sectionTop / window.innerHeight);
+      // Each case gets more than one viewport of scroll after the stage is fully visible.
+      const phases = [0.3, 1.9, 3.5].map((start) => clamp((offset - start) / 1.25));
       cards.forEach((card, index) => {
-        const phase = index === 0 ? firstFall : index === 1 ? clamp((progress - 0.33) / 0.18) : clamp((progress - 0.66) / 0.18);
-        const landing = clamp(phase / 0.46);
-        const impact = phase > 0.46 && phase < 0.62 ? Math.sin(((phase - 0.46) / 0.16) * Math.PI) : 0;
-        const photo = clamp((phase - 0.57) / 0.27);
-        const sheet = clamp((phase - 0.65) / 0.29);
-        const sticker = clamp((phase - 0.79) / 0.21);
-        card.style.setProperty("--case-x", `${(250 * (1 - landing)).toFixed(2)}%`);
-        card.style.setProperty("--case-y", `${(-380 * (1 - landing) + 7 * impact).toFixed(2)}%`);
-        card.style.setProperty("--case-opacity", `${clamp(phase * 5).toFixed(3)}`);
-        card.style.setProperty("--case-rotation", `${(-18 * (1 - landing) + 3 * impact).toFixed(2)}deg`);
-        const coverLift = Math.sin(Math.PI * clamp((phase - 0.47) / 0.39));
-        card.style.setProperty("--case-open", `${(coverLift * 68).toFixed(2)}deg`);
-        card.style.setProperty("--photo-x", `${(125 * (1 - photo)).toFixed(2)}%`);
-        card.style.setProperty("--photo-y", `${(95 * (1 - photo) - 14 * Math.sin(Math.PI * photo)).toFixed(2)}%`);
-        card.style.setProperty("--photo-scale", `${(0.24 + 0.76 * photo).toFixed(3)}`);
-        card.style.setProperty("--photo-rotation", `${(22 * (1 - photo)).toFixed(2)}deg`);
-        card.style.setProperty("--photo-opacity", `${clamp(photo * 3).toFixed(3)}`);
-        card.style.setProperty("--sheet-x", `${(100 * (1 - sheet)).toFixed(2)}%`);
-        card.style.setProperty("--sheet-y", `${(70 * (1 - sheet) - 10 * Math.sin(Math.PI * sheet)).toFixed(2)}%`);
-        card.style.setProperty("--sheet-scale", `${(0.18 + 0.82 * sheet).toFixed(3)}`);
-        card.style.setProperty("--sheet-rotation", `${(-18 * (1 - sheet)).toFixed(2)}deg`);
-        card.style.setProperty("--sheet-opacity", `${clamp(sheet * 3).toFixed(3)}`);
-        card.style.setProperty("--sticker-x", `${(650 * (1 - sticker)).toFixed(2)}%`);
-        card.style.setProperty("--sticker-y", `${(820 * (1 - sticker) - 50 * Math.sin(Math.PI * sticker)).toFixed(2)}%`);
+        const phase = phases[index];
+        const nextPhase = phases[index + 1] ?? 0;
+        card.style.setProperty("--case-retire", `${(1 - clamp((nextPhase - 0.04) / 0.22)).toFixed(3)}`);
+        const landing = clamp(phase / 0.4);
+        const easedLanding = 1 - (1 - landing) ** 2;
+        const impact = phase > 0.4 && phase < 0.52 ? Math.sin(((phase - 0.4) / 0.12) * Math.PI) : 0;
+        const sheet = clamp((phase - 0.62) / 0.25);
+        const photo = clamp((phase - 0.72) / 0.2);
+        const sticker = clamp((phase - 0.84) / 0.16);
+        card.style.setProperty("--case-x", `${(145 * (1 - easedLanding)).toFixed(2)}%`);
+        card.style.setProperty("--case-y", `${(115 * (1 - easedLanding) - 10 * Math.sin(Math.PI * landing) + 7 * impact).toFixed(2)}%`);
+        card.style.setProperty("--case-opacity", `${clamp(phase * 9).toFixed(3)}`);
+        card.style.setProperty("--case-rotation", `${(14 * (1 - easedLanding) - 3 * impact).toFixed(2)}deg`);
+        const coverLift = Math.sin(Math.PI * clamp((phase - 0.5) / 0.5));
+        card.style.setProperty("--case-open", `${(coverLift * 72).toFixed(2)}deg`);
+        card.style.setProperty("--sheet-x", `${(92 * (1 - sheet)).toFixed(2)}%`);
+        card.style.setProperty("--sheet-y", `${(-8 * Math.sin(Math.PI * sheet)).toFixed(2)}%`);
+        card.style.setProperty("--sheet-scale", `${(0.22 + 0.78 * sheet).toFixed(3)}`);
+        card.style.setProperty("--sheet-rotation", `${(8 * (1 - sheet)).toFixed(2)}deg`);
+        card.style.setProperty("--sheet-opacity", `${clamp(sheet * 5).toFixed(3)}`);
+        card.style.setProperty("--photo-x", `${(107 * (1 - photo)).toFixed(2)}%`);
+        card.style.setProperty("--photo-y", `${(64 * (1 - photo) - 9 * Math.sin(Math.PI * photo)).toFixed(2)}%`);
+        card.style.setProperty("--photo-scale", `${(0.3 + 0.7 * photo).toFixed(3)}`);
+        card.style.setProperty("--photo-rotation", `${(-7 * (1 - photo)).toFixed(2)}deg`);
+        card.style.setProperty("--photo-opacity", `${clamp(photo * 5).toFixed(3)}`);
+        card.style.setProperty("--sticker-x", `${(300 * (1 - sticker)).toFixed(2)}%`);
+        card.style.setProperty("--sticker-y", `${(820 * (1 - sticker) - 20 * Math.sin(Math.PI * sticker)).toFixed(2)}%`);
         card.style.setProperty("--sticker-rotation", `${(-25 * (1 - sticker) + 4 * sticker).toFixed(2)}deg`);
         card.style.setProperty("--sticker-opacity", `${clamp(sticker * 3).toFixed(3)}`);
       });
-      setActive(progress >= 0.83 ? 2 : progress >= 0.5 ? 1 : 0);
+      setActive(offset >= 3.55 ? 2 : offset >= 1.95 ? 1 : 0);
     };
     const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
     update();
@@ -286,9 +289,9 @@ function FolderStack({ locale }: { locale: Locale }) {
   const goToCase = (index: number) => {
     const element = region.current;
     if (!element) return;
-    const progress = [0.17, 0.54, 0.88][index] ?? 0;
+    const offset = [1.65, 3.25, 4.85][index] ?? 0;
     const top = element.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: top + progress * (element.offsetHeight - window.innerHeight), behavior: "smooth" });
+    window.scrollTo({ top: top + offset * window.innerHeight, behavior: "smooth" });
   };
 
   return (
