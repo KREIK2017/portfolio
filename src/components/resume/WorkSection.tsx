@@ -233,7 +233,11 @@ function FolderStack({ locale }: { locale: Locale }) {
     const element = region.current;
     if (!element) return;
     let frame = 0;
+    let lastOffset = 0;
+    let furthestOffset = 0;
     const cards = [...element.querySelectorAll<HTMLElement>("[data-folder]")];
+    const seen = cards.map(() => false);
+    const completed = cards.map(() => false);
     const clamp = (value: number) => Math.min(1, Math.max(0, value));
     const update = () => {
       frame = 0;
@@ -241,11 +245,21 @@ function FolderStack({ locale }: { locale: Locale }) {
       const sectionTop = element.getBoundingClientRect().top;
       const offset = Math.max(0, -sectionTop / window.innerHeight);
       // Each case gets more than one viewport of scroll after the stage is fully visible.
-      const phases = [0.3, 1.9, 3.5].map((start) => clamp((offset - start) / 1.25));
+      const rawPhases = [0.3, 1.9, 3.5].map((start) => clamp((offset - start) / 1.25));
+      rawPhases.forEach((phase, index) => { if (phase > 0) seen[index] = true; });
+      if (offset < lastOffset - 0.002) {
+        seen.forEach((wasSeen, index) => { if (wasSeen) completed[index] = true; });
+      }
+      const revisiting = offset < furthestOffset - 0.002;
+      const activeIndex = offset >= 3.55 ? 2 : offset >= 1.95 ? 1 : 0;
+      const phases = rawPhases.map((phase, index) => completed[index] ? 1 : phase);
       cards.forEach((card, index) => {
         const phase = phases[index];
         const nextPhase = phases[index + 1] ?? 0;
-        card.style.setProperty("--case-retire", `${(1 - clamp((nextPhase - 0.04) / 0.22)).toFixed(3)}`);
+        const retire = revisiting && seen[activeIndex]
+          ? Number(index === activeIndex)
+          : 1 - clamp((nextPhase - 0.04) / 0.22);
+        card.style.setProperty("--case-retire", retire.toFixed(3));
         const landing = clamp(phase / 0.4);
         const easedLanding = 1 - (1 - landing) ** 2;
         const impact = phase > 0.4 && phase < 0.52 ? Math.sin(((phase - 0.4) / 0.12) * Math.PI) : 0;
@@ -273,7 +287,9 @@ function FolderStack({ locale }: { locale: Locale }) {
         card.style.setProperty("--sticker-rotation", `${(-25 * (1 - sticker) + 4 * sticker).toFixed(2)}deg`);
         card.style.setProperty("--sticker-opacity", `${clamp(sticker * 3).toFixed(3)}`);
       });
-      setActive(offset >= 3.55 ? 2 : offset >= 1.95 ? 1 : 0);
+      setActive(activeIndex);
+      lastOffset = offset;
+      furthestOffset = Math.max(furthestOffset, offset);
     };
     const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
     update();

@@ -420,8 +420,8 @@
       #ac7a45;
     box-shadow: 0 8px 14px rgba(49, 28, 13, 0.25);
     backface-visibility: hidden;
-    transform-origin: 50% 100%;
-    transform: rotateX(calc(-1 * var(--case-open, 0deg)));
+    transform-origin: 100% 50%;
+    transform: rotateY(calc(-1 * var(--case-open, 0deg)));
     will-change: transform;
   }
   .caseFolderCover span { font-family: var(--font-oswald), Arial, sans-serif; letter-spacing: 0.2em; }
