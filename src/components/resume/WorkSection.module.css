@@ -323,12 +323,13 @@
 
 .folio { display: block; margin-top: 2.2rem; color: #806f5d; font-size: 0.69rem; text-align: right; }
 
-/* Папки справ: окрема сцена для великого екрана. Звичайний список нижче
-   лишається доступним на телефоні, низькому екрані та без анімацій. */
+/* Папки справ: окрема сцена для десктопа. На вузьких екранах і без анімацій
+   залишається послідовний список. */
 .scrollRegion { display: none; }
 
-@media (min-width: 1024px) and (min-height: 820px) and (prefers-reduced-motion: no-preference) {
+@media (min-width: 1024px) and (min-height: 540px) and (prefers-reduced-motion: no-preference) {
   .scrollRegion { display: block; height: 650dvh; }
+  .scrollRegion[data-carousel="true"] { height: auto; }
   .staticCases { display: none; }
 
   .stickyStage {
@@ -341,11 +342,14 @@
       repeating-linear-gradient(90deg, transparent 0 112px, rgba(83, 62, 38, 0.018) 113px 114px);
   }
 
+  .scrollRegion[data-carousel="true"] .stickyStage { position: relative; height: auto; }
+
   .stickyStage .inner {
     height: 100%;
     padding-top: clamp(1.6rem, 3.5vh, 3rem);
     padding-bottom: clamp(1.4rem, 3vh, 2.4rem);
   }
+  .scrollRegion[data-carousel="true"] .inner { height: auto; }
 
   .stickyStage .inner::before { top: 1.15rem; }
   .stickyStage .inner::after { bottom: 1rem; }
@@ -357,7 +361,7 @@
     perspective: 1100px;
   }
 
-  .caseBundle { position: absolute; inset: 0; opacity: var(--case-retire, 1); }
+  .caseBundle { position: absolute; inset: 0; opacity: var(--case-retire, 0); transition: opacity 260ms ease; }
   .caseBundle:nth-child(1) { z-index: 1; }
   .caseBundle:nth-child(2) { z-index: 2; }
   .caseBundle:nth-child(3) { z-index: 3; }
@@ -536,6 +540,29 @@
   .folderNav button span { margin-right: 0.4rem; color: #a64021; }
   .folderNav button[aria-current="step"] { border-color: #88462e; color: #2b241c; background: #dfcaa2; }
   .folderNav button:hover { border-color: #88462e; }
+  .folderNav .carouselArrow { display: none; min-width: 44px; padding-inline: 0.65rem; font-size: 1.25rem; line-height: 1; }
+  .scrollRegion[data-carousel="true"] .carouselArrow { display: inline-flex; align-items: center; justify-content: center; }
+}
+
+@media (min-width: 1024px) and (min-height: 540px) and (max-height: 819px) and (prefers-reduced-motion: no-preference) {
+  .stickyStage .inner { display: flex; flex-direction: column; padding-block: 0.7rem; }
+  .stickyStage .inner::before { top: 0.35rem; }
+  .stickyStage .inner::after { bottom: 0.35rem; }
+  .stickyStage .topline { flex: none; }
+  .stickyStage .heading { flex: none; margin: 0.35rem 0 0.85rem; }
+  .stickyStage .heading h2 { font-size: clamp(2.5rem, 4vw, 3.8rem); }
+  .stickyStage .heading p { max-width: 19rem; font-size: 0.98rem; }
+  .folderDesk { flex: 1; height: auto; min-height: 0; }
+  .folderNav { flex: none; margin-top: 0.7rem; }
+  .scrollRegion[data-carousel="true"] .folderDesk { flex: none; height: clamp(19rem, 55vh, 33rem); }
+  .caseFolderCover { padding: 1.2rem; }
+  .folderDossier { font-size: clamp(2.4rem, 4vw, 4rem); }
+  .folderSeal { margin-bottom: 0.3rem; padding: 0.7rem 0.45rem; }
+  .caseFolderCover .folderTitle { margin-top: 0.55rem; }
+  .folderCategory { margin-top: 0.4rem; }
+  .projectSheet { padding: 0.75rem 1rem; }
+  .sheetBody { top: 43%; right: 1rem; left: 1rem; }
+  .sheetLine, .sheetSummary, .sheetRole { font-size: 0.89rem; }
 }
 
 @media (max-width: 1050px) {

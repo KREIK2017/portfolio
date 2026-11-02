@@ -54,6 +54,74 @@ test("project cases stay readable in one column on phones", async ({ page }) => 
   }
 });
 
+test("folder scroll becomes a selectable carousel after the first pass", async ({ page }, testInfo) => {
+  if (testInfo.project.name !== "desktop") test.skip();
+
+  const work = page.locator("#work");
+  const folders = work.locator("[data-folder]");
+  const scrollRegion = work.locator("[class*='scrollRegion']");
+  await work.scrollIntoViewIfNeeded();
+  await page.evaluate(() => {
+    const region = document.querySelector<HTMLElement>("#work [class*='scrollRegion']")!;
+    window.scrollTo(0, region.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 5);
+  });
+
+  await expect(scrollRegion).toHaveAttribute("data-carousel", "true");
+  await expect(folders.nth(2)).toHaveAttribute("data-active", "true");
+  const compactHeight = await scrollRegion.evaluate((element) => element.getBoundingClientRect().height);
+  expect(compactHeight).toBeLessThan(2000);
+
+  await work.getByRole("navigation", { name: "Вибрати справу" })
+    .getByRole("button", { name: /CodeUnity/ }).click();
+  await expect(folders.first()).toHaveAttribute("data-active", "true");
+  await expect(folders.nth(2)).toHaveAttribute("inert", "");
+  await expect.poll(() => folders.first().evaluate((element) =>
+    Number.parseFloat(element.style.getPropertyValue("--sheet-opacity")))).toBe(1);
+
+  await work.getByRole("button", { name: "Наступна справа" }).click();
+  await expect(folders.nth(1)).toHaveAttribute("data-active", "true");
+
+  await page.evaluate(() => window.scrollBy(0, -window.innerHeight));
+  await expect(scrollRegion).toHaveAttribute("data-carousel", "true");
+});
+
+test("folder animation fits zoomed laptop viewports", async ({ page }, testInfo) => {
+  if (testInfo.project.name !== "desktop") test.skip();
+
+  for (const { width, height } of [
+    { width: 1152, height: 720 }, // 1440 × 900 at 125% browser zoom
+    { width: 1093, height: 614 }, // 1366 × 768 at 125% browser zoom
+    { width: 1024, height: 576 }, // 1280 × 720 at 125% browser zoom
+  ]) {
+    await page.setViewportSize({ width, height });
+    const region = page.locator("#work [class*='scrollRegion']");
+    await expect(region).toBeVisible();
+    await page.evaluate(() => {
+      const element = document.querySelector<HTMLElement>("#work [class*='scrollRegion']")!;
+      window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY + window.innerHeight * 0.6);
+    });
+    await expect.poll(() => page.locator("#work [data-folder='0']").evaluate((element) =>
+      Number.parseFloat((element as HTMLElement).style.getPropertyValue("--case-opacity")))).toBe(1);
+    const layout = await page.evaluate(() => {
+      const stage = document.querySelector<HTMLElement>("#work [class*='stickyStage']")!;
+      const desk = document.querySelector<HTMLElement>("#work [class*='folderDesk']")!;
+      const nav = document.querySelector<HTMLElement>("#work nav[aria-label='Вибрати справу']")!;
+      return { stage: stage.getBoundingClientRect().toJSON(), desk: desk.getBoundingClientRect().toJSON(), nav: nav.getBoundingClientRect().toJSON(), pageWidth: document.documentElement.scrollWidth };
+    });
+    expect(layout.desk.height).toBeGreaterThan(250);
+    expect(layout.nav.bottom).toBeLessThanOrEqual(height + 1);
+    expect(layout.pageWidth).toBeLessThanOrEqual(width);
+  }
+});
+
+test("reduced motion keeps the static project list", async ({ page }, testInfo) => {
+  if (testInfo.project.name !== "desktop") test.skip();
+  await page.setViewportSize({ width: 1152, height: 720 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator("#work [class*='scrollRegion']")).toBeHidden();
+  await expect(page.locator("#work [class*='staticCases']")).toBeVisible();
+});
+
 test("primary navigation is keyboard reachable", async ({ page }) => {
   await page.keyboard.press("Tab");
   await expect(page.locator("a:focus-visible")).toBeVisible();

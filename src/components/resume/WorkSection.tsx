@@ -162,12 +162,12 @@ function SmallCase({ project, locale, index }: { project: Project; locale: Local
   );
 }
 
-function WorkHeading({ locale }: { locale: Locale }) {
+function WorkHeading({ locale, current = 0 }: { locale: Locale; current?: number }) {
   return (
     <>
       <div className={styles.topline}>
         <span>{"//"} {ui.resume.workSection.dossier[locale]}</span>
-        <span>01 / {String(PROJECTS.length).padStart(2, "0")}</span>
+        <span>{String(current + 1).padStart(2, "0")} / {String(PROJECTS.length).padStart(2, "0")}</span>
       </div>
       <div className={styles.heading}>
         <h2>{ui.resume.workSection.heading[locale]}</h2>
@@ -227,39 +227,19 @@ function FolderCase({ project, locale, index, active }: { project: Project; loca
 
 function FolderStack({ locale }: { locale: Locale }) {
   const region = useRef<HTMLDivElement>(null);
+  const selectCase = useRef<(index: number) => void>(() => {});
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     const element = region.current;
     if (!element) return;
     let frame = 0;
-    let lastOffset = 0;
-    let furthestOffset = 0;
     const cards = [...element.querySelectorAll<HTMLElement>("[data-folder]")];
-    const seen = cards.map(() => false);
-    const completed = cards.map(() => false);
+    let selected = -1;
+    let carousel = false;
+    let scrollFrame = 0;
     const clamp = (value: number) => Math.min(1, Math.max(0, value));
-    const update = () => {
-      frame = 0;
-      if (!window.matchMedia("(min-width: 1024px) and (min-height: 820px) and (prefers-reduced-motion: no-preference)").matches) return;
-      const sectionTop = element.getBoundingClientRect().top;
-      const offset = Math.max(0, -sectionTop / window.innerHeight);
-      // Each case gets more than one viewport of scroll after the stage is fully visible.
-      const rawPhases = [0.3, 1.9, 3.5].map((start) => clamp((offset - start) / 1.25));
-      rawPhases.forEach((phase, index) => { if (phase > 0) seen[index] = true; });
-      if (offset < lastOffset - 0.002) {
-        seen.forEach((wasSeen, index) => { if (wasSeen) completed[index] = true; });
-      }
-      const revisiting = offset < furthestOffset - 0.002;
-      const activeIndex = offset >= 3.55 ? 2 : offset >= 1.95 ? 1 : 0;
-      const phases = rawPhases.map((phase, index) => completed[index] ? 1 : phase);
-      cards.forEach((card, index) => {
-        const phase = phases[index];
-        const nextPhase = phases[index + 1] ?? 0;
-        const retire = revisiting && seen[activeIndex]
-          ? Number(index === activeIndex)
-          : 1 - clamp((nextPhase - 0.04) / 0.22);
-        card.style.setProperty("--case-retire", retire.toFixed(3));
+    const paint = (card: HTMLElement, phase: number) => {
         const landing = clamp(phase / 0.4);
         const easedLanding = 1 - (1 - landing) ** 2;
         const impact = phase > 0.4 && phase < 0.52 ? Math.sin(((phase - 0.4) / 0.12) * Math.PI) : 0;
@@ -286,44 +266,91 @@ function FolderStack({ locale }: { locale: Locale }) {
         card.style.setProperty("--sticker-y", `${(820 * (1 - sticker) - 20 * Math.sin(Math.PI * sticker)).toFixed(2)}%`);
         card.style.setProperty("--sticker-rotation", `${(-25 * (1 - sticker) + 4 * sticker).toFixed(2)}deg`);
         card.style.setProperty("--sticker-opacity", `${clamp(sticker * 3).toFixed(3)}`);
-      });
-      setActive(activeIndex);
-      lastOffset = offset;
-      furthestOffset = Math.max(furthestOffset, offset);
     };
-    const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
-    update();
+    const openCase = (index: number) => {
+      if (index === selected || !cards[index]) return;
+      selected = index;
+      window.cancelAnimationFrame(frame);
+      cards.forEach((card, cardIndex) => {
+        card.style.setProperty("--case-retire", String(Number(cardIndex === index)));
+      });
+      const card = cards[index];
+      paint(card, 0);
+      setActive(index);
+      const start = performance.now();
+      const animate = (now: number) => {
+        const phase = clamp((now - start) / 2300);
+        paint(card, phase);
+        if (phase < 1) frame = window.requestAnimationFrame(animate);
+      };
+      frame = window.requestAnimationFrame(animate);
+    };
+    const updateFromScroll = () => {
+      scrollFrame = 0;
+      if (carousel || !window.matchMedia("(min-width: 1024px) and (min-height: 540px) and (prefers-reduced-motion: no-preference)").matches) return;
+      const bounds = element.getBoundingClientRect();
+      const offset = Math.max(0, -bounds.top / window.innerHeight);
+      const phases = [0.3, 1.9, 3.5].map((start) => clamp((offset - start) / 1.25));
+      const current = offset >= 3.55 ? 2 : offset >= 1.95 ? 1 : 0;
+      cards.forEach((card, index) => {
+        paint(card, phases[index]);
+        const nextPhase = phases[index + 1] ?? 0;
+        card.style.setProperty("--case-retire", String(1 - clamp((nextPhase - 0.04) / 0.22)));
+      });
+      if (selected !== current) {
+        selected = current;
+        setActive(current);
+      }
+      // Once the first pass leaves the stage, remove the long scroll track.
+      // Compensate the scroll position so the following content stays in place.
+      if (bounds.bottom <= window.innerHeight && phases.every((phase) => phase === 1)) {
+        const oldHeight = element.offsetHeight;
+        element.dataset.carousel = "true";
+        carousel = true;
+        const removedHeight = oldHeight - element.offsetHeight;
+        window.scrollTo({ top: window.scrollY - removedHeight, behavior: "instant" });
+        cards.forEach((card, index) => card.style.setProperty("--case-retire", String(Number(index === current))));
+      }
+    };
+    const schedule = () => {
+      if (!scrollFrame) scrollFrame = window.requestAnimationFrame(updateFromScroll);
+    };
+    selectCase.current = (index) => {
+      if (carousel) {
+        openCase(index);
+      } else {
+        const top = element.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: top + [1.65, 3.25, 4.85][index] * window.innerHeight, behavior: "smooth" });
+      }
+    };
+    updateFromScroll();
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
     return () => {
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
       window.cancelAnimationFrame(frame);
+      window.cancelAnimationFrame(scrollFrame);
+      selectCase.current = () => {};
     };
   }, []);
-
-  const goToCase = (index: number) => {
-    const element = region.current;
-    if (!element) return;
-    const offset = [1.65, 3.25, 4.85][index] ?? 0;
-    const top = element.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: top + offset * window.innerHeight, behavior: "smooth" });
-  };
 
   return (
     <div className={styles.scrollRegion} ref={region}>
       <div className={styles.stickyStage}>
         <div className={styles.inner}>
-          <WorkHeading locale={locale} />
+          <WorkHeading locale={locale} current={active} />
           <div className={styles.folderDesk}>
             {PROJECTS.map((project, index) => <FolderCase key={project.slug} project={project} locale={locale} index={index} active={active === index} />)}
           </div>
           <nav className={styles.folderNav} aria-label={locale === "uk" ? "Вибрати справу" : "Select a case"}>
+            <button className={styles.carouselArrow} type="button" onClick={() => selectCase.current((active + PROJECTS.length - 1) % PROJECTS.length)} aria-label={locale === "uk" ? "Попередня справа" : "Previous case"}>←</button>
             {PROJECTS.map((project, index) => (
-              <button key={project.slug} type="button" onClick={() => goToCase(index)} aria-current={active === index ? "step" : undefined}>
+              <button key={project.slug} type="button" onClick={() => selectCase.current(index)} aria-current={active === index ? "step" : undefined}>
                 <span>{String(index + 1).padStart(2, "0")}</span> {project.title[locale]}
               </button>
             ))}
+            <button className={styles.carouselArrow} type="button" onClick={() => selectCase.current((active + 1) % PROJECTS.length)} aria-label={locale === "uk" ? "Наступна справа" : "Next case"}>→</button>
           </nav>
         </div>
       </div>
