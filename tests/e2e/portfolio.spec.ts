@@ -136,6 +136,42 @@ test("folder animation fits zoomed laptop viewports", async ({ page }, testInfo)
   }
 });
 
+test("project photo leaves the dossier text readable at laptop scale", async ({ page }, testInfo) => {
+  if (testInfo.project.name !== "desktop") test.skip();
+  for (const { width, height } of [
+    { width: 1152, height: 720 },
+    { width: 1093, height: 614 },
+    { width: 1024, height: 576 },
+  ]) {
+    await page.setViewportSize({ width, height });
+    await page.goto("/");
+    await page.evaluate(() => {
+      const region = document.querySelector<HTMLElement>("#work [class*='scrollRegion']")!;
+      window.scrollTo(0, region.getBoundingClientRect().top + window.scrollY + window.innerHeight * 4.85);
+    });
+    const caseThree = page.locator("#work [data-folder='2']");
+    await expect.poll(() => caseThree.evaluate((element) =>
+      Number.parseFloat((element as HTMLElement).style.getPropertyValue("--photo-opacity")))).toBe(1);
+
+    const gap = await caseThree.evaluate((element) => {
+      const photo = element.querySelector<HTMLElement>("[class*='projectPhoto']")!;
+      const body = element.querySelector<HTMLElement>("[class*='sheetBody']")!;
+      return body.getBoundingClientRect().top - photo.getBoundingClientRect().bottom;
+    });
+    expect(gap).toBeGreaterThanOrEqual(20);
+    const link = caseThree.getByRole("link", { name: /Переглянути код/ });
+    if (height >= 614) {
+      const linkFits = await caseThree.evaluate((element) => {
+        const body = element.querySelector<HTMLElement>("[class*='sheetBody']")!;
+        return body.querySelector("a")!.getBoundingClientRect().bottom <= body.getBoundingClientRect().bottom;
+      });
+      expect(linkFits).toBe(true);
+    }
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toBeVisible();
+  }
+});
+
 test("reduced motion keeps the static project list", async ({ page }, testInfo) => {
   if (testInfo.project.name !== "desktop") test.skip();
   await page.setViewportSize({ width: 1152, height: 720 });
